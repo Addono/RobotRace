@@ -35,12 +35,12 @@ class Robot {
         // code goes here ...
         
         gl.glLineWidth(1f);
-        gl.glColor3f(0f, 0f, 0f);
+        gl.glColor3f(1f, 1f, 1f);
         glut.glutWireCube(1f);
         
         gl.glPushMatrix();
         
-        gl.glTranslatef(0f,0f,.5f);
+        gl.glTranslatef(0f,0f,1f);
         
         glut.glutWireCube(.5f);
         
