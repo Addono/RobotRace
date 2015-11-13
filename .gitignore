@@ -46,3 +46,4 @@ build/classes/robotrace/Robot.class
 *.class
 build/classes/robotrace/Robot.class
 build/built-jar.properties
+*.xml
