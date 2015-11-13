@@ -43,3 +43,5 @@ Temporary Items
 .apdisk
 *.class
 build/built-jar.properties
+nbproject/private/private.properties
+build/classes/robotrace/Robot.class
