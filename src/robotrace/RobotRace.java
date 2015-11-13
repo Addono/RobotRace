@@ -264,29 +264,34 @@ public class RobotRace extends Base {
      */
     public void drawAxisFrame() {
         // code goes here ...
-
-        gl.glLineWidth(2f);
         
+        gl.glPushMatrix();
         gl.glColor3f(1f, 0f, 0f);
-        gl.glBegin(GL_LINES);
-            gl.glVertex3f(0.0f, 0.0f, 0.0f);
-            gl.glVertex3f(1000f, 0f, 0f);
-        gl.glEnd();
+        gl.glRotatef(90f, 0f, 1f, 0f);
+        createArrow(1f);
+        gl.glPopMatrix();
         
+        gl.glPushMatrix();
         gl.glColor3f(0f, 1f, 0f);
-        gl.glBegin(GL_LINES);
-            gl.glVertex3f(0.0f, 0.0f, 0.0f);
-            gl.glVertex3f(0f, 1000f, 0f);
-        gl.glEnd();
+        gl.glRotatef(270f, 1f, 0f, 0f);
+        createArrow(1f);
+        gl.glPopMatrix();
         
         gl.glColor3f(0f, 0f, 1f);
-        gl.glBegin(GL_LINES);
-            gl.glVertex3f(0.0f, 0.0f, 0.0f);
-            gl.glVertex3f(0f, 0f, 1000f);
-        gl.glEnd();
-        
+        createArrow(1f);
     }
- 
+
+    public void createArrow(float length) {
+        gl.glPushMatrix();
+        
+        glut.glutSolidCylinder(.02f * length, .9f * length, 15, 1);
+        
+        gl.glTranslatef(0f, 0f, .9f * length);
+        glut.glutSolidCone(.05f * length,.1f * length,15,1);
+        
+        gl.glPopMatrix();
+    }
+    
     /**
      * Main program execution body, delegates to an instance of
      * the RobotRace implementation.
