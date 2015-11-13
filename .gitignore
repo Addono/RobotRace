@@ -45,3 +45,4 @@ Temporary Items
 build/built-jar.properties
 nbproject/private/private.properties
 build/classes/robotrace/Robot.class
+*.class
