@@ -133,6 +133,8 @@ public class RobotRace extends Base {
         terrain = new Terrain();
         
         
+        // Set the initial start location of the camera.
+        gs.cnt = new Vector(6f,.2f,1f);
     }
     
     /**

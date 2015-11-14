@@ -14,7 +14,6 @@ class Camera {
     /** The up vector. */
     public Vector up = Vector.Z;
     
-    
     /**
      * Updates the camera viewpoint and direction based on the
      * selected camera mode.
@@ -54,6 +53,18 @@ class Camera {
      */
     private void setDefaultMode(GlobalState gs) {
         // code goes here ...
+        
+        // Set the center of the camera.
+        eye = gs.cnt; 
+        
+        // Calculate the direction in which the camera is pointing.
+        Vector lookDirection = new Vector(Math.cos(gs.theta), Math.sin(- gs.theta) * Math.cos(gs.phi), Math.sin(gs.phi));
+        
+        // Calculate the point where the camera is looking at, which is equal to
+        // the center of the camera (point) minus the direction (vector).
+        center = eye.subtract(lookDirection);
+        
+        //System.out.println(gs.theta + " " + gs.phi + " - center: " + center.toString() + " - gs: " + gs.cnt.toString());
     }
 
     /**
@@ -86,5 +97,9 @@ class Camera {
      */
     private void setAutoMode(GlobalState gs, Robot focus) {
         // code goes here ...
+    }
+    
+    double toRadians(double angle) {
+        return angle * (Math.PI / 180);
     }
 }
