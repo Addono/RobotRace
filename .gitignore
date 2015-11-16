@@ -38,15 +38,11 @@ $RECYCLE.BIN/
 # Directories potentially created on remote AFP share
 .AppleDB
 .AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-*.class
-build/built-jar.properties
-nbproject/private/private.properties
-build/classes/robotrace/Robot.class
-*.class
-nbproject/private/private.xml
-*.properties
-/dist/
-*.xml
+
+# User added
+.git
+build\
+dist\
+lib\
+nbproject\
+RobotRace\
