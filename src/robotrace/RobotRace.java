@@ -134,7 +134,7 @@ public class RobotRace extends Base {
         
         
         // Set the initial start location of the camera.
-        gs.cnt = new Vector(6f,.2f,1f);
+        gs.cnt = Vector.O;
     }
     
     /**
@@ -181,7 +181,15 @@ public class RobotRace extends Base {
 
         // Set the perspective.
         // Modify this to meet the requirements in the assignment.
-        glu.gluPerspective(40, (float)gs.w / (float)gs.h, 0.1, 100);
+        double screenRatio = gs.w / gs.h;
+        
+        double xFOV = 2 * Math.atan((gs.vWidth / 2) / gs.vDist); // Calculate FOV.
+        xFOV = xFOV * 180 / Math.PI; // Convert FOV from radians to degrees.
+        
+        double yFOV = xFOV / screenRatio;
+        glu.gluPerspective(yFOV, screenRatio, 0.1, 100);
+        
+        System.out.println(yFOV);
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
@@ -285,10 +293,22 @@ public class RobotRace extends Base {
         gl.glColor3f(0f, 0f, 1f);
         createArrow(1f);
         
+        // Creates a little sphere where the camera focusses.
         gl.glPushMatrix();
         gl.glColor3f(.5f,.5f,.5f);
         gl.glTranslated(gs.cnt.x(),gs.cnt.y(),gs.cnt.z());
         glut.glutSolidSphere(.05f,10,10);
+        gl.glPopMatrix();
+        
+        // Draws horizontal line.
+        gl.glPushMatrix();
+        gl.glColor3f(.8f, .8f, .2f);
+        gl.glRotatef(90 + gs.theta * 180 / (float) Math.PI, 0f, 0f, 1f);
+        gl.glTranslatef((float)-gs.vWidth/2, 0f, 0f);
+        gl.glBegin(GL_LINES);
+            gl.glVertex3f(0f,0f,0f);
+            gl.glVertex3f((float)gs.vWidth, 0f, 0f);
+        gl.glEnd();
         gl.glPopMatrix();
     }
 
