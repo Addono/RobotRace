@@ -284,6 +284,12 @@ public class RobotRace extends Base {
         
         gl.glColor3f(0f, 0f, 1f);
         createArrow(1f);
+        
+        gl.glPushMatrix();
+        gl.glColor3f(.5f,.5f,.5f);
+        gl.glTranslated(gs.cnt.x(),gs.cnt.y(),gs.cnt.z());
+        glut.glutSolidSphere(.05f,10,10);
+        gl.glPopMatrix();
     }
 
     public void createArrow(float length) {
