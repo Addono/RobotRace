@@ -59,9 +59,9 @@ class Camera {
         
         // Calculate the direction in which the camera is pointing.
         Vector lookDirection = new Vector(
-                Math.cos(gs.theta) * Math.sin(gs.phi),
-                Math.sin( gs.theta) * Math.sin(gs.phi),
-                Math.cos(gs.phi)
+                Math.cos(gs.theta) * Math.cos(gs.phi),
+                Math.sin(gs.theta) * Math.cos(gs.phi),
+                Math.sin(gs.phi)
         );
         Vector V = lookDirection.scale(gs.vDist);
         
