@@ -189,8 +189,6 @@ public class RobotRace extends Base {
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
         glu.gluPerspective(yFOV, aspectRatio, 0.1, 100);
         
-        System.out.println(yFOV + " " + gs.vDist);
-        
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -298,17 +296,6 @@ public class RobotRace extends Base {
         gl.glColor3f(.5f,.5f,.5f);
         gl.glTranslated(gs.cnt.x(),gs.cnt.y(),gs.cnt.z());
         glut.glutSolidSphere(.05f,10,10);
-        gl.glPopMatrix();
-        
-        // Draws horizontal line.
-        gl.glPushMatrix();
-        gl.glColor3f(.8f, .8f, .2f);
-        gl.glRotatef(90 + gs.theta * 180 / (float) Math.PI, 0f, 0f, 1f);
-        gl.glTranslatef((float)-gs.vWidth/2, 0f, 0f);
-        gl.glBegin(GL_LINES);
-            gl.glVertex3f(0f,0f,0f);
-            gl.glVertex3f((float)gs.vWidth, 0f, 0f);
-        gl.glEnd();
         gl.glPopMatrix();
     }
 
