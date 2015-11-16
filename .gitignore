@@ -48,3 +48,5 @@ build/classes/robotrace/Robot.class
 *.class
 nbproject/private/private.xml
 *.properties
+/dist/
+*.xml

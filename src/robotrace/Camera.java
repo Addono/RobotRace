@@ -55,14 +55,13 @@ class Camera {
         // code goes here ...
         
         // Set the center of the camera.
-        eye = gs.cnt; 
+        center = gs.cnt;
         
         // Calculate the direction in which the camera is pointing.
-        Vector lookDirection = new Vector(Math.cos(gs.theta), Math.sin(- gs.theta) * Math.cos(gs.phi), Math.sin(gs.phi));
+        Vector lookDirection = new Vector(Math.cos(gs.theta), Math.sin( gs.theta) * Math.cos(gs.phi), Math.sin(gs.phi));
+        Vector V = lookDirection.scale(gs.vDist);
         
-        // Calculate the point where the camera is looking at, which is equal to
-        // the center of the camera (point) minus the direction (vector).
-        center = eye.subtract(lookDirection);
+        eye = center.add(V);
         
         //System.out.println(gs.theta + " " + gs.phi + " - center: " + center.toString() + " - gs: " + gs.cnt.toString());
     }
