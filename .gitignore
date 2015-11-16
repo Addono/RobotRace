@@ -40,9 +40,10 @@ $RECYCLE.BIN/
 .AppleDesktop
 
 # User added
-.git
-build\
-dist\
-lib\
-nbproject\
-RobotRace\
+.git/
+build/
+dist/
+dist/
+lib/
+nbproject/
+RobotRace/
