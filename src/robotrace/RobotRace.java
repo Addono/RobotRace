@@ -267,6 +267,9 @@ public class RobotRace extends Base {
     public void drawAxisFrame() {
         // code goes here ...
         
+        gl.glColor3f(1f, 1f, 0f);
+        glut.glutSolidCube(.12f);
+        
         gl.glPushMatrix();
         gl.glColor3f(1f, 0f, 0f);
         gl.glRotatef(90f, 0f, 1f, 0f);
