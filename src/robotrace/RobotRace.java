@@ -132,12 +132,11 @@ public class RobotRace extends Base {
         // Initialize the terrain
         terrain = new Terrain();
         
-        
         // Set the initial start location of the camera.
         gs.cnt = Vector.O;
     }
     
-    /**
+    /*
      * Called upon the start of the application.
      * Primarily used to configure OpenGL.
      */
@@ -152,7 +151,7 @@ public class RobotRace extends Base {
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_LESS);
 		
-	    // Normalize normals.
+	// Normalize normals.
         gl.glEnable(GL_NORMALIZE);
         
         // Enable textures. 
@@ -160,11 +159,19 @@ public class RobotRace extends Base {
         gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         gl.glBindTexture(GL_TEXTURE_2D, 0);
 		
-	    // Try to load four textures, add more if you like.
+        // Try to load four textures, add more if you like.
         track = loadTexture("track.jpg");
         brick = loadTexture("brick.jpg");
-        head = loadTexture("head.jpg");
+        head  = loadTexture("head.jpg");
         torso = loadTexture("torso.jpg");
+        
+        gl.glShadeModel(GL_SMOOTH);
+        gl.glEnable(GL_LIGHTING);
+        gl.glEnable(GL_LIGHT0);
+        
+        float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor, 0);
+        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, new float[]{0.1f, 0.1f, 0.1f, 1f}, 0);
     }
     
     /**
@@ -187,7 +194,7 @@ public class RobotRace extends Base {
         xFOV = xFOV * 180 / Math.PI; // Convert FOV from radians to degrees.
         
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
-        glu.gluPerspective(yFOV, aspectRatio, 0.1, 100);
+        glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist);
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
@@ -198,7 +205,8 @@ public class RobotRace extends Base {
         camera.update(gs, robots[0]);
         glu.gluLookAt(camera.eye.x(),    camera.eye.y(),    camera.eye.z(),
                       camera.center.x(), camera.center.y(), camera.center.z(),
-                      camera.up.x(),     camera.up.y(),     camera.up.z());
+                      camera.up.x(),     camera.up.y(),     camera.up.z()
+        );
     }
     
     /**
@@ -207,7 +215,7 @@ public class RobotRace extends Base {
     @Override
     public void drawScene() {
         // Background color.
-        gl.glClearColor(1f, 1f, 1f, 0f);
+        gl.glClearColor(0f, 0f, 0f, 0f);
         
         // Clear background.
         gl.glClear(GL_COLOR_BUFFER_BIT);
@@ -238,6 +246,16 @@ public class RobotRace extends Base {
         // Draw the terrain.
         terrain.draw(gl, glu, glut);
         
+        float cameraLightPos[] = {
+            (float) camera.eye.x(), // Get x coordinate of the camera.
+            (float) camera.eye.y(), // Get y coordinate of the camera.
+            (float) camera.eye.z(), // Get z coordinate of the camera.
+            1.0f                    // It's a local position.
+        };
+        float pinkColor[] = {1.0f, 0.5f, 0.5f, 1.0f};
+        
+        gl.glLightfv(GL_LIGHT0, GL_POSITION, cameraLightPos, 0);        
+        
         gl.glLineWidth(1f);
         gl.glColor3f(0f, 0f, 0f);
         
@@ -253,17 +271,20 @@ public class RobotRace extends Base {
         gl.glScalef(1f, 1f, 2f);
 
         // Translated, rotated, scaled box.
-        //glut.glutWireCube(1f);
-        
-        glut.glutWireCylinder(1f, 1f, 50, 10);
+        setMaterial(pinkColor, 0f, "plastic");
+        glut.glutSolidCylinder(1f, 1f, 50, 10);
         
         gl.glPopMatrix();
         
-        // Unit box around origin.
-        //glut.glutWireCube(1f);
-
-        
-        
+        // Create the floor.
+        setMaterial(new float[]{0.2f, .2f, .2f, 1f}, 10f, "plastic");
+        gl.glBegin(GL_POLYGON);
+            gl.glNormal3f(0f, 0f, 1f);
+            gl.glVertex3f(100f, 100f, 0f);
+            gl.glVertex3f(100f, -100f, 0f);
+            gl.glVertex3f(-100f, -100f, 0f);
+            gl.glVertex3f(-100f, 100f, 0f);
+        gl.glEnd();
     }
     
     /**
@@ -271,43 +292,119 @@ public class RobotRace extends Base {
      * and origin (yellow).
      */
     public void drawAxisFrame() {
-        // code goes here ...
+        // Define all the colors.
+        float yellow[] = {1.0f, 1.0f, 0.0f, 1.0f};
+        float red[] = {1.0f, 0.0f, 0.0f, 1.0f};
+        float green[] = {0.0f, 1.0f, 0.0f, 1.0f};
+        float blue[] = {0.0f, 0.0f, 1.0f, 1.0f};
         
-        gl.glColor3f(1f, 1f, 0f);
+        // Define shininess axis frame.
+        float shininess = 10f;
+        
+        // Define material axis frame.
+        String materialType = "metal";
+        
+        // Create the yellow box in the center.
+        setMaterial(yellow, shininess, materialType);
         glut.glutSolidCube(.12f);
         
+        // Create the red arrow.
         gl.glPushMatrix();
-        gl.glColor3f(1f, 0f, 0f);
         gl.glRotatef(90f, 0f, 1f, 0f);
+        setMaterial(red, shininess, materialType);
         createArrow(1f);
         gl.glPopMatrix();
         
+        // Create the green arrow.
         gl.glPushMatrix();
-        gl.glColor3f(0f, 1f, 0f);
+        setMaterial(green, shininess, materialType);
         gl.glRotatef(270f, 1f, 0f, 0f);
         createArrow(1f);
         gl.glPopMatrix();
         
-        gl.glColor3f(0f, 0f, 1f);
+        // Create the blue arrow.
+        setMaterial(blue, 10f, materialType);
         createArrow(1f);
         
         // Creates a little sphere where the camera focusses.
         gl.glPushMatrix();
-        gl.glColor3f(.5f,.5f,.5f);
+        setMaterial(.3f, .3f, .3f, 1f, shininess, materialType);
         gl.glTranslated(gs.cnt.x(),gs.cnt.y(),gs.cnt.z());
         glut.glutSolidSphere(.05f,10,10);
         gl.glPopMatrix();
     }
 
+    /*
+    * @description - Creates the model of an arrow at the local axis.
+    * @param lengt - Length of the arrow.
+    */
     public void createArrow(float length) {
+        int coneSides = 35;
+        float coneRadius = length * .05f;
+        
         gl.glPushMatrix();
         
         glut.glutSolidCylinder(.02f * length, .9f * length, 15, 1);
-        
+       
         gl.glTranslatef(0f, 0f, .9f * length);
-        glut.glutSolidCone(.05f * length,.1f * length,15,1);
+        gl.glBegin(GL_POLYGON);
+            double stepSize = 2 * Math.PI / coneSides;
+            for(int i = 0; i < coneSides; i++) {
+                gl.glNormal3f(0f, 0f, -1f);
+                gl.glVertex3d(coneRadius * Math.cos(i * stepSize), coneRadius * Math.sin(i * stepSize), 0f);
+            }
+        gl.glEnd();
+        glut.glutSolidCone(coneRadius,.1f * length, coneSides, 1);
         
         gl.glPopMatrix();
+    }
+    
+    /*
+    * @description               Sets the lights properties according to the given settings.
+    * @param float r             Amount of red in the color of the object.
+    * @param float g             Amount of green in the color of the object.
+    * @param float b             Amount of blue in the color of the object.
+    * @param float a             Opacity of the object.
+    * @param float shininess     Shininess of the object
+    * @param String materialType Type of the material, contains two types: plastic and metal.
+    * @return                    Void
+    */
+    public void setMaterial(float r, float g, float b, float a, float shininess, String materialType) {
+        float ambientDecrease = 2f;
+        float diffuseDecrease = 10f;
+        
+        float[] ambientColor = {r / ambientDecrease, g / ambientDecrease, b / ambientDecrease, a};
+        float[] diffuseColor = {r / diffuseDecrease, g / diffuseDecrease, b / diffuseDecrease, a};
+        float[] specularColor;
+        
+        switch(materialType.toLowerCase()) {
+            case "metal":
+                specularColor = diffuseColor;
+                break;
+            case "plastic":
+                float white = (r + g + b) / (3 * diffuseDecrease); // Dividing by three might be more accurate, but gives ugly results.
+                specularColor = new float[]{white, white, white, 1.0f};
+                break;
+            default:
+                specularColor = new float[]{0f, 0f, 0f, 0f};
+        }
+        
+        //specularColor = new float[]{.1f, .1f, .1f, 1.0f};
+        
+        gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
+        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
+        gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
+        gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+    }
+    
+    // Wrapper of setMaterial.
+    public void setMaterial(float[] rgba, float shininess, String material) {
+        setMaterial(rgba[0], rgba[1], rgba[2], rgba[3], shininess, material);
+    }
+    
+    // Wrapper of setMaterial.
+    public void setMaterial(float r, float g, float b, float shininess, String material) {
+        setMaterial(r, g, b, 1.0f, shininess, material);
     }
     
     /**
