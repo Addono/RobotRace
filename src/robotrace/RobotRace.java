@@ -167,11 +167,17 @@ public class RobotRace extends Base {
         
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
-        gl.glEnable(GL_LIGHT0);
+        //gl.glEnable(GL_LIGHT0);
+        gl.glEnable(GL_LIGHT1);
         
-        float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+        float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
         gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor, 0);
-        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, new float[]{0.1f, 0.1f, 0.1f, 1f}, 0);
+        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, new float[]{.1f, 0.1f, 0.1f, 1f}, 0);
+        
+        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
+        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {0.5f, 0.5f, 0.5f, 1f}, 0);
+        gl.glLightfv(GL_LIGHT1, GL_POSITION, new float[] {.2f, .2f, .2f, 0f}, 1);
+        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
     }
     
     /**
@@ -192,6 +198,8 @@ public class RobotRace extends Base {
         
         double xFOV = 2 * Math.atan((gs.vWidth / 2) / gs.vDist); // Calculate FOV.
         xFOV = xFOV * 180 / Math.PI; // Convert FOV from radians to degrees.
+        
+        System.out.println(gs.vDist);
         
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
         glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist);
@@ -281,8 +289,11 @@ public class RobotRace extends Base {
         gl.glBegin(GL_POLYGON);
             gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(100f, 100f, 0f);
+            //gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(100f, -100f, 0f);
+            //gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(-100f, -100f, 0f);
+            //gl.glNormal3f(0f, 0f, -1f);
             gl.glVertex3f(-100f, 100f, 0f);
         gl.glEnd();
     }
@@ -398,10 +409,10 @@ public class RobotRace extends Base {
         
         //specularColor = new float[]{.1f, .1f, .1f, 1.0f};
         
-        gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
-        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
-        gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
-        gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+        //gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
+        //gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
+        //gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
+        //gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
     }
     
     // Wrapper of setMaterial.
