@@ -46,5 +46,52 @@ class Robot {
         glut.glutWireCube(.5f);
         
         gl.glPopMatrix();
+        
+        unitTriangularPrism(gl, true);
     }
+    
+    public void drawArm(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+       glut.glutSolidCylinder(1f, 1f, 3, 10);
+    }
+    
+     private void unitTriangularPrism(GL2 gl, boolean solid){
+    // back endcap;
+    gl.glBegin(solid ? gl.GL_TRIANGLES : gl.GL_LINES);
+    gl.glVertex3f(1f, 0f, 0f);
+    gl.glVertex3f(0f, 0f, 0f);
+    gl.glVertex3f(0f, 1f, 0f);
+    gl.glEnd();
+
+    // front endcap
+    gl.glBegin(solid ? gl.GL_TRIANGLES : gl.GL_LINES);
+    gl.glVertex3f(1f, 0f, 1f);
+    gl.glVertex3f(0f, 0f, 1f);
+    gl.glVertex3f(0f, 1f, 1f);
+    gl.glEnd();
+
+    // bottom
+    gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
+    gl.glVertex3f(0f, 0f, 0f);
+    gl.glVertex3f(1f, 0f, 0f);
+    gl.glVertex3f(1f, 0f, 1f);
+    gl.glVertex3f(0f, 0f, 1f);
+    gl.glEnd();
+
+    // back
+    gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
+    gl.glVertex3f(0f, 0f, 0f);
+    gl.glVertex3f(0f, 1f, 0f);
+    gl.glVertex3f(0f, 1f, 1f);
+    gl.glVertex3f(0f, 0f, 1f);
+    gl.glEnd();
+
+    // top
+    gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
+    gl.glVertex3f(0f, 1f, 0f);
+    gl.glVertex3f(1f, 0f, 0f);
+    gl.glVertex3f(1f, 0f, 1f);
+    gl.glVertex3f(0f, 1f, 1f);
+    gl.glEnd();
+}
 }
