@@ -310,7 +310,7 @@ public class RobotRace extends Base {
         
         // Create the red arrow.
         gl.glPushMatrix();
-        gl.glRotatef(90f, 0f, 1f, 0f);
+        gl.glRotatef(90f, 0f, 1f, 0f); // Rotate to get the global x axis alligned with the local z axis.
         setMaterial(red, shininess, materialType);
         createArrow(1f);
         gl.glPopMatrix();
@@ -318,7 +318,7 @@ public class RobotRace extends Base {
         // Create the green arrow.
         gl.glPushMatrix();
         setMaterial(green, shininess, materialType);
-        gl.glRotatef(270f, 1f, 0f, 0f);
+        gl.glRotatef(270f, 1f, 0f, 0f); // Rotate to get the global y axis alligned with the local z axis.
         createArrow(1f);
         gl.glPopMatrix();
         
@@ -335,7 +335,7 @@ public class RobotRace extends Base {
     }
 
     /*
-    * @description - Creates the model of an arrow at the local axis.
+    * @description - Creates the model of an arrow pointing upward along the local z axis.
     * @param lengt - Length of the arrow.
     */
     public void createArrow(float length) {
@@ -344,16 +344,23 @@ public class RobotRace extends Base {
         
         gl.glPushMatrix();
         
+            // Draw the shaft of the arrow.
         glut.glutSolidCylinder(.02f * length, .9f * length, 15, 1);
        
+            // Draw the cone on top.
+        // Move local axis to the position of the base and center of the cone.
         gl.glTranslatef(0f, 0f, .9f * length);
+        
+        // Draws the base of the cone (a circle).
         gl.glBegin(GL_POLYGON);
             double stepSize = 2 * Math.PI / coneSides;
             for(int i = 0; i < coneSides; i++) {
-                gl.glNormal3f(0f, 0f, -1f);
+                gl.glNormal3f(0f, 0f, -1f); // Sets normal of the base of the cone.
                 gl.glVertex3d(coneRadius * Math.cos(i * stepSize), coneRadius * Math.sin(i * stepSize), 0f);
             }
         gl.glEnd();
+        
+        //Draws the cone itself.
         glut.glutSolidCone(coneRadius,.1f * length, coneSides, 1);
         
         gl.glPopMatrix();
