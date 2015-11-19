@@ -409,10 +409,10 @@ public class RobotRace extends Base {
         
         //specularColor = new float[]{.1f, .1f, .1f, 1.0f};
         
-        //gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
-        //gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
-        //gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
-        //gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+        gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
+        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
+        gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
+        gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
     }
     
     // Wrapper of setMaterial.
