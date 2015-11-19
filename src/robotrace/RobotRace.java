@@ -167,7 +167,7 @@ public class RobotRace extends Base {
         
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
-        //gl.glEnable(GL_LIGHT0);
+        gl.glEnable(GL_LIGHT0);
         gl.glEnable(GL_LIGHT1);
         
         float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
