@@ -3,7 +3,6 @@ package robotrace;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import java.awt.event.*;
-import static javax.media.opengl.GL.GL_LINES;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -168,16 +167,16 @@ public class RobotRace extends Base {
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
         gl.glEnable(GL_LIGHT0);
-        gl.glEnable(GL_LIGHT1);
+        gl.glEnable(GL_LIGHT1); // Ambient light source
         
         float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
         gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(GL_LIGHT0, GL_AMBIENT, new float[]{.1f, 0.1f, 0.1f, 1f}, 0);
         
-        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
-        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {0.5f, 0.5f, 0.5f, 1f}, 0);
+        //gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
+        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {0.2f, 0.2f, 0.2f, 1f}, 0);
         gl.glLightfv(GL_LIGHT1, GL_POSITION, new float[] {.2f, .2f, .2f, 0f}, 1);
-        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
+        //gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
     }
     
     /**
@@ -199,7 +198,8 @@ public class RobotRace extends Base {
         xFOV = xFOV * 180 / Math.PI; // Convert FOV from radians to degrees.
         
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
-        glu.gluPerspective(yFOV, aspectRatio, 0.01 * gs.vDist, 100 * gs.vDist);
+        System.out.println(yFOV + " " + aspectRatio);
+        glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist);
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
@@ -243,6 +243,7 @@ public class RobotRace extends Base {
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
         // Draw the first robot.
+        setMaterial(new float[]{.4f, .8f, .5f, 1f}, 10f, "plastic");
         robots[0].draw(gl, glu, glut, false, gs.tAnim);
         
         // Draw the race track.
@@ -251,18 +252,15 @@ public class RobotRace extends Base {
         // Draw the terrain.
         terrain.draw(gl, glu, glut);
         
-        float cameraLightPos[] = {
-            (float) camera.center.x(), // Get x coordinate of the camera.
-            (float) camera.center.y(), // Get y coordinate of the camera.
-            (float) camera.center.z(), // Get z coordinate of the camera.
-            1.0f                    // It's a local position.
+        // Set the position of the ambient light to the eye coordinate of the camera.
+        float ambientLightPos[] = {
+            (float) camera.eye.x(), // Get x coordinate of the camera.
+            (float) camera.eye.y(), // Get y coordinate of the camera.
+            (float) camera.eye.z(), // Get z coordinate of the camera.
+            1.0f                    // It's a global position.
         };
-        float pinkColor[] = {1.0f, 0.5f, 0.5f, 1.0f};
         
-        gl.glLightfv(GL_LIGHT0, GL_POSITION, cameraLightPos, 0);        
-        
-        gl.glLineWidth(1f);
-        gl.glColor3f(0f, 0f, 0f);
+        gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightPos, 0); 
         
         gl.glPushMatrix();
         
@@ -276,17 +274,18 @@ public class RobotRace extends Base {
         gl.glScalef(1f, 1f, 2f);
 
         // Translated, rotated, scaled box.
+        float pinkColor[] = {1.0f, 0.5f, 0.5f, 1.0f};
         setMaterial(pinkColor, 0f, "plastic");
-        glut.glutSolidCylinder(1f, 1f, 50, 10);
+        //glut.glutSolidCylinder(1f, 1f, 100, 10);
         
         gl.glPopMatrix();
         
         // Create the floor.
-        setMaterial(new float[]{0.2f, .2f, .2f, 1f}, 10f, "plastic");
+        setMaterial(new float[]{0.5f, .5f, .5f, 1f}, 10f, "plastic");
         gl.glBegin(GL_POLYGON);
-            //gl.glNormal3f(0f, 0f, 1f);
-            gl.glVertex3f(100f, 100f, 0f);
             gl.glNormal3f(0f, 0f, 1f);
+            gl.glVertex3f(100f, 100f, 0f);
+            //gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(100f, -100f, 0f);
             //gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(-100f, -100f, 0f);
@@ -386,7 +385,7 @@ public class RobotRace extends Base {
     */
     public void setMaterial(float r, float g, float b, float a, float shininess, String materialType) {
         float ambientDecrease = 2f;
-        float diffuseDecrease = 10f;
+        float diffuseDecrease = 4f;
         
         float[] ambientColor = {r / ambientDecrease, g / ambientDecrease, b / ambientDecrease, a};
         float[] diffuseColor = {r / diffuseDecrease, g / diffuseDecrease, b / diffuseDecrease, a};
@@ -406,10 +405,10 @@ public class RobotRace extends Base {
         
         //specularColor = new float[]{.1f, .1f, .1f, 1.0f};
         
-        //gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
-        //gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
-        //gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
-        //gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+        gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
+        gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
+        gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
+        gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
     }
     
     // Wrapper of setMaterial.
@@ -429,5 +428,5 @@ public class RobotRace extends Base {
     public static void main(String args[]) {
         RobotRace robotRace = new RobotRace();
         robotRace.run();
-    } 
+    }
 }
