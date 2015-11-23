@@ -32,30 +32,15 @@ class Robot {
      * Draws this robot (as a {@code stickfigure} if specified).
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
-        // code goes here ...
         
-        gl.glLineWidth(1f);
-        gl.glColor3f(0f, 0f, 0f);
-
-        glut.glutWireCube(1f);
+        
         
         gl.glPushMatrix();
-        
-        gl.glTranslatef(0f,0f,1f);
-        
-        glut.glutWireCube(.5f);
-        
+        gl.glTranslatef(2, 0, 0);
+        drawLeg(gl ,glu,glut,stickFigure, tAnim);
         gl.glPopMatrix();
         
-        gl.glPushMatrix();
-        gl.glTranslatef(2f, 2f, 0f);
-        gl.glRotated(180, 0, 0, 1);
-        drawArm(gl ,glu,glut,stickFigure, tAnim);
-        gl.glPopMatrix();
         
-        gl.glPushMatrix();
-        drawArm(gl ,glu,glut,stickFigure, tAnim);
-        gl.glPopMatrix();
     }
     
     
@@ -64,6 +49,37 @@ class Robot {
         gl.glPushMatrix();
         gl.glScalef(1, 1, 4);
         unitTriangularPrism(gl, true);
+        gl.glPopMatrix();
+       
+    }
+    
+    public void drawCube(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(0f, 0f, 0.5f);
+        glut.glutSolidCube(1f);
+        gl.glTranslatef(0f, 0f, 4f);
+        glut.glutSolidCube(1f);
+        gl.glPopMatrix();
+       
+    }
+    
+    public void drawCylinder(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(0, 0, 1f);
+        gl.glScalef(1, 1, 3);
+        glut.glutSolidCylinder(1f, 1f, 50, 10);
+        gl.glPopMatrix();
+       
+    }
+    
+    public void drawLeg(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(2, 0, 0);
+        drawCube(gl ,glu,glut,stickFigure, tAnim);
+        drawCylinder(gl ,glu,glut,stickFigure, tAnim);
         gl.glPopMatrix();
        
     }
@@ -115,6 +131,5 @@ class Robot {
     gl.glVertex3f(1f, 0f, 1f);
     gl.glVertex3f(0f, 1f, 1f);
     gl.glEnd();
-    
-}
+    }
 }
