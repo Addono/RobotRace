@@ -193,16 +193,13 @@ public class RobotRace extends Base {
         gl.glLoadIdentity();
 
         // Set the perspective.
-        // Modify this to meet the requirements in the assignment.
-        double aspectRatio = gs.w / gs.h;
+        double aspectRatio = (double) gs.w / (double) gs.h; // Calculate the screens aspect ratio.
         
-        double xFOV = 2 * Math.atan((gs.vWidth / 2) / gs.vDist); // Calculate FOV.
+        double xFOV = 2 * Math.atan(((double) gs.vWidth / 2) / gs.vDist); // Calculate FOV.
         xFOV = xFOV * 180 / Math.PI; // Convert FOV from radians to degrees.
         
-        System.out.println(gs.vDist);
-        
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
-        glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist);
+        glu.gluPerspective(yFOV, aspectRatio, 0.01 * gs.vDist, 100 * gs.vDist);
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
