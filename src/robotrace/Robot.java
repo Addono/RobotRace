@@ -47,17 +47,31 @@ class Robot {
         
         gl.glPopMatrix();
         
-        unitTriangularPrism(gl, true);
+        gl.glPushMatrix();
+        gl.glTranslatef(2f, 2f, 0f);
+        gl.glRotated(180, 0, 0, 1);
+        drawArm(gl ,glu,glut,stickFigure, tAnim);
+        gl.glPopMatrix();
+        
+        gl.glPushMatrix();
+        drawArm(gl ,glu,glut,stickFigure, tAnim);
+        gl.glPopMatrix();
     }
+    
     
     public void drawArm(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
         
-       glut.glutSolidCylinder(1f, 1f, 3, 10);
+        gl.glPushMatrix();
+        gl.glScalef(1, 1, 4);
+        unitTriangularPrism(gl, true);
+        gl.glPopMatrix();
+       
     }
     
      private void unitTriangularPrism(GL2 gl, boolean solid){
     // back endcap;
     gl.glBegin(solid ? gl.GL_TRIANGLES : gl.GL_LINES);
+    gl.glNormal3f(0f, 0f, 1f);
     gl.glVertex3f(1f, 0f, 0f);
     gl.glVertex3f(0f, 0f, 0f);
     gl.glVertex3f(0f, 1f, 0f);
@@ -65,33 +79,42 @@ class Robot {
 
     // front endcap
     gl.glBegin(solid ? gl.GL_TRIANGLES : gl.GL_LINES);
+    gl.glNormal3f(0f, 0f, 1f);
     gl.glVertex3f(1f, 0f, 1f);
     gl.glVertex3f(0f, 0f, 1f);
     gl.glVertex3f(0f, 1f, 1f);
     gl.glEnd();
 
+    
     // bottom
     gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
+    gl.glNormal3f(0f, -1f, 0f);
     gl.glVertex3f(0f, 0f, 0f);
     gl.glVertex3f(1f, 0f, 0f);
-    gl.glVertex3f(1f, 0f, 2f);
-    gl.glVertex3f(0f, 0f, 2f);
+    gl.glVertex3f(1f, 0f, 1f);
+    gl.glVertex3f(0f, 0f, 1f);
     gl.glEnd();
+    
+    
 
     // back
     gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
+    gl.glNormal3f(-1f, 0f, 0f);
     gl.glVertex3f(0f, 0f, 0f);
     gl.glVertex3f(0f, 1f, 0f);
-    gl.glVertex3f(0f, 1f, 2f);
-    gl.glVertex3f(0f, 0f, 2f);
+    gl.glVertex3f(0f, 1f, 1f);
+    gl.glVertex3f(0f, 0f, 1f);
     gl.glEnd();
+    
 
     // top
     gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
+    gl.glNormal3f(1f, 1f, 0f);
     gl.glVertex3f(0f, 1f, 0f);
     gl.glVertex3f(1f, 0f, 0f);
-    gl.glVertex3f(1f, 0f, 2f);
-    gl.glVertex3f(0f, 1f, 2f);
+    gl.glVertex3f(1f, 0f, 1f);
+    gl.glVertex3f(0f, 1f, 1f);
     gl.glEnd();
+    
 }
 }
