@@ -252,9 +252,9 @@ public class RobotRace extends Base {
         terrain.draw(gl, glu, glut);
         
         float cameraLightPos[] = {
-            (float) camera.eye.x(), // Get x coordinate of the camera.
-            (float) camera.eye.y(), // Get y coordinate of the camera.
-            (float) camera.eye.z(), // Get z coordinate of the camera.
+            (float) camera.center.x(), // Get x coordinate of the camera.
+            (float) camera.center.y(), // Get y coordinate of the camera.
+            (float) camera.center.z(), // Get z coordinate of the camera.
             1.0f                    // It's a local position.
         };
         float pinkColor[] = {1.0f, 0.5f, 0.5f, 1.0f};
