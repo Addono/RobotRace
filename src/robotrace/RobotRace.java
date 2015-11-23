@@ -264,22 +264,6 @@ public class RobotRace extends Base {
         gl.glLineWidth(1f);
         gl.glColor3f(0f, 0f, 0f);
         
-        gl.glPushMatrix();
-        
-        // Move in x-direction.
-        gl.glTranslatef(2f, 0f, 0f);
-        
-        // Rotate 30 degrees, around z-axis.
-        gl.glRotatef(30f, 0f, 0f, 0f);
-        
-        // Scale in z-direction.
-        gl.glScalef(1f, 1f, 2f);
-
-        // Translated, rotated, scaled box.
-        setMaterial(pinkColor, 0f, "plastic");
-        glut.glutSolidCylinder(1f, 1f, 50, 10);
-        
-        gl.glPopMatrix();
         
         // Create the floor.
         setMaterial(new float[]{0.2f, .2f, .2f, 1f}, 10f, "plastic");
@@ -333,6 +317,8 @@ public class RobotRace extends Base {
         // Create the blue arrow.
         setMaterial(blue, 10f, materialType);
         createArrow(1f);
+        
+        
         
         // Creates a little sphere where the camera focusses.
         gl.glPushMatrix();
