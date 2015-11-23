@@ -74,24 +74,24 @@ class Robot {
     gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
     gl.glVertex3f(0f, 0f, 0f);
     gl.glVertex3f(1f, 0f, 0f);
-    gl.glVertex3f(1f, 0f, 1f);
-    gl.glVertex3f(0f, 0f, 1f);
+    gl.glVertex3f(1f, 0f, 2f);
+    gl.glVertex3f(0f, 0f, 2f);
     gl.glEnd();
 
     // back
     gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
     gl.glVertex3f(0f, 0f, 0f);
     gl.glVertex3f(0f, 1f, 0f);
-    gl.glVertex3f(0f, 1f, 1f);
-    gl.glVertex3f(0f, 0f, 1f);
+    gl.glVertex3f(0f, 1f, 2f);
+    gl.glVertex3f(0f, 0f, 2f);
     gl.glEnd();
 
     // top
     gl.glBegin(solid ? gl.GL_QUADS : gl.GL_LINES);
     gl.glVertex3f(0f, 1f, 0f);
     gl.glVertex3f(1f, 0f, 0f);
-    gl.glVertex3f(1f, 0f, 1f);
-    gl.glVertex3f(0f, 1f, 1f);
+    gl.glVertex3f(1f, 0f, 2f);
+    gl.glVertex3f(0f, 1f, 2f);
     gl.glEnd();
 }
 }
