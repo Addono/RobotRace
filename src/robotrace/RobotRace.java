@@ -3,6 +3,7 @@ package robotrace;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import java.awt.event.*;
+import javax.media.opengl.GL2;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -198,7 +199,7 @@ public class RobotRace extends Base {
         xFOV = xFOV * 180 / Math.PI; // Convert FOV from radians to degrees.
         
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
-        System.out.println(yFOV + " " + aspectRatio);
+        
         glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist);
         
         // Set camera.
@@ -243,7 +244,6 @@ public class RobotRace extends Base {
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
         // Draw the first robot.
-        setMaterial(new float[]{.4f, .8f, .5f, 1f}, 10f, "plastic");
         robots[0].draw(gl, glu, glut, false, gs.tAnim);
         
         // Draw the race track.
@@ -335,7 +335,7 @@ public class RobotRace extends Base {
         
         // Creates a little sphere where the camera focusses.
         gl.glPushMatrix();
-        setMaterial(.3f, .3f, .3f, 1f, shininess, materialType);
+        gl = setMaterial(gl, .3f, .3f, .3f, 1f, shininess, materialType);
         gl.glTranslated(gs.cnt.x(),gs.cnt.y(),gs.cnt.z());
         glut.glutSolidSphere(.05f,10,10);
         gl.glPopMatrix();
@@ -383,7 +383,7 @@ public class RobotRace extends Base {
     * @param String materialType Type of the material, contains two types: plastic and metal.
     * @return                    Void
     */
-    public void setMaterial(float r, float g, float b, float a, float shininess, String materialType) {
+    public static GL2 setMaterial(GL2 gl, float r, float g, float b, float a, float shininess, String materialType) {
         float ambientDecrease = 2f;
         float diffuseDecrease = 4f;
         
@@ -409,16 +409,23 @@ public class RobotRace extends Base {
         gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
         gl.glMaterialfv(GL_FRONT, GL_SPECULAR, specularColor, 0);
         gl.glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+        
+        return gl;
+    }
+    
+    // Wrapper of setMaterial.
+    public static GL2 setMaterial(GL2 gl, float[] rgba, float shininess, String material) {
+        return setMaterial(gl, rgba[0], rgba[1], rgba[2], rgba[3], shininess, material);
     }
     
     // Wrapper of setMaterial.
     public void setMaterial(float[] rgba, float shininess, String material) {
-        setMaterial(rgba[0], rgba[1], rgba[2], rgba[3], shininess, material);
+        gl = setMaterial(gl, rgba[0], rgba[1], rgba[2], rgba[3], shininess, material);
     }
     
     // Wrapper of setMaterial.
     public void setMaterial(float r, float g, float b, float shininess, String material) {
-        setMaterial(r, g, b, 1.0f, shininess, material);
+        gl = setMaterial(gl, r, g, b, 1.0f, shininess, material);
     }
     
     /**

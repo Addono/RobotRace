@@ -33,7 +33,7 @@ class Robot {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
         
-        
+        gl = RobotRace.setMaterial(gl, new float[]{0.5f, .5f, 1f, 1f}, 10f, "plastic");
         
         gl.glPushMatrix();
         gl.glTranslatef(2, 0, 0);
