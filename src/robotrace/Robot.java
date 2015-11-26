@@ -1,6 +1,7 @@
 package robotrace;
 
 import com.jogamp.opengl.util.gl2.GLUT;
+import java.util.Random;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
@@ -8,6 +9,7 @@ import javax.media.opengl.glu.GLU;
 * Represents a Robot, to be implemented according to the Assignments.
 */
 class Robot {
+    Random rn = new Random();
     
     /** The position of the robot. */
     public Vector position = new Vector(0, 0, 0);
@@ -19,7 +21,7 @@ class Robot {
     private final Material material;
     
     float[] centerColor = {.7f, .7f, .7f, 1.0f};
-    float[] outerColor = {1.0f, 1.0f, 0.0f, 1.0f};
+    float[] outerColor = {rn.nextFloat() * .8f + .2f, rn.nextFloat() * .8f + .2f, rn.nextFloat() * .8f + .2f, 1.0f};
 
     /**
      * Constructs the robot with initial parameters.
@@ -90,7 +92,6 @@ class Robot {
                 gl.glRotatef(45, 0f, 0f, 1f);
                 gl.glRotatef(angle, 0f, 1f, 0f);
                 drawPart(gl, glut, width / 10, s, stickFigure);
-                glut.glutWireCube(.1f);
             gl.glPopMatrix();
         }
     }
