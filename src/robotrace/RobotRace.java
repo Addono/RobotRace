@@ -281,15 +281,12 @@ public class RobotRace extends Base {
         gl.glPopMatrix();
         
         // Create the floor.
-        setMaterial(new float[]{0.5f, .5f, .5f, 1f}, 10f, "plastic");
+        setMaterial(new float[]{0.8f, .8f, .8f, 1f}, 10f, "plastic"); // Set the color of the floor
         gl.glBegin(GL_POLYGON);
             gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(100f, 100f, 0f);
-            //gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(100f, -100f, 0f);
-            //gl.glNormal3f(0f, 0f, 1f);
             gl.glVertex3f(-100f, -100f, 0f);
-            //gl.glNormal3f(0f, 0f, -1f);
             gl.glVertex3f(-100f, 100f, 0f);
         gl.glEnd();
     }
