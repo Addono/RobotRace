@@ -36,8 +36,6 @@ class Robot {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) { 
         gl.glPushMatrix();
-        //gl.glTranslatef(2, 0, 0);
-        //drawPart(gl, glut, .13f, centerColor, outerColor, stickFigure);
         drawLeg(gl, glut, stickFigure, tAnim);
         gl.glPopMatrix();
     }
@@ -52,18 +50,49 @@ class Robot {
     }
     
     public void drawLeg(GL2 gl, GLUT glut, boolean stickFigure, float tAnim) {
+        drawFeet(gl, glut, .2f, .3f, stickFigure, tAnim);
+        
         gl.glPushMatrix();
-            //gl.glScalef(.2f, .2f, .2f);
-            gl.glTranslatef(.5f, .5f, .5f);
-            gl.glRotatef(90f, 0f, 1f, 0f);
-            drawPart(gl, glut, .04f, .25f, centerColor, outerColor, stickFigure);
+            // Leg creation here
         gl.glPopMatrix();
     }
     
-    public void drawFeet(GL2 gl, GLUT glut, float height, float width, boolean stickFigure, float tAnim) {
+    public void drawFeet(GL2 gl, GLUT glut, float height, float width, boolean stickFigure, float tAnim) {        
+        // Create the base. First the ones along the x-axis.
         gl.glPushMatrix();
-            
+            gl.glTranslatef(-.5f * width, .5f * width, 0.0f);
+            gl.glRotatef(90f, 0f, 1f, 0f);
+            drawPart(gl, glut, width / 10, width, stickFigure);
+            gl.glTranslatef(0.0f, -width, 0.0f);
+            drawPart(gl, glut, width / 10, width, stickFigure);
         gl.glPopMatrix();
+            
+        // Create the second half of the base, the two along the y-axis.
+        gl.glPushMatrix();
+            gl.glTranslatef(-.5f * width, .5f * width, 0.0f);
+            gl.glRotatef(90f, 1f, 0f, 0f);
+            gl.glRotatef(90f, 0f, 0f, 1f);
+            drawPart(gl, glut, width / 10, width, stickFigure);
+            gl.glTranslatef(0.0f, -width, 0.0f);
+            drawPart(gl, glut, width / 10, width, stickFigure);
+        gl.glPopMatrix();
+        
+        
+        float o = height;
+        float a = (float) Math.sqrt(2 * Math.pow(width / 2, 2));
+        float s = (float) (Math.sqrt(Math.pow(o, 2) + Math.pow(a, 2)));
+        float angle = (float) (Math.atan(a / o) * 180 / Math.PI);
+        
+        for(int i = 0; i < 360; i += 90) {
+            gl.glPushMatrix();
+                gl.glRotatef(i, 0.0f, 0.0f, 1.0f);
+                gl.glTranslatef(-.5f * width, -.5f * width, 0f);
+                gl.glRotatef(45, 0f, 0f, 1f);
+                gl.glRotatef(angle, 0f, 1f, 0f);
+                drawPart(gl, glut, width / 10, s, stickFigure);
+                glut.glutWireCube(.1f);
+            gl.glPopMatrix();
+        }
     }
     
     public void drawPart(GL2 gl, GLUT glut, float centerWidth, float length, float[] rgbaCenter, float[] rgbaOuter, boolean stickFigure) {
@@ -90,7 +119,7 @@ class Robot {
             
             if(!stickFigure) {
                 gl.glPushMatrix();
-                // Draw the
+                // Draw the center.
                 gl.glPushMatrix();
                 RobotRace.setMaterial(gl, centerColor, 20, "metal");
                 gl.glTranslatef(0f, 0f, length / 2);
@@ -98,7 +127,7 @@ class Robot {
                 glut.glutSolidCube(length);
                 gl.glPopMatrix();
                 
-                // Draw the cylinder
+                // Draw the outer cylinder.
                 gl.glPushMatrix();
                 RobotRace.setMaterial(gl, outerColor, 10, "plastic");
                 gl.glTranslatef(0f, 0f, length / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
@@ -107,6 +136,11 @@ class Robot {
                 gl.glPopMatrix();
             }
         }
+    }
+    
+    // Wrapper for drawPart.
+    public void drawPart(GL2 gl, GLUT glut, float centerWidth, float length, boolean stickFigure) {
+        drawPart(gl, glut, centerWidth, length, centerColor, outerColor, stickFigure);
     }
     
     private void unitTriangularPrism(GL2 gl, boolean solid){
