@@ -32,12 +32,12 @@ class Robot {
      * Draws this robot (as a {@code stickfigure} if specified).
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) {
-        
-        gl = RobotRace.setMaterial(gl, new float[]{0.5f, .5f, 1f, 1f}, 10f, "plastic");
+        float[] centerColor = {.7f, .7f, .7f, 1.0f};
+        float[] outerColor = {1.0f, 1.0f, 0.0f, 1.0f};        
         
         gl.glPushMatrix();
         gl.glTranslatef(2, 0, 0);
-        drawPart(gl, glut, .13f, stickFigure);
+        drawPart(gl, glut, .13f, centerColor, outerColor, stickFigure);
         gl.glPopMatrix();
         
         
@@ -53,7 +53,7 @@ class Robot {
        
     }
     
-    public void drawPart(GL2 gl, GLUT glut, float centerWidth, boolean stickFigure) {
+    public void drawPart(GL2 gl, GLUT glut, float centerWidth, float[] rgbaCenter, float[] rgbaOuter, boolean stickFigure) {
         if(centerWidth > .45f) {
             centerWidth = .45f;
         }
@@ -62,8 +62,8 @@ class Robot {
         float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed; // Pythagoras on the 'radius' of the cube.
         float cylinderHeight = 1f - 2 * centerWidth;
         
-        float[] centerColor = {.6f, .6f, .6f, 1.0f};
-        float[] outerColor = {1f, 0f, 0f, 1.0f};
+        float[] centerColor = rgbaCenter;
+        float[] outerColor = rgbaOuter;
         
         if(!stickFigure) {
             gl.glPushMatrix();
