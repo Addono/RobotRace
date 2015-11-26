@@ -35,16 +35,12 @@ class Robot {
      * Draws this robot (as a {@code stickfigure} if specified).
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) { 
-        
         gl.glPushMatrix();
         //gl.glTranslatef(2, 0, 0);
         //drawPart(gl, glut, .13f, centerColor, outerColor, stickFigure);
         drawLeg(gl, glut, stickFigure, tAnim);
         gl.glPopMatrix();
-        
-        
     }
-    
     
     public void drawArm(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
         
@@ -64,40 +60,56 @@ class Robot {
         gl.glPopMatrix();
     }
     
+    public void drawFeet(GL2 gl, GLUT glut, float height, float width, boolean stickFigure, float tAnim) {
+        gl.glPushMatrix();
+            
+        gl.glPopMatrix();
+    }
+    
     public void drawPart(GL2 gl, GLUT glut, float centerWidth, float length, float[] rgbaCenter, float[] rgbaOuter, boolean stickFigure) {
-        // Prevents the center of getting wider than the function will support (function designed to allow up to .5f).
-        if(centerWidth > length / 2) {
-            //centerWidth = length / 2;
-        }
-        
-        float cylinderExceed = 1.2f; // As a factor (so 1.0f means that it will fit exactly).
-        float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed; // Pythagoras on the 'radius' of the cube.
-        float cylinderHeight = length - centerWidth * 2;
-        
-        float[] centerColor = rgbaCenter;
-        float[] outerColor = rgbaOuter;
-        
-        if(!stickFigure) {
-            gl.glPushMatrix();
-                // Draw the 
+        if(stickFigure) {
+            gl.glLineWidth(4.0f);
+            gl.glColor3i(1, 1, 1); // Set wireFrame color to white
+            
+            gl.glBegin(gl.GL_LINES);
+                gl.glVertex3f(0f, 0f, 0f);
+                gl.glVertex3f(0f, 0f, length);
+            gl.glEnd();
+        } else {
+            // Prevents the center of getting wider than the function will support (function designed to allow up to .5f).
+            if(centerWidth > length / 2) {
+                //centerWidth = length / 2;
+            }
+            
+            float cylinderExceed = 1.2f; // As a factor (so 1.0f means that it will fit exactly).
+            float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed; // Pythagoras on the 'radius' of the cube.
+            float cylinderHeight = length - centerWidth * 2;
+            
+            float[] centerColor = rgbaCenter;
+            float[] outerColor = rgbaOuter;
+            
+            if(!stickFigure) {
                 gl.glPushMatrix();
-                    RobotRace.setMaterial(gl, centerColor, 20, "metal");
-                    gl.glTranslatef(0f, 0f, length / 2);
-                    gl.glScalef(centerWidth / length, centerWidth / length, 1f);
-                    glut.glutSolidCube(length);
+                // Draw the
+                gl.glPushMatrix();
+                RobotRace.setMaterial(gl, centerColor, 20, "metal");
+                gl.glTranslatef(0f, 0f, length / 2);
+                gl.glScalef(centerWidth / length, centerWidth / length, 1f);
+                glut.glutSolidCube(length);
                 gl.glPopMatrix();
                 
                 // Draw the cylinder
                 gl.glPushMatrix();
-                    RobotRace.setMaterial(gl, outerColor, 10, "plastic");
-                    gl.glTranslatef(0f, 0f, length / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
-                    glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
+                RobotRace.setMaterial(gl, outerColor, 10, "plastic");
+                gl.glTranslatef(0f, 0f, length / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
+                glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
                 gl.glPopMatrix();
-            gl.glPopMatrix();
+                gl.glPopMatrix();
+            }
         }
     }
     
-     private void unitTriangularPrism(GL2 gl, boolean solid){
+    private void unitTriangularPrism(GL2 gl, boolean solid){
     // back endcap;
     gl.glBegin(solid ? gl.GL_TRIANGLES : gl.GL_LINES);
     gl.glNormal3f(0f, 0f, 1f);
