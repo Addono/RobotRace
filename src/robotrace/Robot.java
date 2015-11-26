@@ -59,7 +59,7 @@ class Robot {
         }
         
         float cylinderExceed = 1.2f; // As a factor (so 1.0f means that it will fit exactly).
-        float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed;
+        float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed; // Pythagoras on the 'radius' of the cube.
         float cylinderHeight = 1f - 2 * centerWidth;
         
         float[] centerColor = {.6f, .6f, .6f, 1.0f};
@@ -69,7 +69,7 @@ class Robot {
             gl.glPushMatrix();
                 // Draw the 
                 gl.glPushMatrix();
-                    RobotRace.setMaterial(gl, centerColor, 5, "metal");
+                    RobotRace.setMaterial(gl, centerColor, 20, "metal");
                     gl.glTranslatef(0f, 0f, 0.5f);
                     gl.glScalef(centerWidth, centerWidth, 1f);
                     glut.glutSolidCube(1f);
@@ -78,7 +78,7 @@ class Robot {
                 // Draw the cylinder
                 gl.glPushMatrix();
                     RobotRace.setMaterial(gl, outerColor, 10, "plastic");
-                    gl.glTranslatef(0f, 0f, .5f - cylinderHeight / 2);
+                    gl.glTranslatef(0f, 0f, .5f - cylinderHeight / 2); // Move local axis to start position of the cylinder.
                     glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
                 gl.glPopMatrix();
             gl.glPopMatrix();
