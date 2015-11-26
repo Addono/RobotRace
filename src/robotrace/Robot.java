@@ -37,7 +37,7 @@ class Robot {
         
         gl.glPushMatrix();
         gl.glTranslatef(2, 0, 0);
-        drawLeg(gl ,glu,glut,stickFigure, tAnim);
+        drawPart(gl, glut, .13f, stickFigure);
         gl.glPopMatrix();
         
         
@@ -53,35 +53,36 @@ class Robot {
        
     }
     
-    public void drawCube(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+    public void drawPart(GL2 gl, GLUT glut, float centerWidth, boolean stickFigure) {
+        if(centerWidth > .45f) {
+            centerWidth = .45f;
+        }
         
-        gl.glPushMatrix();
-        gl.glTranslatef(0f, 0f, 0.5f);
-        glut.glutSolidCube(1f);
-        gl.glTranslatef(0f, 0f, 4f);
-        glut.glutSolidCube(1f);
-        gl.glPopMatrix();
-       
-    }
-    
-    public void drawCylinder(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        float cylinderExceed = 1.2f; // As a factor (so 1.0f means that it will fit exactly).
+        float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed;
+        float cylinderHeight = 1f - 2 * centerWidth;
         
-        gl.glPushMatrix();
-        gl.glTranslatef(0, 0, 1f);
-        gl.glScalef(1, 1, 3);
-        glut.glutSolidCylinder(1f, 1f, 50, 10);
-        gl.glPopMatrix();
-       
-    }
-    
-    public void drawLeg(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        float[] centerColor = {.6f, .6f, .6f, 1.0f};
+        float[] outerColor = {1f, 0f, 0f, 1.0f};
         
-        gl.glPushMatrix();
-        gl.glTranslatef(2, 0, 0);
-        drawCube(gl ,glu,glut,stickFigure, tAnim);
-        drawCylinder(gl ,glu,glut,stickFigure, tAnim);
-        gl.glPopMatrix();
-       
+        if(!stickFigure) {
+            gl.glPushMatrix();
+                // Draw the 
+                gl.glPushMatrix();
+                    RobotRace.setMaterial(gl, centerColor, 5, "metal");
+                    gl.glTranslatef(0f, 0f, 0.5f);
+                    gl.glScalef(centerWidth, centerWidth, 1f);
+                    glut.glutSolidCube(1f);
+                gl.glPopMatrix();
+                
+                // Draw the cylinder
+                gl.glPushMatrix();
+                    RobotRace.setMaterial(gl, outerColor, 10, "plastic");
+                    gl.glTranslatef(0f, 0f, .5f - cylinderHeight / 2);
+                    glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
+                gl.glPopMatrix();
+            gl.glPopMatrix();
+        }
     }
     
      private void unitTriangularPrism(GL2 gl, boolean solid){
