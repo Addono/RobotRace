@@ -296,7 +296,6 @@ public class RobotRace extends Base {
         float theta = gs.theta - offset;
         float phi = gs.phi + offset;
         
-        System.out.println(theta + " " + phi);
         float[] ambientLightDir = {
             (float) (Math.cos(theta) * Math.cos(phi)),
             (float) (Math.sin(theta) * Math.cos(phi)),
