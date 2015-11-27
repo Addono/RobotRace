@@ -1,7 +1,6 @@
 package robotrace;
 
 import com.jogamp.opengl.util.gl2.GLUT;
-import java.util.Random;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
@@ -9,7 +8,6 @@ import javax.media.opengl.glu.GLU;
 * Represents a Robot, to be implemented according to the Assignments.
 */
 class Robot {
-    Random rn = new Random();
     
     /** The position of the robot. */
     public Vector position = new Vector(0, 0, 0);
@@ -162,10 +160,11 @@ class Robot {
 
             gl.glPushMatrix();
                 gl.glRotatef(angle, 1f, 0f, 0f);
+                glut.glutWireCube(.1f);
                 drawPart(gl, glut, partSize / 10, partSize, stickFigure);
-                
+                glut.glutWireCube(.1f);
                 gl.glTranslatef(0.0f, 0.0f, partSize * 9 / 10); // Move to the top of the lower leg.
-                gl.glRotatef(- 2 * angle, 1f, 0f, 0f); // 
+                gl.glRotatef(- 2 * angle, 1f, 0f, 0f);
                 drawPart(gl, glut, partSize / 10, partSize, stickFigure);
             gl.glPopMatrix();
         gl.glPopMatrix();
@@ -225,7 +224,7 @@ class Robot {
         } else {
             // Prevents the center of getting wider than the function will support (function designed to allow up to .5f).
             if(height > width / 2) {
-                //centerWidth = width / 2;
+                width = height / 2;
             }
             
             float cylinderExceed = 1.2f; // As a factor (so 1.0f means that it will fit exactly).
@@ -235,24 +234,22 @@ class Robot {
             float[] centerColor = rgbaCenter;
             float[] outerColor = rgbaOuter;
             
-            if(!stickFigure) {
-                gl.glPushMatrix();
-                // Draw the center.
-                gl.glPushMatrix();
-                RobotRace.setMaterial(gl, centerColor, 20, "metal");
-                gl.glTranslatef(0f, 0f, width / 2);
-                gl.glScalef(height / width, height / width, 1f);
-                glut.glutSolidCube(width);
-                gl.glPopMatrix();
-                
-                // Draw the outer cylinder.
-                gl.glPushMatrix();
-                RobotRace.setMaterial(gl, outerColor, 10, "plastic");
-                gl.glTranslatef(0f, 0f, width / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
-                glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
-                gl.glPopMatrix();
-                gl.glPopMatrix();
-            }
+            gl.glPushMatrix();
+            // Draw the center.
+            gl.glPushMatrix();
+            RobotRace.setMaterial(gl, centerColor, 20, "metal");
+            gl.glTranslatef(0f, 0f, width / 2);
+            gl.glScalef(height / width, height / width, 1f);
+            glut.glutSolidCube(width);
+            gl.glPopMatrix();
+
+            // Draw the outer cylinder.
+            gl.glPushMatrix();
+            RobotRace.setMaterial(gl, outerColor, 10, "plastic");
+            gl.glTranslatef(0f, 0f, width / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
+            glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
+            gl.glPopMatrix();
+            gl.glPopMatrix();
         }
     }
     
