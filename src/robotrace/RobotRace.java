@@ -244,12 +244,16 @@ public class RobotRace extends Base {
         robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
+        
+        
         gl.glPushMatrix();
+        gl.glTranslatef(1f, 0, 0);
         for(int i = 0; i < 4; i++) {
             robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim);
             gl.glTranslatef(1.0f, 0f, 0f);
         }
         gl.glPopMatrix();
+        
         
         // Draw the race track.
         raceTracks[gs.trackNr].draw(gl, glu, glut);
