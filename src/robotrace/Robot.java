@@ -20,17 +20,17 @@ class Robot {
     /** The material from which this robot is built. */
     private final Material material;
     
-    float[] centerColor = {.7f, .7f, .7f, 1.0f};
-    float[] outerColor = {rn.nextFloat() * .8f + .2f, rn.nextFloat() * .8f + .2f, rn.nextFloat() * .8f + .2f, 1.0f};
-
+    float[] centerColor;
+    float[] outerColor;
+    
     /**
      * Constructs the robot with initial parameters.
      */
     public Robot(Material material
         /* add other parameters that characterize this robot */) {
         this.material = material;
-
-        // code goes here ...
+        this.centerColor = material.centerColor;
+        this.outerColor = material.outerColor;
     }
 
     /**

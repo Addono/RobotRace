@@ -169,7 +169,7 @@ public class RobotRace extends Base {
         
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
-        gl.glEnable(GL_LIGHT0);
+        //gl.glEnable(GL_LIGHT0);
         gl.glEnable(GL_LIGHT1); // Ambient light source
         
         float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
@@ -244,8 +244,12 @@ public class RobotRace extends Base {
         robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
-        // Draw the first robot.
-        robots[0].draw(gl, glu, glut, gs.showStick, gs.tAnim);
+        gl.glPushMatrix();
+        for(int i = 0; i < 4; i++) {
+            robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim);
+            gl.glTranslatef(1.0f, 0f, 0f);
+        }
+        gl.glPopMatrix();
         
         // Draw the race track.
         raceTracks[gs.trackNr].draw(gl, glu, glut);
@@ -408,7 +412,7 @@ public class RobotRace extends Base {
                 specularColor = diffuseColor;
                 break;
             case "plastic":
-                float white = (r + g + b) / (3 * diffuseDecrease); // Dividing by three might be more accurate, but gives ugly results.
+                float white = (r + g + b) / (2 * diffuseDecrease); // Dividing by three might be more accurate, but gives ugly results.
                 specularColor = new float[]{white, white, white, 1.0f};
                 break;
             default:
