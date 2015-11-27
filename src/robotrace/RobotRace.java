@@ -4,6 +4,8 @@ import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import java.awt.event.*;
 import javax.media.opengl.GL2;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT1;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -176,7 +178,6 @@ public class RobotRace extends Base {
         
         gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {0.2f, 0.2f, 0.2f, 1f}, 0);
-        gl.glLightfv(GL_LIGHT1, GL_POSITION, new float[] {.2f, .2f, .2f, 0f}, 1);
         gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
     }
     
@@ -289,6 +290,21 @@ public class RobotRace extends Base {
             gl.glVertex3f(-100f, -100f, 0f);
             gl.glVertex3f(-100f, 100f, 0f);
         gl.glEnd();
+        
+        // Set the ambient light of the scene.
+        float offset = 10 * (float) ((Math.PI / 180));
+        float theta = gs.theta - offset;
+        float phi = gs.phi + offset;
+        
+        System.out.println(theta + " " + phi);
+        float[] ambientLightDir = {
+            (float) (Math.cos(theta) * Math.cos(phi)),
+            (float) (Math.sin(theta) * Math.cos(phi)),
+            (float) (Math.sin(phi)),
+            0.0f
+        };
+        
+        gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightDir, 1);
     }
     
     /**
