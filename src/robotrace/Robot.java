@@ -43,6 +43,7 @@ class Robot {
         float legDistance = .2f;
         float legPartHeight = .35f;
         float legHeight=0;
+        float lowerBodyHeight = 0.2f;
         
         gl.glPushMatrix();
         // Draw the feets and legs.
@@ -58,34 +59,56 @@ class Robot {
         gl.glPopMatrix();
         
         gl.glPushMatrix();
-        gl.glTranslatef(0f, 0, legHeight + feetHeight);
-        drawLowerbody(gl,glu,glut,legDistance,stickFigure, tAnim);
+        gl.glTranslatef(0f,0 , legHeight + feetHeight);
+        drawLowerbody(gl,glu,glut,legDistance, lowerBodyHeight,stickFigure, tAnim);
         gl.glPopMatrix();
     }
     
-    public void drawLowerbody(GL2 gl, GLU glu, GLUT glut, float width, boolean stickFigure, float tAnim){
+    public void drawLowerbody(GL2 gl, GLU glu, GLUT glut, float legDistance, float height, boolean stickFigure, float tAnim){
         
-        
+        float bodyWidth = (1.5f *legDistance);
         
         // Create the base. First the ones along the x-axis.
         gl.glPushMatrix();
-            gl.glTranslatef(-.5f * width, .5f * width, 0.0f);
+            gl.glTranslatef(-bodyWidth, .5f * legDistance, 0.0f);
             gl.glRotatef(90f, 0f, 1f, 0f);
-            drawPart(gl, glut, width / 10, width*2, stickFigure);
-            gl.glTranslatef(0.0f, -width, 0.0f);
-            drawPart(gl, glut, width / 10, width*2, stickFigure);
+            drawPart(gl, glut, legDistance / 10, legDistance*3, stickFigure);
+            gl.glTranslatef(0.0f, -legDistance, 0.0f);
+            drawPart(gl, glut, legDistance / 10, legDistance*3, stickFigure);
         gl.glPopMatrix();
             
         // Create the second half of the base, the two along the y-axis.
         gl.glPushMatrix();
-            gl.glTranslatef(-.5f * width, .5f * width, 0.0f);
+            gl.glTranslatef(-bodyWidth, .5f * legDistance, 0.0f);
             gl.glRotatef(90f, 1f, 0f, 0f);
             gl.glRotatef(90f, 0f, 0f, 1f);
-            drawPart(gl, glut, width / 10, width, stickFigure);
-            gl.glTranslatef(0.0f, -width, 0.0f);
-            drawPart(gl, glut, width / 10, width, stickFigure);
+            drawPart(gl, glut, legDistance / 10, legDistance, stickFigure);
+            gl.glTranslatef(0.0f, -legDistance*3, 0.0f);
+            drawPart(gl, glut, legDistance / 10, legDistance, stickFigure);
         gl.glPopMatrix();
         
+        //creat
+        
+        float o = height;
+        float a = (float) Math.sqrt(2 * Math.pow(legDistance / 2, 2));
+        float s = (float) (Math.sqrt(Math.pow(o, 2) + Math.pow(a, 2)));
+        float angle = (float) (Math.atan(a / o) * 180 / Math.PI);
+        
+        for(int j=0; j<=180 ; j=+180){
+        gl.glPushMatrix();
+        gl.glRotatef(j, 0, 0, 1);
+        gl.glTranslatef(legDistance, 0, 0);
+        for(int i = 90; i < 270; i += 90) {
+            gl.glPushMatrix();
+                gl.glRotatef(i, 0.0f, 0.0f, 1.0f);
+                gl.glTranslatef(-.5f * legDistance, -.5f * legDistance, 0f);
+                gl.glRotatef(45, 0f, 0f, 1f);
+                gl.glRotatef(angle, 0f, 1f, 0f);
+                drawPart(gl, glut, legDistance / 10, s, stickFigure);
+            gl.glPopMatrix();
+        }
+        gl.glPopMatrix();
+    }
     }
     
     public void drawBody(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
