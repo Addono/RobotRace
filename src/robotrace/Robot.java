@@ -92,8 +92,7 @@ class Robot {
         gl.glPopMatrix();
         
         
-        //creat main line
-        
+        //Create main part (horizontal part where legs connect to.).
         gl.glPushMatrix();
             gl.glTranslatef(legDistance, 0, height);
             gl.glRotatef(-90, 0, 1, 0);
@@ -102,28 +101,27 @@ class Robot {
         gl.glPopMatrix();
         
         
-        //creat triangles
-        
+        //Create triangles (two diagonal parts on both sides).
         float o = height;
         float a = (float) Math.sqrt(2 * Math.pow(legDistance / 2, 2));
         float s = (float) (Math.sqrt(Math.pow(o, 2) + Math.pow(a, 2)));
         float angle = (float) (Math.atan(a / o) * 180 / Math.PI);
         
         for(int j=0; j<=180 ; j+=180){
-        gl.glPushMatrix();
-        gl.glRotatef(j, 0, 0, 1);
-        gl.glTranslatef(legDistance, 0, 0);
-        for(int i = 90; i < 270; i += 90) {
             gl.glPushMatrix();
-                gl.glRotatef(i, 0.0f, 0.0f, 1.0f);
-                gl.glTranslatef(-.5f * legDistance, -.5f * legDistance, 0f);
-                gl.glRotatef(45, 0f, 0f, 1f);
-                gl.glRotatef(angle, 0f, 1f, 0f);
-                drawPart(gl, glut, shapeWidth, s, stickFigure);
+            gl.glRotatef(j, 0, 0, 1);
+            gl.glTranslatef(legDistance, 0, 0);
+            for(int i = 90; i < 270; i += 90) {
+                gl.glPushMatrix();
+                    gl.glRotatef(i, 0.0f, 0.0f, 1.0f);
+                    gl.glTranslatef(-.5f * legDistance, -.5f * legDistance, 0f);
+                    gl.glRotatef(45, 0f, 0f, 1f);
+                    gl.glRotatef(angle, 0f, 1f, 0f);
+                    drawPart(gl, glut, shapeWidth, s, stickFigure);
+                gl.glPopMatrix();
+            }
             gl.glPopMatrix();
         }
-        gl.glPopMatrix();
-    }
         gl.glPopMatrix();
     }
     
