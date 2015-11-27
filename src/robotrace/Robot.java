@@ -38,7 +38,8 @@ class Robot {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) { 
         gl.glPushMatrix();
-        drawLeg(gl, glut, stickFigure, tAnim);
+        gl.glTranslatef(.5f, .5f, 0.0f);
+        drawLeg(gl, glut, .7f, stickFigure, tAnim);
         gl.glPopMatrix();
         
         drawHead(gl,glu,glut,stickFigure,tAnim);
@@ -64,11 +65,18 @@ class Robot {
        
     }
     
-    public void drawLeg(GL2 gl, GLUT glut, boolean stickFigure, float tAnim) {
-        drawFeet(gl, glut, .2f, .3f, stickFigure, tAnim);
+    public void drawLeg(GL2 gl, GLUT glut, float height, boolean stickFigure, float tAnim) {
+        float feetHeight = height / 4;
+        float partSize = (height - feetHeight) / 2;
+        
+        drawFeet(gl, glut, feetHeight, feetHeight * 1.5f, stickFigure, tAnim);
         
         gl.glPushMatrix();
-            // Leg creation here
+            gl.glTranslatef(0.0f, 0.0f, feetHeight);
+            gl.glPushMatrix();
+                gl.glRotatef(10f, 0f, 1f, 0f);
+                drawPart(gl, glut, partSize / 10, partSize, stickFigure);
+            gl.glPopMatrix();
         gl.glPopMatrix();
     }
     
@@ -93,6 +101,7 @@ class Robot {
         gl.glPopMatrix();
         
         
+        // Draw the diagonal parts.
         float o = height;
         float a = (float) Math.sqrt(2 * Math.pow(width / 2, 2));
         float s = (float) (Math.sqrt(Math.pow(o, 2) + Math.pow(a, 2)));
@@ -109,24 +118,24 @@ class Robot {
         }
     }
     
-    public void drawPart(GL2 gl, GLUT glut, float centerWidth, float length, float[] rgbaCenter, float[] rgbaOuter, boolean stickFigure) {
+    public void drawPart(GL2 gl, GLUT glut, float height, float width, float[] rgbaCenter, float[] rgbaOuter, boolean stickFigure) {
         if(stickFigure) {
             gl.glLineWidth(4.0f);
             gl.glColor3i(1, 1, 1); // Set wireFrame color to white
             
             gl.glBegin(gl.GL_LINES);
                 gl.glVertex3f(0f, 0f, 0f);
-                gl.glVertex3f(0f, 0f, length);
+                gl.glVertex3f(0f, 0f, width);
             gl.glEnd();
         } else {
             // Prevents the center of getting wider than the function will support (function designed to allow up to .5f).
-            if(centerWidth > length / 2) {
-                //centerWidth = length / 2;
+            if(height > width / 2) {
+                //centerWidth = width / 2;
             }
             
             float cylinderExceed = 1.2f; // As a factor (so 1.0f means that it will fit exactly).
-            float cylinderRadius = (float) Math.sqrt(2 * Math.pow(centerWidth / 2, 2)) * cylinderExceed; // Pythagoras on the 'radius' of the cube.
-            float cylinderHeight = length - centerWidth * 2;
+            float cylinderRadius = (float) Math.sqrt(2 * Math.pow(height / 2, 2)) * cylinderExceed; // Pythagoras on the 'radius' of the cube.
+            float cylinderHeight = width - height * 2;
             
             float[] centerColor = rgbaCenter;
             float[] outerColor = rgbaOuter;
@@ -136,15 +145,15 @@ class Robot {
                 // Draw the center.
                 gl.glPushMatrix();
                 RobotRace.setMaterial(gl, centerColor, 20, "metal");
-                gl.glTranslatef(0f, 0f, length / 2);
-                gl.glScalef(centerWidth / length, centerWidth / length, 1f);
-                glut.glutSolidCube(length);
+                gl.glTranslatef(0f, 0f, width / 2);
+                gl.glScalef(height / width, height / width, 1f);
+                glut.glutSolidCube(width);
                 gl.glPopMatrix();
                 
                 // Draw the outer cylinder.
                 gl.glPushMatrix();
                 RobotRace.setMaterial(gl, outerColor, 10, "plastic");
-                gl.glTranslatef(0f, 0f, length / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
+                gl.glTranslatef(0f, 0f, width / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
                 glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 50, 10);
                 gl.glPopMatrix();
                 gl.glPopMatrix();
