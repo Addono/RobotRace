@@ -174,10 +174,10 @@ public class RobotRace extends Base {
         gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(GL_LIGHT0, GL_AMBIENT, new float[]{.1f, 0.1f, 0.1f, 1f}, 0);
         
-        //gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
+        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {0.2f, 0.2f, 0.2f, 1f}, 0);
         gl.glLightfv(GL_LIGHT1, GL_POSITION, new float[] {.2f, .2f, .2f, 0f}, 1);
-        //gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
+        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
     }
     
     /**

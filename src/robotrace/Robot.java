@@ -44,7 +44,7 @@ class Robot {
         float legPartHeight = .35f;
         
         gl.glPushMatrix();
-        
+        // Draw the feets and legs.
         for(int i = -1; i <= 1; i += 2) {
             gl.glPushMatrix();
                 gl.glTranslatef(i * legDistance, 0f, 0f);
