@@ -59,9 +59,9 @@ class Robot {
         drawLeg(gl,glut,stickFigure, tAnim);
         gl.glTranslatef(-1 , 0, 4);
         drawBody(gl,glu,glut,stickFigure,tAnim);
+        gl.glTranslatef(0 , 0, 4);
+        drawHead(gl,glu,glut,stickFigure,tAnim);
         //drawArm(gl,glu,glut,stickFigure,tAnim);
-        //drawArm(gl,glu,glut,stickFigure,tAnim);
-        //drawHead(gl,glu,glut,stickFigure,tAnim);
         gl.glPopMatrix();
        
     }
