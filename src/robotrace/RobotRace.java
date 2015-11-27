@@ -292,14 +292,14 @@ public class RobotRace extends Base {
         gl.glEnd();
         
         // Set the ambient light of the scene.
-        float offset = 10 * (float) ((Math.PI / 180));
-        float theta = gs.theta - offset;
-        float phi = gs.phi + offset;
+        float offset = 10 * (float) ((Math.PI / 180)); // Calculate offset in radians.
+        float theta = gs.theta - offset; // Apply the offset to theta.
+        float phi = gs.phi + offset; // Apply the offset to phi.
         
-        float[] ambientLightDir = {
-            (float) (Math.cos(theta) * Math.cos(phi)),
-            (float) (Math.sin(theta) * Math.cos(phi)),
-            (float) (Math.sin(phi)),
+        float[] ambientLightDir = { // Calculate the direction of the light.
+            (float) -(Math.cos(theta) * Math.cos(phi)),
+            (float) -(Math.sin(theta) * Math.cos(phi)),
+            (float) -(Math.sin(phi)),
             0.0f
         };
         
