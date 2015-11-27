@@ -42,18 +42,50 @@ class Robot {
         
         float legDistance = .2f;
         float legPartHeight = .35f;
+        float legHeight=0;
         
         gl.glPushMatrix();
         // Draw the feets and legs.
         for(int i = -1; i <= 1; i += 2) {
             gl.glPushMatrix();
                 gl.glTranslatef(i * legDistance, 0f, 0f);
-                gl.glTranslatef(0.0f, 0.0f, drawFeet(gl, glut, feetHeight, feetWidth, stickFigure, tAnim));
-                drawLeg(gl, glut, legPartHeight, stickFigure, tAnim);
+                drawFeet(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
+                gl.glTranslatef(0.0f, 0.0f, feetHeight);
+                legHeight = drawLeg(gl, glut, legPartHeight, stickFigure, tAnim);
             gl.glPopMatrix();
         }
         
         gl.glPopMatrix();
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(0f, 0,-1*(legHeight+feetHeight));
+        drawLowerbody(gl,glu,glut,legDistance,stickFigure, tAnim);
+        gl.glPopMatrix();
+    }
+    
+    public void drawLowerbody(GL2 gl, GLU glu, GLUT glut, float width, boolean stickFigure, float tAnim){
+        
+        
+        
+        // Create the base. First the ones along the x-axis.
+        gl.glPushMatrix();
+            gl.glTranslatef(-.5f * width, .5f * width, 0.0f);
+            gl.glRotatef(90f, 0f, 1f, 0f);
+            drawPart(gl, glut, width / 10, width*2, stickFigure);
+            gl.glTranslatef(0.0f, -width, 0.0f);
+            drawPart(gl, glut, width / 10, width*2, stickFigure);
+        gl.glPopMatrix();
+            
+        // Create the second half of the base, the two along the y-axis.
+        gl.glPushMatrix();
+            gl.glTranslatef(-.5f * width, .5f * width, 0.0f);
+            gl.glRotatef(90f, 1f, 0f, 0f);
+            gl.glRotatef(90f, 0f, 0f, 1f);
+            drawPart(gl, glut, width / 10, width, stickFigure);
+            gl.glTranslatef(0.0f, -width, 0.0f);
+            drawPart(gl, glut, width / 10, width, stickFigure);
+        gl.glPopMatrix();
+        
     }
     
     public void drawBody(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
