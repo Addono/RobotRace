@@ -58,7 +58,7 @@ class Robot {
         gl.glPopMatrix();
         
         gl.glPushMatrix();
-        gl.glTranslatef(0f, 0,-1*(legHeight+feetHeight));
+        gl.glTranslatef(0f, 0, legHeight + feetHeight);
         drawLowerbody(gl,glu,glut,legDistance,stickFigure, tAnim);
         gl.glPopMatrix();
     }
@@ -133,7 +133,7 @@ class Robot {
             gl.glPopMatrix();
         gl.glPopMatrix();
         
-        return (float) (2 * partSize * Math.cos(angle)) - partSize / 10;
+        return (float) (2 * partSize * Math.cos(angle * Math.PI / 180)) - partSize / 10;
     }
     
     public float drawFeet(GL2 gl, GLUT glut, float height, float width, boolean stickFigure, float tAnim) {        
