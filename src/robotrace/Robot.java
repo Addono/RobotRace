@@ -67,14 +67,18 @@ class Robot {
     public void drawLowerbody(GL2 gl, GLU glu, GLUT glut, float legDistance, float height, boolean stickFigure, float tAnim){
         
         float bodyWidth = (1.5f *legDistance);
+        float shapeWidth = legDistance / 8;
         
+        gl.glPushMatrix();
+        gl.glRotatef(180, 1, 0, 0);
+        gl.glTranslatef(0, 0, -height);
         // Create the base. First the ones along the x-axis.
         gl.glPushMatrix();
             gl.glTranslatef(-bodyWidth, .5f * legDistance, 0.0f);
             gl.glRotatef(90f, 0f, 1f, 0f);
-            drawPart(gl, glut, legDistance / 10, legDistance*3, stickFigure);
+            drawPart(gl, glut, shapeWidth, legDistance*3, stickFigure);
             gl.glTranslatef(0.0f, -legDistance, 0.0f);
-            drawPart(gl, glut, legDistance / 10, legDistance*3, stickFigure);
+            drawPart(gl, glut, shapeWidth, legDistance*3, stickFigure);
         gl.glPopMatrix();
             
         // Create the second half of the base, the two along the y-axis.
@@ -82,19 +86,30 @@ class Robot {
             gl.glTranslatef(-bodyWidth, .5f * legDistance, 0.0f);
             gl.glRotatef(90f, 1f, 0f, 0f);
             gl.glRotatef(90f, 0f, 0f, 1f);
-            drawPart(gl, glut, legDistance / 10, legDistance, stickFigure);
+            drawPart(gl, glut, shapeWidth, legDistance, stickFigure);
             gl.glTranslatef(0.0f, -legDistance*3, 0.0f);
-            drawPart(gl, glut, legDistance / 10, legDistance, stickFigure);
+            drawPart(gl, glut, shapeWidth, legDistance, stickFigure);
         gl.glPopMatrix();
         
-        //creat
+        
+        //creat main line
+        
+        gl.glPushMatrix();
+            gl.glTranslatef(legDistance, 0, height);
+            gl.glRotatef(-90, 0, 1, 0);
+            
+            drawPart(gl, glut, shapeWidth, legDistance*2, stickFigure);
+        gl.glPopMatrix();
+        
+        
+        //creat triangles
         
         float o = height;
         float a = (float) Math.sqrt(2 * Math.pow(legDistance / 2, 2));
         float s = (float) (Math.sqrt(Math.pow(o, 2) + Math.pow(a, 2)));
         float angle = (float) (Math.atan(a / o) * 180 / Math.PI);
         
-        for(int j=0; j<=180 ; j=+180){
+        for(int j=0; j<=180 ; j+=180){
         gl.glPushMatrix();
         gl.glRotatef(j, 0, 0, 1);
         gl.glTranslatef(legDistance, 0, 0);
@@ -104,11 +119,12 @@ class Robot {
                 gl.glTranslatef(-.5f * legDistance, -.5f * legDistance, 0f);
                 gl.glRotatef(45, 0f, 0f, 1f);
                 gl.glRotatef(angle, 0f, 1f, 0f);
-                drawPart(gl, glut, legDistance / 10, s, stickFigure);
+                drawPart(gl, glut, shapeWidth, s, stickFigure);
             gl.glPopMatrix();
         }
         gl.glPopMatrix();
     }
+        gl.glPopMatrix();
     }
     
     public void drawBody(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
