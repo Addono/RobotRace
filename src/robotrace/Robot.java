@@ -38,10 +38,42 @@ class Robot {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) { 
         gl.glPushMatrix();
-        drawLeg(gl, glut, stickFigure, tAnim);
+        //drawLeg(gl, glut, stickFigure, tAnim);
         gl.glPopMatrix();
         
-        drawHead(gl,glu,glut,stickFigure,tAnim);
+        drawRobot(gl,glu,glut,stickFigure,tAnim);
+    }
+    
+    public void drawRobot(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+        gl.glPushMatrix();
+        
+        gl.glTranslatef(4f , 0, 0.5f);
+        
+        drawLeg(gl,glut,stickFigure, tAnim);
+        gl.glTranslatef(0f, 0, -0.5f);
+        drawFeet(gl, glut, 0.5f, 1f, stickFigure, tAnim);
+        gl.glTranslatef(2f , 0, 0);
+        drawFeet(gl, glut, 0.5f, 1f, stickFigure, tAnim);
+        gl.glTranslatef(0f, 0, 0.5f);
+        drawLeg(gl,glut,stickFigure, tAnim);
+        gl.glTranslatef(-1 , 0, 4);
+        drawBody(gl,glu,glut,stickFigure,tAnim);
+        //drawArm(gl,glu,glut,stickFigure,tAnim);
+        //drawArm(gl,glu,glut,stickFigure,tAnim);
+        //drawHead(gl,glu,glut,stickFigure,tAnim);
+        gl.glPopMatrix();
+       
+    }
+    
+    public void drawBody(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(0f, 0f, 2f);
+        gl.glScalef(3, 2, 4);
+        glut.glutSolidCube(1);
+        gl.glPopMatrix();
+       
     }
     
     public void drawHead(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
@@ -69,6 +101,7 @@ class Robot {
         
         gl.glPushMatrix();
             // Leg creation here
+            drawPart(gl, glut,1, 4, centerColor, outerColor, stickFigure);
         gl.glPopMatrix();
     }
     
