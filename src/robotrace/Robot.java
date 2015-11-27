@@ -40,11 +40,24 @@ class Robot {
         gl.glPushMatrix();
         drawLeg(gl, glut, stickFigure, tAnim);
         gl.glPopMatrix();
+        
+        drawHead(gl,glu,glut,stickFigure,tAnim);
+    }
+    
+    public void drawHead(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
+        
+        gl.glPushMatrix();
+        gl.glTranslatef(0f, 0f, 0.5f);
+        gl.glScalef(2, 1, 1);
+        glut.glutSolidCube(1);
+        gl.glPopMatrix();
+       
     }
     
     public void drawArm(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim){
         
         gl.glPushMatrix();
+        gl.glTranslatef(0, 0, 0.5f);
         gl.glScalef(1, 1, 4);
         unitTriangularPrism(gl, true);
         gl.glPopMatrix();
