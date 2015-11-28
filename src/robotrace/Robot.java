@@ -80,7 +80,9 @@ class Robot {
         gl.glPopMatrix();*/
         
         gl.glPushMatrix();
-        // Draw the feets and legs.
+        // Draw a arm.
+        for(int i = 1; i >= -1; i -= 2) {
+            gl.glScalef( i, 1.0f, 1.0f);
             gl.glPushMatrix();
                 gl.glTranslatef(legDistance*1.5f, 0f, feetHeight+bodyHeight+lowerBodyHeight*2+legPartHeight);
                 gl.glRotatef(90, 0, 1, 0);
@@ -91,7 +93,7 @@ class Robot {
                 gl.glTranslatef(feetHeight, 0.0f, feetHeight*-0.5f);
                 legHeight = drawLeg(gl, glut, legPartHeight, stickFigure, tAnim);
             gl.glPopMatrix();
-        
+        }
         gl.glPopMatrix();
         
     }
