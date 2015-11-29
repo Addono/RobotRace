@@ -22,38 +22,44 @@ class Robot {
     
     float[] centerColor;
     float[] outerColor;
+    float stretchedHeight;
     
     /**
      * Constructs the robot with initial parameters.
      */
-    public Robot(Material material
-        /* add other parameters that characterize this robot */) {
+    public Robot(Material material, float stretchedHeight) {
         this.material = material;
         this.centerColor = material.centerColor;
         this.outerColor = material.outerColor;
+        this.stretchedHeight = stretchedHeight;
     }
 
     /**
      * Draws this robot (as a {@code stickfigure} if specified).
      */
     public void draw(GL2 gl, GLU glu, GLUT glut, boolean stickFigure, float tAnim) { 
-        float feetHeight = .1f;
-        float feetWidth = .2f;
+        float feetHeight = stretchedHeight / 20;
+        float feetWidth = stretchedHeight / 10;
         
-        float legDistance = .2f;
-        float legPartHeight = .35f;
-        float legHeight=0;
-        float lowerBodyHeight = 0.2f;
-        float bodyHeight = legDistance*2.5f;
+        float legDistance = stretchedHeight / 10;
+        float legPartHeight = stretchedHeight * 14 / 60;
+        float kneeAngle = 20f;
+        
+        float lowerBodyHeight = stretchedHeight / 10;
+        float bodyHeight = stretchedHeight * 3 / 10;
+        
+        float elbowAngle = (float) (10f * (2f + Math.cos(tAnim)));
+        float armAngle = (float) (25f * (Math.sin(tAnim)));
         
         gl.glPushMatrix();
+        float legHeight = 0; // Stores the actual height of the legs.
         // Draw the feets and legs.
         for(int i = -1; i <= 1; i += 2) {
             gl.glPushMatrix();
                 gl.glTranslatef(i * legDistance, 0f, 0f);
                 drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
                 gl.glTranslatef(0.0f, 0.0f, feetHeight);
-                legHeight = drawLeg(gl, glut, legPartHeight, stickFigure, tAnim);
+                legHeight = drawLimb(gl, glut, legPartHeight, kneeAngle, stickFigure, tAnim);
             gl.glPopMatrix();
         }
         
@@ -61,38 +67,38 @@ class Robot {
         
         // Draw the lower body.
         gl.glPushMatrix();
-        gl.glTranslatef(0f,0 , legHeight + feetHeight);
-        drawLowerbody(gl,glu,glut,legDistance, lowerBodyHeight,stickFigure, tAnim);
+            gl.glTranslatef(0f,0 , legHeight + feetHeight);
+            drawLowerbody(gl,glu,glut,legDistance, lowerBodyHeight, stickFigure, tAnim);
         gl.glPopMatrix();
         
         // Draw the upper body.
         gl.glPushMatrix();
-        gl.glTranslatef(0, 0, legHeight + feetHeight + lowerBodyHeight);
-        drawBody(gl,glu,glut,legDistance, lowerBodyHeight, bodyHeight ,stickFigure, tAnim);
+            gl.glTranslatef(0, 0, legHeight + feetHeight + lowerBodyHeight);
+            drawBody(gl,glu,glut,legDistance, lowerBodyHeight, bodyHeight, stickFigure, tAnim);
         gl.glPopMatrix();
         
         // Draw the head.
         gl.glPushMatrix();
-        gl.glTranslatef(0, 0, legHeight + feetHeight + lowerBodyHeight);
-        drawHead(gl,glu,glut,legDistance, lowerBodyHeight, feetHeight, feetWidth, bodyHeight, stickFigure, tAnim);
+            gl.glTranslatef(0, 0, legHeight + feetHeight + lowerBodyHeight);
+            drawHead(gl,glu,glut,legDistance, lowerBodyHeight, feetHeight, feetWidth, bodyHeight, stickFigure, tAnim);
         gl.glPopMatrix();
         
         // Draw the arms.
         gl.glPushMatrix();
-        // Draw both arms individually.
-        for(int i = 1; i >= -1; i -= 2) {
-            gl.glScalef( i, 1.0f, 1.0f);
-            gl.glPushMatrix();
-                gl.glTranslatef(legDistance*1.5f, 0.0f, feetHeight+bodyHeight+lowerBodyHeight*2+legPartHeight);
-                gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
-                drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
-                gl.glRotatef(90, 0.0f, 1.0f, 0.0f);
-                gl.glRotatef(180, 0.0f, 0.0f, 1.0f);
-                gl.glRotatef(-20, 1.0f, 0.0f, 0.0f);
-                gl.glTranslatef(feetHeight, 0.0f, feetHeight*-0.5f);
-                legHeight = drawLeg(gl, glut, legPartHeight, stickFigure, tAnim);
-            gl.glPopMatrix();
-        }
+            // Draw both arms individually.
+            for(int i = 1; i >= -1; i -= 2) {
+                gl.glScalef( i, 1.0f, 1.0f);
+                gl.glPushMatrix();
+                    gl.glTranslatef(legDistance * 1.5f, 0.0f, feetHeight + bodyHeight + lowerBodyHeight * 2 + legPartHeight);
+                    gl.glRotatef(90f, 0.0f, 1.0f, 0.0f);
+                    drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
+                    gl.glRotatef(90f, 0.0f, 1.0f, 0.0f);
+                    gl.glRotatef(180f, 0.0f, 0.0f, 1.0f);
+                    gl.glRotatef(i * armAngle, 1.0f, 0.0f, 0.0f);
+                    gl.glTranslatef(feetHeight, 0.0f, feetHeight * -0.5f);
+                    drawLimb(gl, glut, legPartHeight, elbowAngle, stickFigure, tAnim);
+                gl.glPopMatrix();
+            }
         gl.glPopMatrix();
         
     }
@@ -165,23 +171,22 @@ class Robot {
         
         float bodyWidth = (1.5f *legDistance);
         float shapeWidth = legDistance / 8;
-        float bodyHeight = legDistance*2.5f;
         
         // Draw the vertical parts of the body.
         gl.glPushMatrix();
             gl.glTranslatef(legDistance * 1.5f, legDistance * 0.5f, 0);
-            drawPart(gl, glut, shapeWidth, bodyHeight, stickFigure);
+            drawPart(gl, glut, shapeWidth, BodyHeight, stickFigure);
             gl.glTranslatef(0, -legDistance, 0);
-            drawPart(gl, glut, shapeWidth, bodyHeight, stickFigure);
+            drawPart(gl, glut, shapeWidth, BodyHeight, stickFigure);
             gl.glTranslatef(-2 * legDistance * 1.5f, 0.0f, 0.0f);
-            drawPart(gl, glut, shapeWidth, bodyHeight, stickFigure);
+            drawPart(gl, glut, shapeWidth, BodyHeight, stickFigure);
             gl.glTranslatef(0, legDistance, 0);
-            drawPart(gl, glut, shapeWidth, bodyHeight, stickFigure);
+            drawPart(gl, glut, shapeWidth, BodyHeight, stickFigure);
         gl.glPopMatrix();
         
         // Draw the three upper horizontal parts.
         gl.glPushMatrix();
-            gl.glTranslatef(-bodyWidth, .5f * legDistance, bodyHeight);
+            gl.glTranslatef(-bodyWidth, .5f * legDistance, BodyHeight);
             gl.glRotatef(90f, 0.0f, 1.0f, 0.0f);
             // Draw the part in the back.
             drawPart(gl, glut, shapeWidth, legDistance*3, stickFigure);
@@ -195,7 +200,7 @@ class Robot {
             
         // Draw the two vertical parts (the shoulders).
         gl.glPushMatrix();
-            gl.glTranslatef(-bodyWidth, .5f * legDistance, bodyHeight);
+            gl.glTranslatef(-bodyWidth, .5f * legDistance, BodyHeight);
             gl.glRotatef(90f, 1f, 0f, 0f);
             gl.glRotatef(90f, 0f, 0f, 1f);
             drawPart(gl, glut, shapeWidth, legDistance, stickFigure);
@@ -234,8 +239,7 @@ class Robot {
         gl.glPopMatrix();
     }
     
-    public float drawLeg(GL2 gl, GLUT glut, float partSize, boolean stickFigure, float tAnim) {
-        float angle = 15f;
+    public float drawLimb(GL2 gl, GLUT glut, float partSize, float angle, boolean stickFigure, float tAnim) {
         
         gl.glPushMatrix();
             gl.glPushMatrix();

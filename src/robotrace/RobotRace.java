@@ -84,20 +84,16 @@ public class RobotRace extends Base {
         robots = new Robot[4];
         
         // Initialize robot 0
-        robots[0] = new Robot(Material.GOLD
-            /* add other parameters that characterize this robot */);
+        robots[0] = new Robot(Material.GOLD, 2f);
         
         // Initialize robot 1
-        robots[1] = new Robot(Material.SILVER
-            /* add other parameters that characterize this robot */);
+        robots[1] = new Robot(Material.SILVER, 1.7f);
         
         // Initialize robot 2
-        robots[2] = new Robot(Material.WOOD
-            /* add other parameters that characterize this robot */);
+        robots[2] = new Robot(Material.WOOD, 2.4f);
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE
-            /* add other parameters that characterize this robot */);
+        robots[3] = new Robot(Material.ORANGE, 1.9f);
         
         // Initialize the camera
         camera = new Camera();
@@ -292,8 +288,7 @@ public class RobotRace extends Base {
         // Draw the little sphere showing the position of lightsource 0.
         gl.glPushMatrix();
             gl.glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
-            setMaterial(1.0f, 1.0f, 0.0f, 20, "plastic");
-            glut.glutSolidSphere(.04f, 20, 5);
+            glut.glutSolidSphere(.04f, 30, 10);
         gl.glPopMatrix();
     }
     
