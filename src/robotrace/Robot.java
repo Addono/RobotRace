@@ -23,6 +23,7 @@ class Robot {
     float[] centerColor;
     float[] outerColor;
     float stretchedHeight;
+    String outerType;
     
     /**
      * Constructs the robot with initial parameters.
@@ -32,6 +33,7 @@ class Robot {
         this.centerColor = material.centerColor;
         this.outerColor = material.outerColor;
         this.stretchedHeight = stretchedHeight;
+        this.outerType = material.outerType;
     }
 
     /**
@@ -334,7 +336,7 @@ class Robot {
 
                     // Draw the outer cylinder.
                     gl.glPushMatrix();
-                        RobotRace.setMaterial(gl, outerColor, 10, "plastic");
+                        RobotRace.setMaterial(gl, outerColor, 10, outerType);
                         gl.glTranslatef(0f, 0f, width / 2 - cylinderHeight / 2); // Move local axis to start position of the cylinder.
                         glut.glutSolidCylinder(cylinderRadius, cylinderHeight, 16, 2);
                     gl.glPopMatrix();

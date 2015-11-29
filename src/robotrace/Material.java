@@ -14,7 +14,8 @@ public enum Material {
         new float[] {.9f, .9f, .9f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f),
+        0f,
+        "metal"),
 
     /**
      * Silver material properties.
@@ -25,7 +26,8 @@ public enum Material {
         new float[] {.3f, .3f, .3f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f),
+        0f,
+        "metal"),
 
     /** 
      * Wood material properties.
@@ -36,7 +38,8 @@ public enum Material {
         new float[] {60f/255f, 15f/255f, 0f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f),
+        0f,
+        "metal"),
 
     /**
      * Orange material properties.
@@ -47,7 +50,8 @@ public enum Material {
         new float[] {.7f, .7f, .7f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f);
+        0f,
+        "plastic");
 
     float[] outerColor;
     
@@ -61,15 +65,18 @@ public enum Material {
     
     /** The specular exponent of the material. */
     float shininess;
+    
+    String outerType;
 
     /**
      * Constructs a new material with diffuse and specular properties.
      */
-    private Material(float[] outerColor, float[] centerColor, float[] diffuse, float[] specular, float shininess) {
+    private Material(float[] outerColor, float[] centerColor, float[] diffuse, float[] specular, float shininess, String type) {
         this.outerColor = outerColor;
         this.centerColor = centerColor;
         this.diffuse = diffuse;
         this.specular = specular;
         this.shininess = shininess;
+        this.outerType = type;
     }
 }
