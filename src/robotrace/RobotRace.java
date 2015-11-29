@@ -167,18 +167,20 @@ public class RobotRace extends Base {
         head  = loadTexture("head.jpg");
         torso = loadTexture("torso.jpg");
         
+        // Enable lighting.
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
-        //gl.glEnable(GL_LIGHT0);
+        gl.glEnable(GL_LIGHT0); // Local moving light source.
         gl.glEnable(GL_LIGHT1); // Ambient light source
         
+        // Set the properties of lightsource 0.
         float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
         gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor, 0);
-        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, new float[]{.1f, 0.1f, 0.1f, 1f}, 0);
+        gl.glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColor, 0);
         
-        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteColor, 0);
-        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {0.2f, 0.2f, 0.2f, 1f}, 0);
-        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, whiteColor, 0);
+        // Set the properties of lighsource 1.
+        float ambientIntensity = .3f;
+        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {ambientIntensity, ambientIntensity, ambientIntensity, 1f}, 0);
     }
     
     /**
@@ -201,7 +203,7 @@ public class RobotRace extends Base {
         
         double yFOV = xFOV / aspectRatio; // Convert xFOV to yFOV y using the aspect ratio of the screen.
         
-        glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist);
+        glu.gluPerspective(yFOV, aspectRatio, 0.1 * gs.vDist, 10 * gs.vDist); // Set the perspective.
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
@@ -244,6 +246,7 @@ public class RobotRace extends Base {
         robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
+        // Draw all the robots on a line at the x-axis.
         gl.glPushMatrix();
         gl.glTranslatef(-1.5f, 0, 0); // Set start position of the first robot.
         for(int i = 0; i < 4; i++) {
@@ -259,50 +262,13 @@ public class RobotRace extends Base {
         // Draw the terrain.
         terrain.draw(gl, glu, glut);
         
-        // Set the position of the ambient light to the eye coordinate of the camera.
-        float ambientLightPos[] = {
-            (float) camera.eye.x(), // Get x coordinate of the camera.
-            (float) camera.eye.y(), // Get y coordinate of the camera.
-            (float) camera.eye.z(), // Get z coordinate of the camera.
-            1.0f                    // It's a global position.
-        };
-        
-        gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightPos, 0); 
-        
-        gl.glPushMatrix();
-        
-        // Move in x-direction.
-        gl.glTranslatef(2f, 0f, 0f);
-        
-        // Rotate 30 degrees, around z-axis.
-        gl.glRotatef(30f, 0f, 0f, 0f);
-        
-        // Scale in z-direction.
-        gl.glScalef(1f, 1f, 2f);
-
-        // Translated, rotated, scaled box.
-        float pinkColor[] = {1.0f, 0.5f, 0.5f, 1.0f};
-        setMaterial(pinkColor, 0f, "plastic");
-        //glut.glutSolidCylinder(1f, 1f, 100, 10);
-        
-        gl.glPopMatrix();
-        
-        // Create the floor.
-        setMaterial(new float[]{0.8f, .8f, .8f, 1f}, 10f, "plastic"); // Set the color of the floor
-        gl.glBegin(GL_POLYGON);
-            gl.glNormal3f(0f, 0f, 1f);
-            gl.glVertex3f(100f, 100f, 0f);
-            gl.glVertex3f(100f, -100f, 0f);
-            gl.glVertex3f(-100f, -100f, 0f);
-            gl.glVertex3f(-100f, 100f, 0f);
-        gl.glEnd();
         
         // Set the ambient light of the scene.
         double offset = 10 * (Math.PI / 180); // Calculate offset in radians.
         double theta = gs.theta - offset; // Apply the offset to theta.
         double phi = gs.phi + offset; // Apply the offset to phi.
         
-        float[] ambientLightDir = { // Calculate the direction of the light.
+        float[] ambientLightDir = { // Calculate the direction of the ambient light.
             (float) (Math.cos(theta) * Math.cos(phi)),
             (float) (Math.sin(theta) * Math.cos(phi)),
             (float) (Math.sin(phi)),
@@ -310,6 +276,25 @@ public class RobotRace extends Base {
         };
         
         gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
+        
+        
+        // Calculate the position of the lightsource 0.
+        float[] lightPosition = {
+            (float) (3 * Math.sin(gs.tAnim)),
+            (float) (Math.cos(gs.tAnim)),
+            1.0f + (float) (2 * Math.cos(gs.tAnim / 2)),
+            1.0f
+        };
+        
+        // Set the position of lightsource 0
+        gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition, 0);
+        
+        // Draw the little sphere showing the position of lightsource 0.
+        gl.glPushMatrix();
+            gl.glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
+            setMaterial(1.0f, 1.0f, 0.0f, 20, "plastic");
+            glut.glutSolidSphere(.04f, 20, 5);
+        gl.glPopMatrix();
     }
     
     /**
@@ -327,7 +312,7 @@ public class RobotRace extends Base {
         float shininess = 10f;
         
         // Define material axis frame.
-        String materialType = "metal";
+        String materialType = "plastic";
         
         // Create the yellow box in the center.
         setMaterial(yellow, shininess, materialType);
@@ -359,9 +344,10 @@ public class RobotRace extends Base {
         gl.glPopMatrix();
     }
 
-    /*
-    * @description - Creates the model of an arrow pointing upward along the local z axis.
-    * @param lengt - Length of the arrow.
+    /**
+    * @description  Creates the model of an arrow pointing upward along the local z axis.
+    * @param lengt  Length of the arrow.
+    * @return       Void
     */
     public void createArrow(float length) {
         int coneSides = 35;
@@ -391,19 +377,19 @@ public class RobotRace extends Base {
         gl.glPopMatrix();
     }
     
-    /*
-    * @description               Sets the lights properties according to the given settings.
-    * @param float r             Amount of red in the color of the object.
-    * @param float g             Amount of green in the color of the object.
-    * @param float b             Amount of blue in the color of the object.
-    * @param float a             Opacity of the object.
-    * @param float shininess     Shininess of the object
-    * @param String materialType Type of the material, contains two types: plastic and metal.
-    * @return                    Void
+    /**
+    * @description                      Sets the lights properties according to the given settings.
+    * @parameter float r                Amount of red in the color of the object.
+    * @parameter float g                Amount of green in the color of the object.
+    * @parameter float b                Amount of blue in the color of the object.
+    * @parameter float a                Opacity of the object.
+    * @parameter float shininess        Shininess of the object
+    * @parameter String materialType    Type of the material, contains two types: plastic and metal.
+    * @return                           Void
     */
     public static GL2 setMaterial(GL2 gl, float r, float g, float b, float a, float shininess, String materialType) {
-        float ambientDecrease = 3f;
-        float diffuseDecrease = 1f;
+        float ambientDecrease = 2f;
+        float diffuseDecrease = 1.7f;
         
         float[] ambientColor = {r / ambientDecrease, g / ambientDecrease, b / ambientDecrease, a};
         float[] diffuseColor = {r / diffuseDecrease, g / diffuseDecrease, b / diffuseDecrease, a};
@@ -429,7 +415,7 @@ public class RobotRace extends Base {
         return gl;
     }
     
-    // Wrapper of setMaterial.
+    // Static wrapper of setMaterial.
     public static GL2 setMaterial(GL2 gl, float[] rgba, float shininess, String material) {
         return setMaterial(gl, rgba[0], rgba[1], rgba[2], rgba[3], shininess, material);
     }
