@@ -244,13 +244,11 @@ public class RobotRace extends Base {
         robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
-        
-        
         gl.glPushMatrix();
-        gl.glTranslatef(1f, 0, 0);
+        gl.glTranslatef(-1.5f, 0, 0); // Set start position of the first robot.
         for(int i = 0; i < 4; i++) {
-            robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim);
-            gl.glTranslatef(1.0f, 0f, 0f);
+            robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim); // Draw the i-th robot.
+            gl.glTranslatef(1.0f, 0f, 0f); // Move 1f to the right before drawing the next robot.
         }
         gl.glPopMatrix();
         
@@ -300,18 +298,18 @@ public class RobotRace extends Base {
         gl.glEnd();
         
         // Set the ambient light of the scene.
-        float offset = 10 * (float) ((Math.PI / 180)); // Calculate offset in radians.
-        float theta = gs.theta - offset; // Apply the offset to theta.
-        float phi = gs.phi + offset; // Apply the offset to phi.
+        double offset = 10 * (Math.PI / 180); // Calculate offset in radians.
+        double theta = gs.theta - offset; // Apply the offset to theta.
+        double phi = gs.phi + offset; // Apply the offset to phi.
         
         float[] ambientLightDir = { // Calculate the direction of the light.
-            (float) -(Math.cos(theta) * Math.cos(phi)),
-            (float) -(Math.sin(theta) * Math.cos(phi)),
-            (float) -(Math.sin(phi)),
+            (float) (Math.cos(theta) * Math.cos(phi)),
+            (float) (Math.sin(theta) * Math.cos(phi)),
+            (float) (Math.sin(phi)),
             0.0f
         };
         
-        gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightDir, 1);
+        gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
     }
     
     /**
@@ -404,8 +402,8 @@ public class RobotRace extends Base {
     * @return                    Void
     */
     public static GL2 setMaterial(GL2 gl, float r, float g, float b, float a, float shininess, String materialType) {
-        float ambientDecrease = 2f;
-        float diffuseDecrease = 4f;
+        float ambientDecrease = 3f;
+        float diffuseDecrease = 1f;
         
         float[] ambientColor = {r / ambientDecrease, g / ambientDecrease, b / ambientDecrease, a};
         float[] diffuseColor = {r / diffuseDecrease, g / diffuseDecrease, b / diffuseDecrease, a};
@@ -422,8 +420,6 @@ public class RobotRace extends Base {
             default:
                 specularColor = new float[]{0f, 0f, 0f, 0f};
         }
-        
-        //specularColor = new float[]{.1f, .1f, .1f, 1.0f};
         
         gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
         gl.glMaterialfv(GL_FRONT, GL_AMBIENT, ambientColor, 0);
