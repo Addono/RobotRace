@@ -103,8 +103,8 @@ class RaceTrack {
                 );
                 
                 gl.glVertex3d(
-                    point.add(tangentLine.scale(trackWidth + trackWidth)).x(),
-                    point.add(tangentLine.scale(trackWidth + trackWidth)).y(),
+                    point.add(tangentLine.scale(trackWidth + sideWidth)).x(),
+                    point.add(tangentLine.scale(trackWidth + sideWidth)).y(),
                     trackBottom
                 );
             }
