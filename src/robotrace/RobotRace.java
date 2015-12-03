@@ -72,7 +72,7 @@ public class RobotRace extends Base {
     /** Instance of the terrain. */
     private final Terrain terrain;
     
-    int ambientLight = GL_LIGHT0;
+    int ambientLight = GL_LIGHT2;
     int lightSource1 = GL_LIGHT1;
     
     /**
@@ -170,12 +170,12 @@ public class RobotRace extends Base {
         gl.glEnable(lightSource1); // Local moving light source.
         gl.glEnable(ambientLight); // Ambient light source
         
-        // Set the properties of lightsource 0.
+        // Set the properties of lightsource 1.
         float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
         gl.glLightfv(lightSource1, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(lightSource1, GL_SPECULAR, whiteColor, 0);
         
-        // Set the properties of lighsource 1.
+        // Set the properties of lighsource 0.
         float ambientIntensity = .3f;
         gl.glLightfv(ambientLight, GL_AMBIENT, new float[] {ambientIntensity, ambientIntensity, ambientIntensity, 1f}, 0);
     }
@@ -279,7 +279,7 @@ public class RobotRace extends Base {
         float[] lightPosition = {
             (float) (3 * Math.sin(gs.tAnim)),
             (float) (Math.cos(gs.tAnim)),
-            1.0f + (float) (2 * Math.cos(gs.tAnim / 2)),
+            3.1f + (float) (2 * Math.cos(gs.tAnim / 2)),
             1.0f
         };
         
