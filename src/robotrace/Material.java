@@ -14,7 +14,7 @@ public enum Material {
         new float[] {.9f, .9f, .9f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f,
+        1f,
         "metal"),
 
     /**
@@ -26,7 +26,7 @@ public enum Material {
         new float[] {.3f, .3f, .3f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f,
+        1f,
         "metal"),
 
     /** 
@@ -38,7 +38,7 @@ public enum Material {
         new float[] {60f/255f, 15f/255f, 0f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f,
+        100f,
         "metal"),
 
     /**
@@ -50,7 +50,7 @@ public enum Material {
         new float[] {.7f, .7f, .7f, 1.0f},
         new float[] {0.8f, 0.8f, 0.8f, 1.0f},
         new float[] {0.0f, 0.0f, 0.0f, 1.0f},
-        0f,
+        50f,
         "plastic");
 
     float[] outerColor;
