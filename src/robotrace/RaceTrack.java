@@ -1,6 +1,7 @@
 package robotrace;
 
 import com.jogamp.opengl.util.gl2.GLUT;
+import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
@@ -9,7 +10,7 @@ import javax.media.opengl.glu.GLU;
  */
 class RaceTrack {
     
-    /** The width of one lane. The total width of the track is 4 * laneWidth. */
+    /** The trackWidth of one lane. The total trackWidth of the track is 4 * laneWidth. */
     private final static float laneWidth = 1.22f;
 
     /** Array with 3N control points, where N is the number of segments. */
@@ -19,13 +20,18 @@ class RaceTrack {
      * Constructor for the default track.
      */
     public RaceTrack() {
+        calculateTrackPoints();
     }
+    
+    ArrayList<Vector> points = new ArrayList<Vector>();
+    ArrayList<Vector> tangentLines = new ArrayList<Vector>();
     
     /**
      * Constructor for a spline track.
      */
     public RaceTrack(Vector[] controlPoints) {
         this.controlPoints = controlPoints;
+        calculateTrackPoints();
     }
 
     /**
@@ -33,9 +39,43 @@ class RaceTrack {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         if (null == controlPoints) {
-            // draw the test track
+            int parts = 50;
+            float trackWidth = 1.22f * 4;
+            
+            RobotRace.setMaterial(gl, .8f, .2f, 0f, 1f, 1f, "plastic");
+            
+            // Draw the horizontal plane of the track.
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            for(int i = 0; i < points.size(); i++) {
+                gl.glNormal3f(0f, 0f, 1f);
+                gl.glVertex3d(
+                    points.get(i).x(),
+                    points.get(i).y(),
+                    points.get(i).z()
+                );
+                
+                gl.glNormal3f(0f, 0f, 1f);
+                gl.glVertex3d(points.get(i).x() + tangentLines.get(i).scale(trackWidth).x(),
+                    points.get(i).y() + tangentLines.get(i).scale(trackWidth).y(),
+                    points.get(i).z() + tangentLines.get(i).scale(trackWidth).z()
+                );
+            }
+            gl.glEnd();
         } else {
             // draw the spline track
+        }
+    }
+    
+    private void calculateTrackPoints() {
+        int parts = 100;
+        for(int i = 0; i <= parts; i++) {
+            float t = (float) i / parts;
+            
+            // Calculate the inner point on the inner ring.
+            points.add(getPoint(t));
+            
+            // Calculate the point on the outer ring, by taking the vector orthogonal to the tangent line and de z vector.
+            tangentLines.add(getTangent(t).cross(Vector.Z).normalized());
         }
     }
     
