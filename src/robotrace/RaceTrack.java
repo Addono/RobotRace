@@ -39,25 +39,73 @@ class RaceTrack {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         if (null == controlPoints) {
-            int parts = 50;
             float trackWidth = 1.22f * 4;
+            float sideWidth = 1.4f;
+            float trackBottom = -1f;
             
-            RobotRace.setMaterial(gl, .8f, .2f, 0f, 1f, 1f, "plastic");
+            RobotRace.setMaterial(gl, .9f, .2f, 0f, 1f, 30f, "metal");
             
             // Draw the horizontal plane of the track.
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             for(int i = 0; i < points.size(); i++) {
+                Vector point = points.get(i);
+                Vector tangentLine = tangentLines.get(i);
+                
                 gl.glNormal3f(0f, 0f, 1f);
                 gl.glVertex3d(
-                    points.get(i).x(),
-                    points.get(i).y(),
-                    points.get(i).z()
+                    point.x(),
+                    point.y(),
+                    point.z()
                 );
                 
                 gl.glNormal3f(0f, 0f, 1f);
-                gl.glVertex3d(points.get(i).x() + tangentLines.get(i).scale(trackWidth).x(),
-                    points.get(i).y() + tangentLines.get(i).scale(trackWidth).y(),
-                    points.get(i).z() + tangentLines.get(i).scale(trackWidth).z()
+                gl.glVertex3d(
+                    point.x() + tangentLine.scale(trackWidth).x(),
+                    point.y() + tangentLine.scale(trackWidth).y(),
+                    point.z() + tangentLine.scale(trackWidth).z()
+                );
+            }
+            gl.glEnd();
+            
+            RobotRace.setMaterial(gl, .5f, .15f, 0f, 1f, 100f, "metal");
+            
+            
+            // Draw inner diagonal side.
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            for(int i = 0; i < points.size(); i++) {
+                Vector point = points.get(i);
+                Vector tangentLine = tangentLines.get(i);
+                
+                gl.glVertex3d(
+                    point.x(),
+                    point.y(),
+                    point.z()
+                );
+                
+                gl.glVertex3d(
+                    point.x() + tangentLine.scale(-sideWidth).x(),
+                    point.y() + tangentLine.scale(-sideWidth).y(),
+                    trackBottom
+                );
+            }
+            gl.glEnd();
+            
+            // Draw outer diagonal side.
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            for(int i = 0; i < points.size(); i++) {
+                Vector point = points.get(i);
+                Vector tangentLine = tangentLines.get(i);
+                
+                gl.glVertex3d(
+                    point.add(tangentLine.scale(trackWidth)).x(),
+                    point.add(tangentLine.scale(trackWidth)).y(),
+                    point.add(tangentLine.scale(trackWidth)).z()
+                );
+                
+                gl.glVertex3d(
+                    point.add(tangentLine.scale(trackWidth + trackWidth)).x(),
+                    point.add(tangentLine.scale(trackWidth + trackWidth)).y(),
+                    trackBottom
                 );
             }
             gl.glEnd();
