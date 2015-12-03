@@ -68,9 +68,9 @@ class RaceTrack {
      */
     private Vector getPoint(double t) {
         return new Vector(
-                (10 * Math.cos(2 * Math.PI * t)),
-                14 * Math.sin(2 * Math.PI * t),
-                1.0f
+            (10 * Math.cos(2 * Math.PI * t)),
+            14 * Math.sin(2 * Math.PI * t),
+            1.0f
         );
     }
 
@@ -78,7 +78,11 @@ class RaceTrack {
      * Returns a tangent on the test track at 0 <= t < 1.
      */
     private Vector getTangent(double t) {
-        return Vector.O; // <- code goes here
+        return new Vector(
+            -20 * Math.PI * Math.sin(2 * Math.PI * t),
+            28 * Math.PI * Math.cos(2 * Math.PI * t),
+            0.0f
+        );
     }
     
     /**
