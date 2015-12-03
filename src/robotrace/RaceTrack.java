@@ -67,7 +67,11 @@ class RaceTrack {
      * Returns a point on the test track at 0 <= t < 1.
      */
     private Vector getPoint(double t) {
-        return Vector.O; // <- code goes here
+        return new Vector(
+                (10 * Math.cos(2 * Math.PI * t)),
+                14 * Math.sin(2 * Math.PI * t),
+                1.0f
+        );
     }
 
     /**
