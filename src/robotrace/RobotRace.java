@@ -4,8 +4,6 @@ import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import java.awt.event.*;
 import javax.media.opengl.GL2;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_LIGHT1;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -73,6 +71,9 @@ public class RobotRace extends Base {
     
     /** Instance of the terrain. */
     private final Terrain terrain;
+    
+    int ambientLight = GL_LIGHT0;
+    int lightSource1 = GL_LIGHT1;
     
     /**
      * Constructs this robot race by initializing robots,
@@ -161,22 +162,22 @@ public class RobotRace extends Base {
         track = loadTexture("track.jpg");
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
-        torso = loadTexture("torso.jpg");
+        torso = loadTexture("torso.jpg");        
         
         // Enable lighting.
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
-        gl.glEnable(GL_LIGHT0); // Local moving light source.
-        gl.glEnable(GL_LIGHT1); // Ambient light source
+        gl.glEnable(lightSource1); // Local moving light source.
+        gl.glEnable(ambientLight); // Ambient light source
         
         // Set the properties of lightsource 0.
         float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
-        gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor, 0);
-        gl.glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColor, 0);
+        gl.glLightfv(lightSource1, GL_DIFFUSE, whiteColor, 0);
+        gl.glLightfv(lightSource1, GL_SPECULAR, whiteColor, 0);
         
         // Set the properties of lighsource 1.
         float ambientIntensity = .3f;
-        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, new float[] {ambientIntensity, ambientIntensity, ambientIntensity, 1f}, 0);
+        gl.glLightfv(ambientLight, GL_AMBIENT, new float[] {ambientIntensity, ambientIntensity, ambientIntensity, 1f}, 0);
     }
     
     /**
@@ -271,7 +272,7 @@ public class RobotRace extends Base {
             0.0f
         };
         
-        gl.glLightfv(GL_LIGHT1, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
+        gl.glLightfv(ambientLight, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
         
         
         // Calculate the position of the lightsource 0.
@@ -283,7 +284,7 @@ public class RobotRace extends Base {
         };
         
         // Set the position of lightsource 0
-        gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition, 0);
+        gl.glLightfv(lightSource1, GL_POSITION, lightPosition, 0);
         
         // Draw the little sphere showing the position of lightsource 0.
         gl.glPushMatrix();
