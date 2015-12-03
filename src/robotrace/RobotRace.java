@@ -74,6 +74,7 @@ public class RobotRace extends Base {
     
     int ambientLight = GL_LIGHT2;
     int lightSource1 = GL_LIGHT1;
+    int cameraLight = GL_LIGHT3;
     
     /**
      * Constructs this robot race by initializing robots,
@@ -168,6 +169,7 @@ public class RobotRace extends Base {
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
         gl.glEnable(lightSource1); // Local moving light source.
+        gl.glEnable(cameraLight);
         gl.glEnable(ambientLight); // Ambient light source
         
         // Set the properties of lightsource 1.
@@ -175,9 +177,13 @@ public class RobotRace extends Base {
         gl.glLightfv(lightSource1, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(lightSource1, GL_SPECULAR, whiteColor, 0);
         
-        // Set the properties of lighsource 0.
+        // Set the properties of the ambient lightsource.
         float ambientIntensity = .3f;
         gl.glLightfv(ambientLight, GL_AMBIENT, new float[] {ambientIntensity, ambientIntensity, ambientIntensity, 1f}, 0);
+        
+        // Set the properties of the camera lightsource.
+        gl.glLightfv(cameraLight, GL_DIFFUSE, whiteColor, 0);
+        gl.glLightfv(cameraLight, GL_SPECULAR, whiteColor, 0);
     }
     
     /**
@@ -272,7 +278,7 @@ public class RobotRace extends Base {
             0.0f
         };
         
-        gl.glLightfv(ambientLight, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
+        gl.glLightfv(cameraLight, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
         
         
         // Calculate the position of the lightsource 0.
@@ -396,11 +402,11 @@ public class RobotRace extends Base {
                 specularColor = diffuseColor;
                 break;
             case "plastic":
-                float white = (r + g + b) / (2 * diffuseDecrease); // Dividing by three might be more accurate, but gives ugly results.
+                float white = (r + g + b) / (diffuseDecrease); // Dividing by three might be more accurate, but gives ugly results.
                 specularColor = new float[]{white, white, white, 1.0f};
                 break;
             default:
-                specularColor = new float[]{0f, 0f, 0f, 0f};
+                specularColor = new float[] {0f, 0f, 0f, 0f};
         }
         
         gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseColor, 0);
