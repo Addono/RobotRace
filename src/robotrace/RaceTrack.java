@@ -133,7 +133,9 @@ class RaceTrack {
      */
     public Vector getLanePoint(int lane, double t) {
         if (null == controlPoints) {
-            return Vector.O; // <- code goes here
+            return getPoint(t).add(
+                    (getTangent(t).cross(Vector.Z).normalized()).scale(1.33f*(.5 + lane))
+            );
         } else {
             return Vector.O; // <- code goes here
         }
