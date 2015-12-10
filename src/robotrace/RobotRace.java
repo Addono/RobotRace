@@ -318,7 +318,7 @@ public class RobotRace extends Base {
         
         // Create the yellow box in the center.
         setMaterial(yellow, shininess, materialType);
-        glut.glutSolidCube(.12f);
+        glut.glutSolidSphere(.12f, 10, 10);
         
         // Create the red arrow.
         gl.glPushMatrix();
