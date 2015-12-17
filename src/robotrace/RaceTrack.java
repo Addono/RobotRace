@@ -39,7 +39,7 @@ class RaceTrack {
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         if (null == controlPoints) {
-            float trackWidth = 1.22f * 4;
+            float trackWidth = laneWidth * 4;
             float sideWidth = 1.4f;
             float trackBottom = -1f;
             
@@ -134,7 +134,7 @@ class RaceTrack {
     public Vector getLanePoint(int lane, double t) {
         if (null == controlPoints) {
             return getPoint(t).add(
-                    (getTangent(t).cross(Vector.Z).normalized()).scale(1.33f*(.5 + lane))
+                    (getTangent(t).cross(Vector.Z).normalized()).scale(laneWidth * (.5 + lane))
             );
         } else {
             return Vector.O; // <- code goes here
