@@ -250,8 +250,9 @@ public class RobotRace extends Base {
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
         // Draw all the robots on their position on the racetrack.
+        float robotSpeed[] = { 10, 15, 25, 28};
         for(int i = 0; i < 4; i++) {
-            float timeScale = 20f;
+            float timeScale = robotSpeed[i];
             robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, gs.tAnim / timeScale);
             robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, gs.tAnim / timeScale);
             
