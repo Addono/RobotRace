@@ -249,15 +249,24 @@ public class RobotRace extends Base {
         robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
-        // Draw all the robots on a line at the x-axis.
-        gl.glPushMatrix();
-        gl.glTranslatef(-1.5f, 0, 0); // Set start position of the first robot.
+        // Draw all the robots on their position on the racetrack.
         for(int i = 0; i < 4; i++) {
+            float timeScale = 20f;
+            robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, gs.tAnim / timeScale);
+            robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, gs.tAnim / timeScale);
+            
+            Vector defaultDir = new Vector(0f, -1f, 0f); // Point towards the front side of the robot.
+            Vector rotationVector = defaultDir.cross(robots[i].direction).normalized();
+            
+            // Calculate the angle of rotation around the rotationVector. 
+            double angle = Math.acos(robots[i].direction.normalized().dot(defaultDir.normalized()));
+            
+            gl.glPushMatrix();
+            gl.glTranslated(robots[i].position.x(), robots[i].position.y(), robots[i].position.z());
+            gl.glRotated(angle * 180 / Math.PI, rotationVector.x(), rotationVector.y(), rotationVector.z());
             robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim); // Draw the i-th robot.
-            gl.glTranslatef(1.0f, 0f, 0f); // Move 1f to the right before drawing the next robot.
+            gl.glPopMatrix();
         }
-        gl.glPopMatrix();
-        
         
         // Draw the race track.
         raceTracks[gs.trackNr].draw(gl, glu, glut);

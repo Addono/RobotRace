@@ -147,7 +147,7 @@ class RaceTrack {
      */
     public Vector getLaneTangent(int lane, double t) {
         if (null == controlPoints) {
-            return Vector.O; // <- code goes here
+            return getTangent(t);
         } else {
             return Vector.O; // <- code goes here
         }
@@ -172,7 +172,7 @@ class RaceTrack {
             -20 * Math.PI * Math.sin(2 * Math.PI * t),
             28 * Math.PI * Math.cos(2 * Math.PI * t),
             0.0f
-        );
+        ).normalized();
     }
     
     /**
