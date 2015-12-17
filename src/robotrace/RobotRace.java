@@ -246,7 +246,7 @@ public class RobotRace extends Base {
         }
         
         // Get the position and direction of the first robot.
-        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, 0);
+        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, gs.tAnim / 20);
         robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
         
         // Draw all the robots on their position on the racetrack.
@@ -288,24 +288,6 @@ public class RobotRace extends Base {
         };
         
         gl.glLightfv(cameraLight, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
-        
-        
-        // Calculate the position of the lightsource 0.
-        float[] lightPosition = {
-            (float) (3 * Math.sin(gs.tAnim)),
-            (float) (Math.cos(gs.tAnim)),
-            3.1f + (float) (2 * Math.cos(gs.tAnim / 2)),
-            1.0f
-        };
-        
-        // Set the position of lightsource 0
-        gl.glLightfv(lightSource1, GL_POSITION, lightPosition, 0);
-        
-        // Draw the little sphere showing the position of lightsource 0.
-        gl.glPushMatrix();
-            gl.glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
-            glut.glutSolidSphere(.04f, 30, 10);
-        gl.glPopMatrix();
     }
     
     /**
