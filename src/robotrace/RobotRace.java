@@ -436,4 +436,8 @@ public class RobotRace extends Base {
         RobotRace robotRace = new RobotRace();
         robotRace.run();
     }
+    
+    public static void logVector(Vector vector) {
+        System.out.println("Vector: "  + vector.x() + "\t" + vector.y() + "\t" + vector.z());
+    }
 }
