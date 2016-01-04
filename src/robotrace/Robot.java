@@ -16,6 +16,8 @@ class Robot {
     
     /** The direction in which the robot is running. */
     public Vector direction = new Vector(1, 0, 0);
+    
+    public Vector feetToHead = new Vector(0, 0, 1);
 
     /** The material from which this robot is built. */
     private final Material material;

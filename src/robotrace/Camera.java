@@ -22,12 +22,12 @@ class Camera {
     
     private int oldCamMode = -1;
     private float switchTime = 0;
+    
     /**
      * Updates the camera viewpoint and direction based on the
      * selected camera mode.
      */
     public void update(GlobalState gs, Robot focus) {
-        
         // Check if the camera mode was switched.
         if(gs.camMode != oldCamMode) {
             switchTime = gs.tAnim; // Store the last time the camera mode was switched.
@@ -39,7 +39,6 @@ class Camera {
         }
         
         switch (gs.camMode) {
-            
             // Helicopter mode
             case 1:
                 setHelicopterMode(gs, focus);
@@ -65,7 +64,7 @@ class Camera {
                 setDefaultMode(gs);
         }
         
-        // Get the 
+        // Get the vector transition scalar.
         float vectorTransScalar = transitionScalar(gs.tAnim - switchTime, 2f);
         
         eye = newEye.scale(vectorTransScalar).add(oldEye.scale(1 - vectorTransScalar));
@@ -84,7 +83,7 @@ class Camera {
     private float transitionScalar(float deltaT, float maxLength) {
         float t = deltaT / maxLength;
         if(t < 1 && t >= 0) {
-            return t * t * (3 * (1 - t) + t);
+            return t * t * (3 * (1 - t) + t); // Some math.
         } else {
             return 1;
         }
@@ -105,9 +104,10 @@ class Camera {
                 Math.sin(gs.theta) * Math.cos(gs.phi),
                 Math.sin(gs.phi)
         );
+        
         Vector V = lookDirection.scale(gs.vDist);
         
-        newEye = center.add(V);
+        newEye = newCenter.add(V);
     }
 
     /**
@@ -116,9 +116,10 @@ class Camera {
      */
     private void setHelicopterMode(GlobalState gs, Robot focus) {
         // code goes here ...
+        newUp = focus.feetToHead.cross(focus.direction);
         newCenter = focus.position;
-        newCenter.z += 2;
-        newEye = newCenter.add(focus.direction.scale(gs.vDist));
+        newEye = focus.position.add(focus.feetToHead.scale(gs.vDist));
+        RobotRace.logVector(focus.feetToHead);
     }
 
     /**
@@ -127,9 +128,9 @@ class Camera {
      */
     private void setMotorCycleMode(GlobalState gs, Robot focus) {
         // code goes here ...
-        
+        newUp = focus.feetToHead;
         newCenter = focus.position.add(newUp.scale(2f));
-        newEye = newCenter.add(focus.direction.cross(newUp).scale(3f*0.5*gs.vDist));
+        newEye = newCenter.add(focus.direction.cross(newUp).scale(1.5f * gs.vDist));
     }
 
     /**

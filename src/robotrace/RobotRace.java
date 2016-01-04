@@ -216,9 +216,10 @@ public class RobotRace extends Base {
         // For camera modes 1 to 4, determine which robot to focus on.
         if(gs.camMode == 3){
             camera.update(gs, robots[3]);
-        }else{
-        camera.update(gs, robots[0]);
+        } else {
+            camera.update(gs, robots[0]);
         }
+        
         glu.gluLookAt(camera.eye.x(),    camera.eye.y(),    camera.eye.z(),
                       camera.center.x(), camera.center.y(), camera.center.z(),
                       camera.up.x(),     camera.up.y(),     camera.up.z()
@@ -249,12 +250,8 @@ public class RobotRace extends Base {
             drawAxisFrame();
         }
         
-        // Get the position and direction of the first robot.
-        robots[0].position = raceTracks[gs.trackNr].getLanePoint(0, gs.tAnim / 20);
-        robots[0].direction = raceTracks[gs.trackNr].getLaneTangent(0, 0);
-        
         // Draw all the robots on their position on the racetrack.
-        float robotSpeed[] = { 10, 15, 25, 28};
+        float robotSpeed[] = {10, 15, 25, 28}; // Array containing the speed of all the robots.
         for(int i = 0; i < 4; i++) {
             float timeScale = robotSpeed[i];
             robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, gs.tAnim / timeScale);
@@ -265,10 +262,10 @@ public class RobotRace extends Base {
             
             // Calculate the angle of rotation around the rotationVector. 
             double angle = Math.acos(robots[i].direction.normalized().dot(defaultDir.normalized()));
-            
             gl.glPushMatrix();
             gl.glTranslated(robots[i].position.x(), robots[i].position.y(), robots[i].position.z());
-            gl.glRotated(angle * 180 / Math.PI, rotationVector.x(), rotationVector.y(), rotationVector.z());
+            gl.glRotated((angle * 180) / Math.PI, rotationVector.x(), rotationVector.y(), rotationVector.z());
+            glut.glutSolidCube(.5f);
             robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim); // Draw the i-th robot.
             gl.glPopMatrix();
         }
@@ -438,6 +435,6 @@ public class RobotRace extends Base {
     }
     
     public static void logVector(Vector vector) {
-        System.out.println("Vector: "  + vector.x() + "\t" + vector.y() + "\t" + vector.z());
+        System.out.println("Vector: "  + vector.x() + "\t" + vector.y() + "\t" + vector.z() + "\t" + vector.length());
     }
 }

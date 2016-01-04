@@ -38,7 +38,7 @@ class RaceTrack {
      * Draws this track, based on the control points.
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
-        if (null == controlPoints) {
+        if (controlPoints == null) {
             float trackWidth = laneWidth * 4;
             float sideWidth = 1.4f;
             float trackBottom = -1f;
@@ -134,7 +134,7 @@ class RaceTrack {
     public Vector getLanePoint(int lane, double t) {
         if (null == controlPoints) {
             return getPoint(t).add(
-                    (getTangent(t).cross(Vector.Z).normalized()).scale(laneWidth * (.5 + lane))
+                    getLaneTangent(0, t).cross(Vector.Z).normalized().scale(laneWidth * (.5f + lane))
             );
         } else {
             return Vector.O; // <- code goes here
@@ -158,7 +158,7 @@ class RaceTrack {
      */
     private Vector getPoint(double t) {
         return new Vector(
-            (10 * Math.cos(2 * Math.PI * t)),
+            10 * Math.cos(2 * Math.PI * t),
             14 * Math.sin(2 * Math.PI * t),
             1.0f
         );
