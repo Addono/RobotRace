@@ -128,13 +128,8 @@ class Camera {
     private void setMotorCycleMode(GlobalState gs, Robot focus) {
         // code goes here ...
         
-        Vector temp;
-        
-        newCenter = focus.position;
-        newCenter.z += 2;
-        temp = newCenter;
-        temp.z = temp.y*-1 ;
-        newEye = temp.add(focus.direction.scale(gs.vDist));
+        newCenter = focus.position.add(newUp.scale(2f));
+        newEye = newCenter.add(focus.direction.cross(newUp).scale(3f*0.5*gs.vDist));
     }
 
     /**
@@ -143,6 +138,10 @@ class Camera {
      */
     private void setFirstPersonMode(GlobalState gs, Robot focus) {
         // code goes here ...
+        
+        newCenter = focus.position.add(newUp.scale(2f));
+        newEye = newCenter.add(focus.direction.scale(-0.5f));
+        
     }
     
     /**
