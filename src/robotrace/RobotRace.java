@@ -265,7 +265,6 @@ public class RobotRace extends Base {
             gl.glPushMatrix();
             gl.glTranslated(robots[i].position.x(), robots[i].position.y(), robots[i].position.z());
             gl.glRotated((angle * 180) / Math.PI, rotationVector.x(), rotationVector.y(), rotationVector.z());
-            glut.glutSolidCube(.5f);
             robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim); // Draw the i-th robot.
             gl.glPopMatrix();
         }
@@ -278,7 +277,7 @@ public class RobotRace extends Base {
         
         
         // Set the ambient light of the scene.
-        double offset = 10 * (Math.PI / 180); // Calculate offset in radians.
+        double offset = 10f * (Math.PI / 180f); // Calculate offset in radians.
         double theta = gs.theta - offset; // Apply the offset to theta.
         double phi = gs.phi + offset; // Apply the offset to phi.
         
