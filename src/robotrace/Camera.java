@@ -1,5 +1,7 @@
 package robotrace;
 
+import java.util.Random;
+
 /**
  * Implementation of a camera with a position and orientation. 
  */
@@ -22,6 +24,11 @@ class Camera {
     
     private int oldCamMode = -1;
     private float switchTime = 0;
+    private float vectorTransScalar = 0;
+    
+    private int autoModeState = 1;
+    
+    Random rn = new Random();
     
     /**
      * Updates the camera viewpoint and direction based on the
@@ -65,7 +72,7 @@ class Camera {
         }
         
         // Get the vector transition scalar.
-        float vectorTransScalar = transitionScalar(gs.tAnim - switchTime, 2f);
+        vectorTransScalar = transitionScalar(gs.tAnim - switchTime, 2f);
         
         eye = newEye.scale(vectorTransScalar).add(oldEye.scale(1 - vectorTransScalar));
         center = newCenter.scale(vectorTransScalar).add(oldCenter.scale(1 - vectorTransScalar));
@@ -93,11 +100,6 @@ class Camera {
      * Computes eye, center, and up, based on the camera's default mode.
      */
     private void setDefaultMode(GlobalState gs) {
-        // code goes here ...
-        
-        // Set the center of the camera.
-        newCenter = gs.cnt;
-        
         // Calculate the direction in which the camera is pointing.
         Vector lookDirection = new Vector(
                 Math.cos(gs.theta) * Math.cos(gs.phi),
@@ -106,8 +108,11 @@ class Camera {
         );
         
         Vector V = lookDirection.scale(gs.vDist);
-        
-        newEye = newCenter.add(V);
+
+        // Set the up direction of the camera.
+        newUp       =  new Vector(0f, 0f, 1f);
+        newCenter   =  gs.cnt;
+        newEye      =  gs.cnt.add(V);
     }
 
     /**
@@ -115,11 +120,11 @@ class Camera {
      * The camera should focus on the robot.
      */
     private void setHelicopterMode(GlobalState gs, Robot focus) {
-        // code goes here ...
-        newUp = focus.feetToHead.cross(focus.direction);
-        newCenter = focus.position;
-        newEye = focus.position.add(focus.feetToHead.scale(gs.vDist));
-        RobotRace.logVector(focus.feetToHead);
+        newUp       =  focus.feetToHead.cross(focus.direction); // Up vector can't be feetToHead, since it will be parallel to the look direction.
+        newCenter   =  focus.position;
+        newEye      =  focus.position.add( // Place the camera above the robot.
+                focus.feetToHead.scale(gs.vDist)
+        );
     }
 
     /**
@@ -127,10 +132,13 @@ class Camera {
      * The camera should focus on the robot.
      */
     private void setMotorCycleMode(GlobalState gs, Robot focus) {
-        // code goes here ...
-        newUp = focus.feetToHead;
-        newCenter = focus.position.add(newUp.scale(2f));
-        newEye = newCenter.add(focus.direction.cross(newUp).scale(1.5f * gs.vDist));
+        newUp       =  focus.feetToHead;
+        newCenter   =  focus.position.add( // Move the center upwards so it will focus on the body.
+                focus.feetToHead.scale(1.4f) 
+        );
+        newEye      =  newCenter.add( // Place the camera beside the robot.
+                focus.direction.cross(focus.feetToHead).scale(1.5f * gs.vDist)
+        );
     }
 
     /**
@@ -138,10 +146,13 @@ class Camera {
      * The camera should view from the perspective of the robot.
      */
     private void setFirstPersonMode(GlobalState gs, Robot focus) {
-        // code goes here ...
-        
-        newCenter = focus.position.add(newUp.scale(2f));
-        newEye = newCenter.add(focus.direction.scale(-0.5f));
+        newUp       =  focus.feetToHead;
+        newCenter   =  focus.position.add( // Move the center upwards so it will be at head height.
+                focus.feetToHead.scale(2f)
+        );
+        newEye      =  newCenter.add( // Place the camera a bit in front of the robot, to prevent that the camera is inside the robot.
+                focus.direction.scale(-0.5f)
+        );
         
     }
     
@@ -150,7 +161,47 @@ class Camera {
      * The above modes are alternated.
      */
     private void setAutoMode(GlobalState gs, Robot focus) {
-        // code goes here ...
+        // Check if a new state should be selected.
+        if(vectorTransScalar == 1 && rn.nextFloat() < 0.0005 * (gs.tAnim - switchTime)) { // Chance to switch increases while more times passes.
+            int oldAutoModeState = autoModeState;
+            do {
+                autoModeState = rn.nextInt(3) + 1; // Get a random integer in the range [1, 3]
+            } while (autoModeState == oldAutoModeState);
+            
+            switchTime = gs.tAnim; // Store the last time the camera mode was switched.
+
+            // Store the old vectors.
+            oldEye = eye;
+            oldCenter = center;
+            oldUp = up;
+        }
+        
+        // Update the camera with the appropriate state.
+        switch(autoModeState) {
+            // Helicopter mode
+            case 1:
+                setHelicopterMode(gs, focus);
+                break;
+
+            // Motor cycle mode    
+            case 2:
+                setMotorCycleMode(gs, focus);
+                break;
+
+            // First person mode    
+            case 3:
+                setFirstPersonMode(gs, focus);
+                break;
+
+            // Auto mode    
+            case 4:
+                setAutoMode(gs, focus);
+                break;
+
+            // Default mode    
+            default:
+                setDefaultMode(gs);
+        }
     }
     
     double toRadians(double angle) {
