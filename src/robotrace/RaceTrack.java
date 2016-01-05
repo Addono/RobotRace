@@ -3,7 +3,16 @@ package robotrace;
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.jogamp.opengl.util.texture.Texture;
 import java.util.ArrayList;
+import static javax.media.opengl.GL.GL_BLEND;
+import static javax.media.opengl.GL.GL_DEPTH_TEST;
+import static javax.media.opengl.GL.GL_LESS;
+import static javax.media.opengl.GL.GL_NICEST;
+import static javax.media.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
+import static javax.media.opengl.GL.GL_SRC_ALPHA;
+import static javax.media.opengl.GL.GL_TEXTURE_2D;
 import javax.media.opengl.GL2;
+import static javax.media.opengl.GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_NORMALIZE;
 import javax.media.opengl.glu.GLU;
 
 /**
@@ -49,8 +58,26 @@ class RaceTrack {
             // Draw the horizontal plane of the track.
             
             //test start
+            
+            // Enable blending.
+        gl.glEnable(GL_BLEND);
+        gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                
+        // Enable depth testing.
+        gl.glEnable(GL_DEPTH_TEST);
+        gl.glDepthFunc(GL_LESS);
+		
+	// Normalize normals.
+        gl.glEnable(GL_NORMALIZE);
+        
+        // Enable textures. 
+        gl.glEnable(GL_TEXTURE_2D);
+        gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        gl.glBindTexture(GL_TEXTURE_2D, 0);
+        
+        
   gl.glColor3f(1f, 1f, 1f);
-  track.bind(gl);
+  //track.bind(gl);
   gl.glBegin(gl.GL_QUADS);
   gl.glTexCoord2d(0, 0);
   gl.glVertex3d(0, 0, 0);
