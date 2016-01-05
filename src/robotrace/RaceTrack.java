@@ -57,7 +57,7 @@ class RaceTrack {
             
             // Draw the horizontal plane of the track.
             
-            //test start
+            //test start-------------------------------------------------------------------------------------
             
             // Enable blending.
         gl.glEnable(GL_BLEND);
@@ -78,6 +78,8 @@ class RaceTrack {
         
   gl.glColor3f(1f, 1f, 1f);
   //track.bind(gl);
+  //track.getTextureID;
+  //gl.glBindTexture(GL_TEXTURE_2D, track.getTextureID);
   gl.glBegin(gl.GL_QUADS);
   gl.glTexCoord2d(0, 0);
   gl.glVertex3d(0, 0, 0);
@@ -89,7 +91,7 @@ class RaceTrack {
   gl.glVertex3d(0, 1, 0);
   gl.glEnd(); 
             
-            //test end
+            //test end---------------------------------------------------------------------------------------
             
             //gl.glColor3f(1f, 1f, 1f);
             //track.bind(gl);
