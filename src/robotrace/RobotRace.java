@@ -270,7 +270,8 @@ public class RobotRace extends Base {
         }
         
         // Draw the race track.
-        raceTracks[gs.trackNr].draw(gl, glu, glut);
+        raceTracks[gs.trackNr].draw(gl, glu, glut, track);
+        
         
         // Draw the terrain.
         terrain.draw(gl, glu, glut);

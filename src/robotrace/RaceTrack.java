@@ -1,6 +1,7 @@
 package robotrace;
 
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
 import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
@@ -37,7 +38,7 @@ class RaceTrack {
     /**
      * Draws this track, based on the control points.
      */
-    public void draw(GL2 gl, GLU glu, GLUT glut) {
+    public void draw(GL2 gl, GLU glu, GLUT glut, Texture track) {
         if (controlPoints == null) {
             float trackWidth = laneWidth * 4;
             float sideWidth = 1.4f;
@@ -46,12 +47,33 @@ class RaceTrack {
             RobotRace.setMaterial(gl, .9f, .2f, 0f, 1f, 30f, "metal");
             
             // Draw the horizontal plane of the track.
+            
+            //test start
+  gl.glColor3f(1f, 1f, 1f);
+  track.bind(gl);
+  gl.glBegin(gl.GL_QUADS);
+  gl.glTexCoord2d(0, 0);
+  gl.glVertex3d(0, 0, 0);
+  gl.glTexCoord2d(1, 0);
+  gl.glVertex3d(1, 0, 0);
+  gl.glTexCoord2d(1, 1);
+  gl.glVertex3d(1, 1, 0);
+  gl.glTexCoord2d(0, 1);
+  gl.glVertex3d(0, 1, 0);
+  gl.glEnd(); 
+            
+            //test end
+            
+            //gl.glColor3f(1f, 1f, 1f);
+            //track.bind(gl);
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            
             for(int i = 0; i < points.size(); i++) {
                 Vector point = points.get(i);
                 Vector tangentLine = tangentLines.get(i);
                 
                 gl.glNormal3f(0f, 0f, 1f);
+                //gl.glTexCoord2d(0, 0);
                 gl.glVertex3d(
                     point.x(),
                     point.y(),
@@ -59,6 +81,7 @@ class RaceTrack {
                 );
                 
                 gl.glNormal3f(0f, 0f, 1f);
+                //gl.glTexCoord2d(0, 1);
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(trackWidth).x(),
                     point.y() + tangentLine.scale(trackWidth).y(),
@@ -67,10 +90,12 @@ class RaceTrack {
             }
             gl.glEnd();
             
+           
             RobotRace.setMaterial(gl, .5f, .15f, 0f, 1f, 100f, "metal");
             
             
             // Draw inner diagonal side.
+            
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             for(int i = 0; i < points.size(); i++) {
                 Vector point = points.get(i);
