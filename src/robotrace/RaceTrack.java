@@ -59,37 +59,37 @@ class RaceTrack {
             
             //test start-------------------------------------------------------------------------------------
             
-            // Enable blending.
-        gl.glEnable(GL_BLEND);
-        gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                
-        // Enable depth testing.
-        gl.glEnable(GL_DEPTH_TEST);
-        gl.glDepthFunc(GL_LESS);
-		
-	// Normalize normals.
-        gl.glEnable(GL_NORMALIZE);
-        
-        // Enable textures. 
-        gl.glEnable(GL_TEXTURE_2D);
-        gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        gl.glBindTexture(GL_TEXTURE_2D, 0);
-        
-        
-  gl.glColor3f(1f, 1f, 1f);
-  //track.bind(gl);
-  //track.getTextureID;
-  //gl.glBindTexture(GL_TEXTURE_2D, track.getTextureID);
-  gl.glBegin(gl.GL_QUADS);
-  gl.glTexCoord2d(0, 0);
-  gl.glVertex3d(0, 0, 0);
-  gl.glTexCoord2d(1, 0);
-  gl.glVertex3d(1, 0, 0);
-  gl.glTexCoord2d(1, 1);
-  gl.glVertex3d(1, 1, 0);
-  gl.glTexCoord2d(0, 1);
-  gl.glVertex3d(0, 1, 0);
-  gl.glEnd(); 
+                // Enable blending.
+            gl.glEnable(GL_BLEND);
+            gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            // Enable depth testing.
+            gl.glEnable(GL_DEPTH_TEST);
+            gl.glDepthFunc(GL_LESS);
+
+            // Normalize normals.
+            gl.glEnable(GL_NORMALIZE);
+
+            // Enable textures. 
+            gl.glEnable(GL_TEXTURE_2D);
+            gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+            gl.glBindTexture(GL_TEXTURE_2D, 0);
+
+
+            gl.glColor3f(1f, 1f, 1f);
+            //track.bind(gl);
+            //track.getTextureID;
+            //gl.glBindTexture(GL_TEXTURE_2D, track.getTextureID);
+            gl.glBegin(gl.GL_QUADS);
+            gl.glTexCoord2d(0, 0);
+            gl.glVertex3d(0, 0, 0);
+            gl.glTexCoord2d(1, 0);
+            gl.glVertex3d(1, 0, 0);
+            gl.glTexCoord2d(1, 1);
+            gl.glVertex3d(1, 1, 0);
+            gl.glTexCoord2d(0, 1);
+            gl.glVertex3d(0, 1, 0);
+            gl.glEnd(); 
             
             //test end---------------------------------------------------------------------------------------
             
@@ -121,7 +121,6 @@ class RaceTrack {
             
            
             RobotRace.setMaterial(gl, .5f, .15f, 0f, 1f, 100f, "metal");
-            
             
             // Draw inner diagonal side.
             
@@ -250,9 +249,13 @@ class RaceTrack {
     /**
      * Returns a tangent on a bezier segment with control points
      * P0, P1, P2, P3 at 0 <= t < 1.
+     * P = 3 *P0 * t^2 + P1 * (6 * (1 - t) * t - 3* t^2) + P2 * (3 * (1 - t)^2 - 6 * (1 - t) * t) + -3 * P3 * (1 - t)^2
      */
     private Vector getCubicBezierTangent(double t, Vector P0, Vector P1,
                                                    Vector P2, Vector P3) {
-        return Vector.O; // <- code goes here
+        return  P0.scale(3 * t * t)
+                .add(P1.scale(6 * t * (1 - t)))
+                .add(P2.scale(3 * (1 - t) * (1 - t) - 6 * (1 - t) * t))
+                .add(P3.scale(-3 * (1 - t) * (1 - t)));
     }
 }
