@@ -237,13 +237,13 @@ class RaceTrack {
      *      1  1
      *    1   2  1
      *   1  3  3  1
-     * P = P0 * t^3 + P1 * t^2 * (1 - t) + P2 * t * (1-t)^2 + P3 * (1 - t)^3
+     * P = P0 * t^3 + 3 * P1 * t^2 * (1 - t) + 3 * P2 * t * (1-t)^2 + P3 * (1 - t)^3
      */
     private Vector getCubicBezierPoint(double t, Vector P0, Vector P1,
                                                  Vector P2, Vector P3) {
         return P0.scale(t*t*t)
-                .add(P1.scale(t * t * (1 - t)))
-                .add(P2.scale(t * Math.pow(1 - t, 2)))
+                .add(P1.scale(3 * t * t * (1 - t)))
+                .add(P2.scale(3 * t * Math.pow(1 - t, 2)))
                 .add(P3.scale(Math.pow(1 - t, 3)));
     }
     
