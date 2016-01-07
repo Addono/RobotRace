@@ -60,11 +60,12 @@ class RaceTrack {
             
             //test start-------------------------------------------------------------------------------------
             
-            gl.glColor3f(1f, 1f, 1f);
-            track.enable(gl);
+            //gl.glColor3f(1f, 1f, 1f);
+            //track.enable(gl);
+            //track.bind(gl);
+            gl.glEnable(GL_TEXTURE_2D);
+            track.bind(gl);
             
-            System.out.println(track.getTarget());
-            //gl.glTexImage2D(GL_TEXTURE_2D, 0, GL.GL_RGBA, 512, 512, 0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, track.getTarget());
             //track.bind(gl);
             //track.getTextureID;
             //gl.glBindTexture(GL_TEXTURE_2D, track.getTextureID);
