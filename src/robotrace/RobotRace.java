@@ -161,7 +161,7 @@ public class RobotRace extends Base {
 		
         // Try to load four textures, add more if you like.
         track = loadTexture("track.jpg");
-        brick = loadTexture("test.jpg");
+        brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
         torso = loadTexture("torso.jpg");        
         
