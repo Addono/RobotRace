@@ -10,14 +10,16 @@ import javax.media.opengl.glu.GLU;
  * Implementation of the terrain.
  */
 class Terrain {
-    int amount_x = 100;
-    int amount_y = 100;
+    int amount_x = 200;
+    int amount_y = 200;
     float size_x = 40;
     float size_y = 40;
     
-    float[][] heights = new float[amount_x][amount_y];
+    float[][] heights = new float[amount_x][amount_y]; // Stores all the heights for all the different point.
+    
     /**
-     * Can be used to set up a display list.
+     * Pre-computes the height for all points.
+     * 
      */
     public Terrain() {
         for(int x = 0; x < amount_x; x++) {
@@ -33,18 +35,51 @@ class Terrain {
      * Draws the terrain.
      */
     public void draw(GL2 gl, GLU glu, GLUT glut) {
-        gl.glBegin(gl.GL_TRIANGLE_STRIP);
+        RobotRace.setMaterial(gl, new float[] {.8f, .8f, .8f, 1f}, 20, "metal");
+        
+        
         for(int y = 0; y < amount_y - 1; y++) {
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            Vector oldPoint1 = new Vector(0,0,0);
+            Vector oldPoint2 = new Vector(0,0,0);
             for(int x = 0; x < amount_x; x++) {
-                drawPoint(gl, x, y);
-                drawPoint(gl, x, y+1);
+                Vector point1 = Coordinate(x, y);
+                Vector point2 = Coordinate(x, y + 1);
+                
+                Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
+                Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
+                Vector oldHorizontal = oldPoint2.subtract(oldPoint1);   // The line from oldP1 to oldP2.
+                
+                Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
+                Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
+                
+                setNormal(gl, normal1);
+                drawLineSegment(gl, point1); // Draw the first line segment, creating a new triangle.
+                
+                setNormal(gl, normal2);
+                drawLineSegment(gl, point2); // Draw the second line segment, creating a new triangle.
+                
+                oldPoint1 = point1;
+                oldPoint2 = point2;
             }
+            gl.glEnd();
         }
-        gl.glEnd();
+    }
+    
+    public void setNormal(GL2 gl, Vector normal) {
+        gl.glNormal3d(normal.x(), normal.y(), normal.z());
     }
 
-    public void drawPoint(GL2 gl, int x, int y) {
-        gl.glVertex3d(xCoordinate(x), yCoordinate(y), heights[x][y]);
+    public void drawLineSegment(GL2 gl, Vector point) {
+        gl.glVertex3d(point.x(), point.y(), point.z());
+    }
+    
+    public Vector Coordinate(int x, int y) {
+        return new Vector(
+                xCoordinate(x),
+                yCoordinate(y),
+                heights[x][y]
+        );
     }
     
     public float xCoordinate(int x) {

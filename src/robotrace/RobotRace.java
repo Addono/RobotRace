@@ -4,6 +4,7 @@ import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import java.awt.event.*;
 import javax.media.opengl.GL2;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -169,13 +170,15 @@ public class RobotRace extends Base {
         gl.glShadeModel(GL_SMOOTH);
         gl.glEnable(GL_LIGHTING);
         gl.glEnable(lightSource1); // Local moving light source.
-        gl.glEnable(cameraLight);
+        //gl.glEnable(cameraLight);
         gl.glEnable(ambientLight); // Ambient light source
         
         // Set the properties of lightsource 1.
-        float whiteColor[] = { 1.0f, 1.0f, 1.0f, 1f };
+        float whiteColor[] = { 1.0f, 1.0f, 1.0f, 0f };
         gl.glLightfv(lightSource1, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(lightSource1, GL_SPECULAR, whiteColor, 0);
+        gl.glLightfv(lightSource1, GL_POSITION, new float[] {3f, 3f, 10f, 0f}, 0);
+        gl.glLightfv(lightSource1, GL_AMBIENT, new float[] {0f, 0f, 0f, 0f}, 0);
         
         // Set the properties of the ambient lightsource.
         float ambientIntensity = .3f;
@@ -184,6 +187,7 @@ public class RobotRace extends Base {
         // Set the properties of the camera lightsource.
         gl.glLightfv(cameraLight, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(cameraLight, GL_SPECULAR, whiteColor, 0);
+        
     }
     
     /**
@@ -280,7 +284,6 @@ public class RobotRace extends Base {
         
         // Draw the terrain.
         terrain.draw(gl, glu, glut);
-        
         
         // Set the ambient light of the scene.
         double offset = 10f * (Math.PI / 180f); // Calculate offset in radians.

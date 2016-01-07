@@ -54,12 +54,12 @@ class RaceTrack {
             float sideWidth = 1.4f;
             float trackBottom = -1f;
             
-            RobotRace.setMaterial(gl, 1f, 1f, 1f, 1f, 30f, "metal");
+            RobotRace.setMaterial(gl, 1f, 1f, 1f, 1f, 10f, "metal");
 
             gl.glEnable(GL_TEXTURE_2D);
             track.bind(gl);
             
-            gl.glTexEnvi(gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_REPLACE);
+            //gl.glTexEnvi(gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_REPLACE); // Kills shading
             
             gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
             gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
@@ -99,7 +99,7 @@ class RaceTrack {
             gl.glEnd();
             
            
-            RobotRace.setMaterial(gl, .5f, .15f, 0f, 1f, 100f, "metal");
+            RobotRace.setMaterial(gl, 1f, 1f, 1f, 1f, 10f, "metal");
             
             // Draw inner diagonal side.
             brick.bind(gl);
