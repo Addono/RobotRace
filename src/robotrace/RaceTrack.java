@@ -175,6 +175,10 @@ class RaceTrack {
         }
     }
     
+    /**
+     *  Stores all points of the track in an ArrayList. To prevent re-doing
+     *  computations.
+     */
     private void calculateTrackPoints() {
         int parts = 100;
         for(int i = 0; i <= parts; i++) {
