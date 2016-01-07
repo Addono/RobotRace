@@ -210,6 +210,9 @@ public class RobotRace extends Base {
         
         // Set camera.
         gl.glMatrixMode(GL_MODELVIEW);
+    }
+    
+    public void updateCamera() {
         gl.glLoadIdentity();
                
         // Update the view according to the camera mode and robot of interest.
@@ -251,7 +254,7 @@ public class RobotRace extends Base {
         }
         
         // Draw all the robots on their position on the racetrack.
-        float robotSpeed[] = {10, 15, 25, 28}; // Array containing the speed of all the robots.
+        float robotSpeed[] = {32f, 36f, 33f, 34f}; // Array containing the speed of all the robots.
         for(int i = 0; i < 4; i++) {
             float timeScale = robotSpeed[i];
             robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, gs.tAnim / timeScale);
@@ -268,6 +271,8 @@ public class RobotRace extends Base {
             robots[i].draw(gl, glu, glut, gs.showStick, gs.tAnim); // Draw the i-th robot.
             gl.glPopMatrix();
         }
+        
+        updateCamera();
         
         // Draw the race track.
         raceTracks[gs.trackNr].draw(gl, glu, glut, track, brick);
