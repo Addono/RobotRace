@@ -160,7 +160,7 @@ public class RobotRace extends Base {
         gl.glBindTexture(GL_TEXTURE_2D, 0);
 		
         // Try to load four textures, add more if you like.
-        track = loadTexture("track.jpg");
+        track = loadTexture("track4.jpg");
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
         torso = loadTexture("torso.jpg");        
