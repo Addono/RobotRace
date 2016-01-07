@@ -77,7 +77,7 @@ class RaceTrack {
                 Vector tangentLine = tangentLines.get(i);
                 
                 // Calculate how long this part of the track is.
-                length += point.subtract(oldPoint).length() / 4;
+                length += point.subtract(oldPoint).length() / 10;
                 
                 gl.glTexCoord2f(length, 0f);
                 gl.glVertex3d(
@@ -86,7 +86,7 @@ class RaceTrack {
                     point.z()
                 );
                 
-                gl.glTexCoord2f(length, 1f); // Set the upper right position on the texture.
+                gl.glTexCoord2f(length, trackWidth / 10); // Set the upper right position on the texture.
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(trackWidth).x(),
                     point.y() + tangentLine.scale(trackWidth).y(),
@@ -117,7 +117,7 @@ class RaceTrack {
                 gl.glNormal3d(normal.x(), normal.y(), normal.z());
                 
                 // Calculate how long this part of the track is.
-                length += point.subtract(oldPoint).length() / 4;
+                length += point.subtract(oldPoint).length() / 10;
                 
                 gl.glTexCoord2f(0f, length);
                 gl.glVertex3d(
@@ -126,7 +126,7 @@ class RaceTrack {
                     point.z()
                 );
                 
-                gl.glTexCoord2f(1f, length);
+                gl.glTexCoord2f(sideWidth / 10, length);
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(-sideWidth).x(),
                     point.y() + tangentLine.scale(-sideWidth).y(),
@@ -149,7 +149,7 @@ class RaceTrack {
                 gl.glNormal3d(normal.x(), normal.y(), normal.z());
                 
                 // Calculate how long this part of the track is.
-                length += point.subtract(oldPoint).length() / 4;
+                length += point.subtract(oldPoint).length() / 20;
                 
                 gl.glTexCoord2f(0f, length);
                 gl.glVertex3d(
@@ -158,7 +158,7 @@ class RaceTrack {
                     point.add(tangentLine.scale(trackWidth)).z()
                 );
                 
-                gl.glTexCoord2f(1f, length);
+                gl.glTexCoord2f(sideWidth / 10, length);
                 gl.glVertex3d(
                     point.add(tangentLine.scale(trackWidth + sideWidth)).x(),
                     point.add(tangentLine.scale(trackWidth + sideWidth)).y(),
