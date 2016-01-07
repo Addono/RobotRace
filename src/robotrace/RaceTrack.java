@@ -68,7 +68,7 @@ class RaceTrack {
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             gl.glNormal3f(0f, 0f, 1f);
             float length = 0;
-            float scale = 10;
+            float scale = laneWidth * 4;
             Vector oldPoint = points.get(0);
             
             // Create a strip of all points.
