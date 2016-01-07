@@ -19,7 +19,6 @@ class Terrain {
     
     /**
      * Pre-computes the height for all points.
-     * 
      */
     public Terrain() {
         for(int x = 0; x < amount_x; x++) {
@@ -43,8 +42,8 @@ class Terrain {
             Vector oldPoint1 = new Vector(0,0,0);
             Vector oldPoint2 = new Vector(0,0,0);
             for(int x = 0; x < amount_x; x++) {
-                Vector point1 = Coordinate(x, y);
-                Vector point2 = Coordinate(x, y + 1);
+                Vector point1 = Coordinate(x, y);       // Get the coordinate of the first point.
+                Vector point2 = Coordinate(x, y + 1);   // Get the coordinate of the second point.
                 
                 Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
                 Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
@@ -53,14 +52,14 @@ class Terrain {
                 Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
                 Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
                 
-                setNormal(gl, normal1);
+                setNormal(gl, normal1);      // Set the normal for the first triangle to be drawn.
                 drawLineSegment(gl, point1); // Draw the first line segment, creating a new triangle.
                 
-                setNormal(gl, normal2);
+                setNormal(gl, normal2);      // Set the normal for the second normal to be drawn.
                 drawLineSegment(gl, point2); // Draw the second line segment, creating a new triangle.
                 
-                oldPoint1 = point1;
-                oldPoint2 = point2;
+                oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
+                oldPoint2 = point2;          // Store the value of point2, which will be used by the next calculation.
             }
             gl.glEnd();
         }
