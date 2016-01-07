@@ -48,7 +48,7 @@ class RaceTrack {
     /**
      * Draws this track, based on the control points.
      */
-    public void draw(GL2 gl, GLU glu, GLUT glut, Texture track) {
+    public void draw(GL2 gl, GLU glu, GLUT glut, Texture track, Texture brick) {
         if (controlPoints == null) {
             float trackWidth = laneWidth * 4;
             float sideWidth = 1.4f;
@@ -69,6 +69,8 @@ class RaceTrack {
             gl.glNormal3f(0f, 0f, 1f);
             float length = 0;
             Vector oldPoint = points.get(0);
+            
+            // Create a strip of all points.
             for(int i = 0; i < points.size(); i++) {
                 // Retrieve the upcoming point and tangent line from the ArrayList.
                 Vector point = points.get(i);
@@ -99,43 +101,71 @@ class RaceTrack {
             RobotRace.setMaterial(gl, .5f, .15f, 0f, 1f, 100f, "metal");
             
             // Draw inner diagonal side.
+            brick.bind(gl);
             
+            gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+            gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+            
+            oldPoint = points.get(0);
+            length = 0;
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             for(int i = 0; i < points.size(); i++) {
                 Vector point = points.get(i);
                 Vector tangentLine = tangentLines.get(i);
+                Vector normal = point.subtract(oldPoint).cross(tangentLine);
                 
+                gl.glNormal3d(normal.x(), normal.y(), normal.z());
+                
+                // Calculate how long this part of the track is.
+                length += point.subtract(oldPoint).length() / 4;
+                
+                gl.glTexCoord2f(0f, length);
                 gl.glVertex3d(
                     point.x(),
                     point.y(),
                     point.z()
                 );
                 
+                gl.glTexCoord2f(1f, length);
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(-sideWidth).x(),
                     point.y() + tangentLine.scale(-sideWidth).y(),
                     trackBottom
                 );
+                
+                oldPoint = point;
             }
             gl.glEnd();
             
             // Draw outer diagonal side.
+            length = 0;
+            oldPoint = points.get(0);
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             for(int i = 0; i < points.size(); i++) {
                 Vector point = points.get(i);
                 Vector tangentLine = tangentLines.get(i);
+                Vector normal = point.subtract(oldPoint).cross(tangentLine);
                 
+                gl.glNormal3d(normal.x(), normal.y(), normal.z());
+                
+                // Calculate how long this part of the track is.
+                length += point.subtract(oldPoint).length() / 4;
+                
+                gl.glTexCoord2f(0f, length);
                 gl.glVertex3d(
                     point.add(tangentLine.scale(trackWidth)).x(),
                     point.add(tangentLine.scale(trackWidth)).y(),
                     point.add(tangentLine.scale(trackWidth)).z()
                 );
                 
+                gl.glTexCoord2f(1f, length);
                 gl.glVertex3d(
                     point.add(tangentLine.scale(trackWidth + sideWidth)).x(),
                     point.add(tangentLine.scale(trackWidth + sideWidth)).y(),
                     trackBottom
                 );
+                
+                oldPoint = point;
             }
             gl.glEnd();
         } else {

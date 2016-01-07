@@ -161,7 +161,7 @@ public class RobotRace extends Base {
 		
         // Try to load four textures, add more if you like.
         track = loadTexture("track.jpg");
-        brick = loadTexture("brick.jpg");
+        brick = loadTexture("test.jpg");
         head  = loadTexture("head.jpg");
         torso = loadTexture("torso.jpg");        
         
@@ -270,7 +270,7 @@ public class RobotRace extends Base {
         }
         
         // Draw the race track.
-        raceTracks[gs.trackNr].draw(gl, glu, glut, track);
+        raceTracks[gs.trackNr].draw(gl, glu, glut, track, brick);
         
         
         // Draw the terrain.
