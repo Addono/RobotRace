@@ -68,6 +68,7 @@ class RaceTrack {
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             gl.glNormal3f(0f, 0f, 1f);
             float length = 0;
+            float scale = 10;
             Vector oldPoint = points.get(0);
             
             // Create a strip of all points.
@@ -77,7 +78,7 @@ class RaceTrack {
                 Vector tangentLine = tangentLines.get(i);
                 
                 // Calculate how long this part of the track is.
-                length += point.subtract(oldPoint).length() / 10;
+                length += point.subtract(oldPoint).length() / scale;
                 
                 gl.glTexCoord2f(length, 0f);
                 gl.glVertex3d(
@@ -86,7 +87,7 @@ class RaceTrack {
                     point.z()
                 );
                 
-                gl.glTexCoord2f(length, trackWidth / 10); // Set the upper right position on the texture.
+                gl.glTexCoord2f(length, trackWidth / scale); // Set the upper right position on the texture.
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(trackWidth).x(),
                     point.y() + tangentLine.scale(trackWidth).y(),
@@ -108,6 +109,7 @@ class RaceTrack {
             
             oldPoint = points.get(0);
             length = 0;
+            scale = 1f;
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             for(int i = 0; i < points.size(); i++) {
                 Vector point = points.get(i);
@@ -117,7 +119,7 @@ class RaceTrack {
                 gl.glNormal3d(normal.x(), normal.y(), normal.z());
                 
                 // Calculate how long this part of the track is.
-                length += point.subtract(oldPoint).length() / 10;
+                length += point.subtract(oldPoint).length() / scale;
                 
                 gl.glTexCoord2f(0f, length);
                 gl.glVertex3d(
@@ -126,7 +128,7 @@ class RaceTrack {
                     point.z()
                 );
                 
-                gl.glTexCoord2f(sideWidth / 10, length);
+                gl.glTexCoord2f(sideWidth / scale, length);
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(-sideWidth).x(),
                     point.y() + tangentLine.scale(-sideWidth).y(),
@@ -149,7 +151,7 @@ class RaceTrack {
                 gl.glNormal3d(normal.x(), normal.y(), normal.z());
                 
                 // Calculate how long this part of the track is.
-                length += point.subtract(oldPoint).length() / 20;
+                length += point.subtract(oldPoint).length() / scale;
                 
                 gl.glTexCoord2f(0f, length);
                 gl.glVertex3d(
@@ -158,7 +160,7 @@ class RaceTrack {
                     point.add(tangentLine.scale(trackWidth)).z()
                 );
                 
-                gl.glTexCoord2f(sideWidth / 10, length);
+                gl.glTexCoord2f(sideWidth / scale, length);
                 gl.glVertex3d(
                     point.add(tangentLine.scale(trackWidth + sideWidth)).x(),
                     point.add(tangentLine.scale(trackWidth + sideWidth)).y(),
