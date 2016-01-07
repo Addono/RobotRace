@@ -54,57 +54,58 @@ class RaceTrack {
             float sideWidth = 1.4f;
             float trackBottom = -1f;
             
-            RobotRace.setMaterial(gl, .9f, .2f, 0f, 1f, 30f, "metal");
-            
-            // Draw the horizontal plane of the track.
-            
-            //test start-------------------------------------------------------------------------------------
-            
-            //gl.glColor3f(1f, 1f, 1f);
-            //track.enable(gl);
-            //track.bind(gl);
+            RobotRace.setMaterial(gl, 1f, 1f, 1f, 1f, 30f, "metal");
+
             gl.glEnable(GL_TEXTURE_2D);
             track.bind(gl);
             
-            //track.bind(gl);
-            //track.getTextureID;
-            //gl.glBindTexture(GL_TEXTURE_2D, track.getTextureID);
-            gl.glBegin(gl.GL_QUADS);
+            gl.glTexEnvi(gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_REPLACE);
+            
+            gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+            gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+            
+            
+            //test start-------------------------------------------------------------------------------------
+            
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
             gl.glTexCoord2d(0, 0);
             gl.glVertex3d(0, 0, 0);
             gl.glTexCoord2d(1, 0);
             gl.glVertex3d(1, 0, 0);
             gl.glTexCoord2d(1, 1);
             gl.glVertex3d(1, 1, 0);
-            gl.glTexCoord2d(0, 1);
-            gl.glVertex3d(0, 1, 0);
             gl.glEnd(); 
             
             //test end---------------------------------------------------------------------------------------
             
-            //gl.glColor3f(1f, 1f, 1f);
-            //track.bind(gl);
+            // Draw the horizontal plane of the track.
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
-            
+            gl.glNormal3f(0f, 0f, 1f);
+            float length = 0;
+            Vector oldPoint = points.get(0);
             for(int i = 0; i < points.size(); i++) {
+                // Retrieve the upcoming point and tangent line from the ArrayList.
                 Vector point = points.get(i);
                 Vector tangentLine = tangentLines.get(i);
                 
-                gl.glNormal3f(0f, 0f, 1f);
-                //gl.glTexCoord2d(0, 0);
+                // Calculate how long this part of the track is.
+                length += point.subtract(oldPoint).length() / 4;
+                
+                gl.glTexCoord2f(length, 0f);
                 gl.glVertex3d(
                     point.x(),
                     point.y(),
                     point.z()
                 );
                 
-                gl.glNormal3f(0f, 0f, 1f);
-                //gl.glTexCoord2d(0, 1);
+                gl.glTexCoord2f(length, 1f); // Set the upper right position on the texture.
                 gl.glVertex3d(
                     point.x() + tangentLine.scale(trackWidth).x(),
                     point.y() + tangentLine.scale(trackWidth).y(),
                     point.z() + tangentLine.scale(trackWidth).z()
                 );
+                
+                oldPoint = point; // Save this point, so it can be used in the next cycle.
             }
             gl.glEnd();
             
