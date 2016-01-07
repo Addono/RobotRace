@@ -64,20 +64,6 @@ class RaceTrack {
             gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
             gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
             
-            
-            //test start-------------------------------------------------------------------------------------
-            
-            gl.glBegin(gl.GL_TRIANGLE_STRIP);
-            gl.glTexCoord2d(0, 0);
-            gl.glVertex3d(0, 0, 0);
-            gl.glTexCoord2d(1, 0);
-            gl.glVertex3d(1, 0, 0);
-            gl.glTexCoord2d(1, 1);
-            gl.glVertex3d(1, 1, 0);
-            gl.glEnd(); 
-            
-            //test end---------------------------------------------------------------------------------------
-            
             // Draw the horizontal plane of the track.
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             gl.glNormal3f(0f, 0f, 1f);
