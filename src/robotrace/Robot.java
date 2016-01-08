@@ -4,6 +4,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import java.util.Random;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
+import static java.lang.Math.*;
 
 /**
 * Represents a Robot, to be implemented according to the Assignments.
@@ -47,31 +48,42 @@ class Robot {
         
         float legDistance = stretchedHeight / 10;
         float legPartHeight = stretchedHeight * 14 / 60;
-        float kneeAngle = 20f;
-        float legAngle = 30f;
+        float rightKneeAngle = (float) (10f * (2f + cos(tAnim*10)));
+        float leftKneeAngle = (float) (10f * (2f + sin(tAnim*10)));
+        float legAngle = (float) (25f * (sin(tAnim*10)));
         
         
+        float legAngleRad = legAngle*(float)Math.PI/180f;
+        float legHeight  = (float) (2 * legPartHeight * Math.cos(rightKneeAngle * Math.PI / 180)) - legPartHeight/ 10;
         float lowerBodyHeight = stretchedHeight / 10;
         float bodyHeight = stretchedHeight * 3 / 10;
+  
         
-        float elbowAngle = (float) (10f * (2f + Math.cos(tAnim)));
-        float armAngle = (float) (25f * (Math.sin(tAnim)));
+        float elbowAngle = (float) (10f * (2f + Math.cos(tAnim*10)));
+        float armAngle = (float) (25f * (Math.sin(tAnim*10)));
         
         gl.glPushMatrix();
-        float legHeight = 0; // Stores the actual height of the legs.
         // Draw the feets and legs.
         for(int i = -1; i <= 1; i += 2) {
             gl.glPushMatrix();
-                gl.glTranslatef(0f, 0f, -1*(feetHeight+legPartHeight));
-                gl.glRotatef(legAngle, -1f, 0f, 0f);
-                gl.glTranslatef(0f, 0f, (feetHeight+legPartHeight));
+                float currentKneeAngle;
+                if(i==-1){
+                    currentKneeAngle = rightKneeAngle;
+                }else{
+                    currentKneeAngle = leftKneeAngle;
+                }
+                
+                gl.glTranslatef(0f, -1*(float)Math.sin(i*legAngleRad)*(feetHeight+legHeight) , ((feetHeight+legHeight)-(float)Math.cos(i*legAngleRad)*(feetHeight+legHeight))*1);
+                gl.glRotatef(i*legAngle, -1f, 0f, 0f);
                 gl.glTranslatef(i * legDistance, 0f, 0f);
                 drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
                 gl.glTranslatef(0.0f, 0.0f, feetHeight);
-                legHeight = drawLimb(gl, glut, legPartHeight, kneeAngle, legAngle, stickFigure, tAnim);
+                legHeight = drawLimb(gl, glut, legPartHeight, currentKneeAngle, legAngle, stickFigure, tAnim);
+                
                 
                 
             gl.glPopMatrix();
+            
         }
         
         gl.glPopMatrix();
@@ -100,7 +112,7 @@ class Robot {
             for(int i = 1; i >= -1; i -= 2) {
                 gl.glScalef( i, 1.0f, 1.0f);
                 gl.glPushMatrix();
-                    gl.glTranslatef(legDistance * 1.5f, 0.0f, feetHeight + bodyHeight + lowerBodyHeight * 2 + legPartHeight);
+                    gl.glTranslatef(legDistance * 1.5f, 0.0f, bodyHeight + lowerBodyHeight + legHeight);
                     gl.glRotatef(90f, 0.0f, 1.0f, 0.0f);
                     drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
                     gl.glRotatef(90f, 0.0f, 1.0f, 0.0f);

@@ -336,7 +336,7 @@ public class RobotRace extends Base {
         }
         
         // Draw all the robots on their position on the racetrack.
-        float robotSpeed[] = {32f, 36f, 33f, 34f}; // Array containing the speed of all the robots.
+        float robotSpeed[] = {22f, 26f, 27f, 30f}; // Array containing the speed of all the robots.
         for(int i = 0; i < 4; i++) {
             float timeScale = robotSpeed[i];
             robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, gs.tAnim / timeScale);
