@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import javax.media.opengl.GL2;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
+import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Handles all of the RobotRace graphics functionality,
@@ -142,12 +144,66 @@ public class RobotRace extends Base {
         gs.cnt = Vector.O;
     }
     
-    public static Color[] generateColors() {
-        Color[] colors = new Color[256];
-        for(int i = 0; i < 256; i++) {
-            colors[i] = new Color(i, i, i);
+    /**
+     * Creates a color gradient, scales from the previous color until
+     * the next one.
+     * 
+     * @param rgbah     For every color an array with the values red, green, blue, alpha and the height (all in the range [0, 1]).
+     * @param amount    Amount of colors.
+     * @param scale     How fast the color transition should be, relative to the given color points. Higher will cause faster transitions.
+     * @return Colors[] Array of all the colors.
+     */
+    public Color[] colorGradient(float[][] rgbah, int amount, float scale) {
+        
+        // First sort the rgbah array on height - with lowest first - thus sorting
+        //   on the 4th column.
+        Arrays.sort(rgbah, new Comparator<float[]>() {
+            public int compare(float[] row1, float[] row2) {
+                if (row1[4] > row2[4])
+                    return 1;    
+                else if (row1[4] < row2[4])
+                    return -1;
+                else
+                    return 0;
+           }
+        });
+        
+        // Create the colors array, which will store all the colors.
+        Color[] colors = new Color[amount];
+        
+        // Calculate all colors.
+        int previousSteps = 0;
+        for(int i = 0, limit = rgbah.length - 1; i < limit; i++) {
+            int stepsAmount = (int) ((rgbah[i+1][4] - rgbah[i][4]) * amount); // Get the amount of steps, difference in height [0, 1] times the amount of steps.
+            int steps = previousSteps + stepsAmount; // Is the target amount which will be reached with this value for i.
+            
+            // Generate colors[previousSteps] until colors[steps]
+            for(int j = previousSteps; j < steps; j++) { 
+                // Calculate color[j]
+                
+                // Get the factor of the lower color1 (rgbah[i]) and higher color2 (rgbah[i+1).
+                // The sum of the factors is always 
+                float factorColor1 = (float) Math.pow((float) (steps - j) / (float) stepsAmount, scale); // [0, 1]
+                float factorColor2 = 1 - factorColor1; // [0, 1]
+                
+                // Use the factor and the colors to generate the new color.
+                float[] color = new float[4];
+                for(int c = 0; c < 4; c++) {
+                    color[c] = rgbah[i][c] * factorColor1 + rgbah[i+1][c] * factorColor2;
+                }
+                
+                // Put this into the colors array.
+                colors[j] = new Color(color[0], color[1], color[2], color[3]);
+            }
+            
+            previousSteps = steps;
         }
+        
         return colors;
+    }
+    
+    public Color[] colorGradient(float[][] rgba, int amount) {
+        return colorGradient(rgba, amount, 1);
     }
     
     /*
@@ -178,7 +234,15 @@ public class RobotRace extends Base {
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
         torso = loadTexture("torso.jpg");      
-        terrainTexture = create1DTexture(generateColors());
+        
+        float[][] terrainColors = {
+            new float[] {0f, 0.302f, .302f, 1f, 0f},         // The dark blue spot.
+            new float[] {.125f, .698f, .667f, 1f, .375f},     // 
+            new float[] {0.957f, 0.843f, 0.276f, 1f, .6875f},//
+            new float[] {.486f, .988f, 0f, 1f, 1f}           // Lawn green
+        };
+        
+        terrainTexture = create1DTexture(colorGradient(terrainColors, 256, 2));
         
         // Enable lighting.
         gl.glShadeModel(GL_SMOOTH);
