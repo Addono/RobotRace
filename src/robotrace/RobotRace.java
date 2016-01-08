@@ -235,7 +235,7 @@ public class RobotRace extends Base {
         track = loadTexture("track4.jpg");
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
-        torso = loadTexture("track5.jpg");   
+        torso = loadTexture("partTex.jpg");   
         
         float[][] terrainColors = {
             new float[] {0f, 0.302f, .302f, 1f, 0f},         // The dark blue spot.
