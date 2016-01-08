@@ -1,7 +1,10 @@
 package robotrace;
 
 import com.jogamp.opengl.util.gl2.GLUT;
+import java.awt.Color;
 import static java.lang.Math.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
@@ -14,6 +17,7 @@ class Terrain {
     int amount_u = 200;
     float size_x = 40;
     float size_y = 40;
+    int texture;
     
     float[][] heights = new float[amount_v][amount_u]; // Stores all the heights for all the different point.
     
@@ -36,11 +40,17 @@ class Terrain {
     public void draw(GL2 gl, GLU glu, GLUT glut) {
         RobotRace.setMaterial(gl, new float[] {.8f, .8f, .8f, 1f}, 20, "metal");
         
+        gl.glDisable(gl.GL_TEXTURE_2D);
+        gl.glEnable(gl.GL_TEXTURE_1D);
+        
+        gl.glBindTexture(gl.GL_TEXTURE_1D, RobotRace.terrainTexture);
         
         for(int u = 0; u < amount_u - 1; u++) {
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            
             Vector oldPoint1 = new Vector(0,0,0);
             Vector oldPoint2 = new Vector(0,0,0);
+            
             for(int v = 0; v < amount_v; v++) {
                 Vector point1 = Coordinate(v, u);       // Get the coordinate of the first point.
                 Vector point2 = Coordinate(v, u + 1);   // Get the coordinate of the second point.
@@ -52,17 +62,26 @@ class Terrain {
                 Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
                 Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
                 
-                setNormal(gl, normal1);      // Set the normal for the first triangle to be drawn.
-                drawLineSegment(gl, point1); // Draw the first line segment, creating a new triangle.
-                
-                setNormal(gl, normal2);      // Set the normal for the second normal to be drawn.
-                drawLineSegment(gl, point2); // Draw the second line segment, creating a new triangle.
+                drawTriangle(gl, normal1, point1);
+                drawTriangle(gl, normal2, point2);
                 
                 oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
                 oldPoint2 = point2;          // Store the value of point2, which will be used by the next calculation.
             }
             gl.glEnd();
         }
+    }
+    
+    public void drawTriangle(GL2 gl, Vector normal, Vector newPoint) {
+        // Texture mapping.
+        double scaledHeight = (newPoint.z() + 1) / 2;
+        gl.glTexCoord1d(scaledHeight);
+        
+        // Set the normal.
+        setNormal(gl, normal);
+        
+        // Draw the line to the new point.
+        drawLineSegment(gl, newPoint);
     }
     
     /**
@@ -76,13 +95,13 @@ class Terrain {
     }
     
     /**
-     * Draws a line part from the previous line end to the specified point.
+     * Draws a line part from the previous line end to the specified newPoint.
      * 
      * @param GL2       The JOGL 2 object.
-     * @param Vector    The point where the line should be drawn to. 
+     * @param Vector    The newPoint where the line should be drawn to. 
      */
-    public void drawLineSegment(GL2 gl, Vector point) {
-        gl.glVertex3d(point.x(), point.y(), point.z());
+    public void drawLineSegment(GL2 gl, Vector newPoint) {
+        gl.glVertex3d(newPoint.x(), newPoint.y(), newPoint.z());
     }
     
     /**

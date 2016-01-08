@@ -1,8 +1,11 @@
 package robotrace;
 
+import java.awt.Color;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
 import java.awt.event.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import javax.media.opengl.GL2;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_POSITION;
 
@@ -77,6 +80,8 @@ public class RobotRace extends Base {
     int lightSource1 = GL_LIGHT1;
     int cameraLight = GL_LIGHT3;
     
+    public static int terrainTexture;
+    
     /**
      * Constructs this robot race by initializing robots,
      * camera, track, and terrain.
@@ -137,6 +142,14 @@ public class RobotRace extends Base {
         gs.cnt = Vector.O;
     }
     
+    public static Color[] generateColors() {
+        Color[] colors = new Color[256];
+        for(int i = 0; i < 256; i++) {
+            colors[i] = new Color(i, i, i);
+        }
+        return colors;
+    }
+    
     /*
      * Called upon the start of the application.
      * Primarily used to configure OpenGL.
@@ -151,7 +164,7 @@ public class RobotRace extends Base {
         // Enable depth testing.
         gl.glEnable(GL_DEPTH_TEST);
         gl.glDepthFunc(GL_LESS);
-		
+        
 	// Normalize normals.
         gl.glEnable(GL_NORMALIZE);
         
@@ -164,7 +177,8 @@ public class RobotRace extends Base {
         track = loadTexture("track4.jpg");
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
-        torso = loadTexture("torso.jpg");        
+        torso = loadTexture("torso.jpg");      
+        terrainTexture = create1DTexture(generateColors());
         
         // Enable lighting.
         gl.glShadeModel(GL_SMOOTH);
@@ -444,5 +458,33 @@ public class RobotRace extends Base {
     
     public static void logVector(Vector vector) {
         System.out.println("Vector: "  + vector.x() + "\t" + vector.y() + "\t" + vector.z() + "\t" + vector.length());
+    }
+    
+    /**
+    * Creates a new 1D - texture.
+    * @param gl
+    * @param colors
+    * @return the texture ID for the generated texture.
+    */
+    public int create1DTexture(Color[] colors){
+        gl.glDisable(GL_TEXTURE_2D);
+        gl.glEnable(GL_TEXTURE_1D);
+        int[] texid = new int[]{-1};
+        gl.glGenTextures(1, texid, 0);
+        ByteBuffer bb = ByteBuffer.allocateDirect(colors.length * 4).order(ByteOrder.nativeOrder());
+        for (Color color : colors) {
+           int pixel = color.getRGB();
+           bb.put((byte) ((pixel >> 16) & 0xFF)); // Red component
+           bb.put((byte) ((pixel >> 8) & 0xFF));  // Green component
+           bb.put((byte) (pixel & 0xFF));         // Blue component
+           bb.put((byte) ((pixel >> 24) & 0xFF)); // Alpha component
+        }
+        bb.flip();
+        gl.glBindTexture(GL_TEXTURE_1D, texid[0]);
+        gl.glTexImage1D(GL_TEXTURE_1D, 0, GL_RGBA8, colors.length, 0, GL_RGBA, GL_UNSIGNED_BYTE, bb);
+        gl.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        gl.glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        gl.glBindTexture(GL_TEXTURE_1D, 0);
+        return texid[0];
     }
 }
