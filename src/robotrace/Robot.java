@@ -64,27 +64,35 @@ class Robot {
         
         gl.glPushMatrix();
         // Draw the feets and legs.
-        for(int i = -1; i <= 1; i += 2) {
-            gl.glPushMatrix();
-                float currentKneeAngle;
-                if(i==-1){
-                    currentKneeAngle = rightKneeAngle;
-                }else{
-                    currentKneeAngle = leftKneeAngle;
-                }
+        
+                float legHeight1  = (float) (2 * legPartHeight * Math.cos(rightKneeAngle * Math.PI / 180)) - legPartHeight/ 10;
+                float legHeight2  = (float) (2 * legPartHeight * Math.cos(leftKneeAngle * Math.PI / 180)) - legPartHeight/ 10;
+                legHeight = max(legHeight1,legHeight2);
                 
-                gl.glTranslatef(0f, -1*(float)Math.sin(i*legAngleRad)*(feetHeight+legHeight) , ((feetHeight+legHeight)-(float)Math.cos(i*legAngleRad)*(feetHeight+legHeight))*1);
-                gl.glRotatef(i*legAngle, -1f, 0f, 0f);
-                gl.glTranslatef(i * legDistance, 0f, 0f);
+            gl.glPushMatrix();
+                 if(legHeight2>legHeight1){
+                        gl.glTranslatef(0f, 0f, legHeight2-legHeight1);
+                     }
+                gl.glTranslatef(0f, -1*(float)Math.sin(legAngleRad)*(feetHeight+legHeight) , ((feetHeight+legHeight)-(float)Math.cos(legAngleRad)*(feetHeight+legHeight)));
+                gl.glRotatef(legAngle, -1f, 0f, 0f);
+                gl.glTranslatef(legDistance, 0f, 0f);
                 drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
                 gl.glTranslatef(0.0f, 0.0f, feetHeight);
-                legHeight = drawLimb(gl, glut, legPartHeight, currentKneeAngle, legAngle, stickFigure, tAnim);
-                
-                
+                drawLimb(gl, glut, legPartHeight, rightKneeAngle, legAngle, stickFigure, tAnim);
+            gl.glPopMatrix();
+            gl.glPushMatrix();
+                if(legHeight1>legHeight2){
+                    gl.glTranslatef(0f, 0f, legHeight1-legHeight2);
+                }
+                gl.glTranslatef(0f, -1*(float)Math.sin(-1*legAngleRad)*(feetHeight+legHeight) , ((feetHeight+legHeight)-(float)Math.cos(-1*legAngleRad)*(feetHeight+legHeight)));
+                gl.glRotatef(-1*legAngle, -1f, 0f, 0f);
+                gl.glTranslatef(-1*legDistance, 0f, 0f);
+                drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
+                gl.glTranslatef(0.0f, 0.0f, feetHeight);
+                drawLimb(gl, glut, legPartHeight, leftKneeAngle, -1*legAngle, stickFigure, tAnim);
                 
             gl.glPopMatrix();
             
-        }
         
         gl.glPopMatrix();
         
