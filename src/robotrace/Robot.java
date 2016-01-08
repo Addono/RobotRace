@@ -362,7 +362,8 @@ class Robot {
             part = RobotRace.getPart();
             
             gl.glEnable(GL_TEXTURE_2D);
-            part.bind(gl);  
+            //remove "//" for textures below
+            //part.bind(gl);  
             
             
             if(!stickFigure) {
