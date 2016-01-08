@@ -48,7 +48,7 @@ class Robot {
         float legDistance = stretchedHeight / 10;
         float legPartHeight = stretchedHeight * 14 / 60;
         float kneeAngle = 20f;
-        float legAngle = 10f;
+        float legAngle = 30f;
         
         
         float lowerBodyHeight = stretchedHeight / 10;
@@ -64,7 +64,7 @@ class Robot {
             gl.glPushMatrix();
                 gl.glTranslatef(0f, 0f, -1*(feetHeight+legPartHeight));
                 gl.glRotatef(legAngle, -1f, 0f, 0f);
-                gl.glTranslatef(0f, 0f, feetHeight+legPartHeight);
+                gl.glTranslatef(0f, 0f, (feetHeight+legPartHeight));
                 gl.glTranslatef(i * legDistance, 0f, 0f);
                 drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
                 gl.glTranslatef(0.0f, 0.0f, feetHeight);
@@ -254,10 +254,6 @@ class Robot {
         
         gl.glPushMatrix();
             gl.glPushMatrix();
-                
-                //test
-                gl.glRotatef(legAngle, 1f, 0f, 0f);
-                
                 // Draw the lower part of the leg.
                 gl.glRotatef(angle, 1f, 0f, 0f);
                 drawPart(gl, glut, partSize / 10, partSize, stickFigure);
