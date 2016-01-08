@@ -35,13 +35,12 @@ class Robot {
     /**
      * Constructs the robot with initial parameters.
      */
-    public Robot(Material material, float stretchedHeight, Texture part) {
+    public Robot(Material material, float stretchedHeight) {
         this.material = material;
         this.centerColor = material.centerColor;
         this.outerColor = material.outerColor;
         this.stretchedHeight = stretchedHeight;
         this.outerType = material.outerType;
-        this.part = part;
     }
 
     /**
@@ -336,6 +335,8 @@ class Robot {
     /*
      * @description     Base shape for the robot, consisting of a cylinder - called outer - with a square - called center - on each side.
      */
+    
+    
     public void drawPart(GL2 gl, GLUT glut, float height, float width, float[] rgbaCenter, float[] rgbaOuter, boolean stickFigure) {
         if(stickFigure) { // Check if it should be drawn as a stick figure.
             gl.glLineWidth(2.5f);
@@ -358,8 +359,10 @@ class Robot {
             float[] centerColor = rgbaCenter;
             float[] outerColor = rgbaOuter;
             
+            part = RobotRace.getPart();
+            
             gl.glEnable(GL_TEXTURE_2D);
-            //part.bind(gl);   
+            part.bind(gl);  
             
             
             if(!stickFigure) {

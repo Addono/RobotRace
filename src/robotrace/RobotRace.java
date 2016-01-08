@@ -82,6 +82,7 @@ public class RobotRace extends Base {
     int ambientLight = GL_LIGHT2;
     int lightSource1 = GL_LIGHT1;
     int cameraLight = GL_LIGHT3;
+    static Texture part;
     
     
     public static int terrainTexture;
@@ -96,16 +97,16 @@ public class RobotRace extends Base {
         robots = new Robot[4];
         
         // Initialize robot 0
-        robots[0] = new Robot(Material.GOLD, 2f,torso);
+        robots[0] = new Robot(Material.GOLD, 2f);
         
         // Initialize robot 1
-        robots[1] = new Robot(Material.SILVER, 1.7f,torso);
+        robots[1] = new Robot(Material.SILVER, 1.7f);
         
         // Initialize robot 2
-        robots[2] = new Robot(Material.WOOD, 2.4f,torso);
+        robots[2] = new Robot(Material.WOOD, 2.4f);
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE, 1.9f,torso);
+        robots[3] = new Robot(Material.ORANGE, 1.9f);
         
         // Initialize the camera
         camera = new Camera();
@@ -235,7 +236,8 @@ public class RobotRace extends Base {
         track = loadTexture("track4.jpg");
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
-        torso = loadTexture("partTex.jpg");   
+        torso = loadTexture("torso.jpg");
+        part = loadTexture("partTex.jpg");
         
         float[][] terrainColors = {
             new float[] {0f, 0.302f, .302f, 1f, 0f},         // The dark blue spot.
@@ -268,6 +270,10 @@ public class RobotRace extends Base {
         gl.glLightfv(cameraLight, GL_DIFFUSE, whiteColor, 0);
         gl.glLightfv(cameraLight, GL_SPECULAR, whiteColor, 0);
         
+    }
+    
+    public static Texture getPart(){
+        return part;
     }
     
     /**
