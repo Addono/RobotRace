@@ -48,6 +48,8 @@ class Robot {
         float legDistance = stretchedHeight / 10;
         float legPartHeight = stretchedHeight * 14 / 60;
         float kneeAngle = 20f;
+        float legAngle = 10f;
+        
         
         float lowerBodyHeight = stretchedHeight / 10;
         float bodyHeight = stretchedHeight * 3 / 10;
@@ -60,10 +62,15 @@ class Robot {
         // Draw the feets and legs.
         for(int i = -1; i <= 1; i += 2) {
             gl.glPushMatrix();
+                gl.glTranslatef(0f, 0f, -1*(feetHeight+legPartHeight));
+                gl.glRotatef(legAngle, -1f, 0f, 0f);
+                gl.glTranslatef(0f, 0f, feetHeight+legPartHeight);
                 gl.glTranslatef(i * legDistance, 0f, 0f);
                 drawTriangle(gl, glut, feetHeight, feetWidth, stickFigure, tAnim);
                 gl.glTranslatef(0.0f, 0.0f, feetHeight);
-                legHeight = drawLimb(gl, glut, legPartHeight, kneeAngle, stickFigure, tAnim);
+                legHeight = drawLimb(gl, glut, legPartHeight, kneeAngle, legAngle, stickFigure, tAnim);
+                
+                
             gl.glPopMatrix();
         }
         
@@ -100,7 +107,7 @@ class Robot {
                     gl.glRotatef(180f, 0.0f, 0.0f, 1.0f);
                     gl.glRotatef(i * armAngle, 1.0f, 0.0f, 0.0f);
                     gl.glTranslatef(feetHeight, 0.0f, feetHeight * -0.5f);
-                    drawLimb(gl, glut, legPartHeight, elbowAngle, stickFigure, tAnim);
+                    drawLimb(gl, glut, legPartHeight, elbowAngle, legAngle, stickFigure, tAnim);
                 gl.glPopMatrix();
             }
         gl.glPopMatrix();
@@ -243,10 +250,14 @@ class Robot {
         gl.glPopMatrix();
     }
     
-    public float drawLimb(GL2 gl, GLUT glut, float partSize, float angle, boolean stickFigure, float tAnim) {
+    public float drawLimb(GL2 gl, GLUT glut, float partSize, float angle, float legAngle, boolean stickFigure, float tAnim) {
         
         gl.glPushMatrix();
             gl.glPushMatrix();
+                
+                //test
+                gl.glRotatef(legAngle, 1f, 0f, 0f);
+                
                 // Draw the lower part of the leg.
                 gl.glRotatef(angle, 1f, 0f, 0f);
                 drawPart(gl, glut, partSize / 10, partSize, stickFigure);
