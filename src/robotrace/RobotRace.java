@@ -1,5 +1,6 @@
 package robotrace;
 
+import com.jogamp.opengl.util.texture.Texture;
 import java.awt.Color;
 import javax.media.opengl.GL;
 import static javax.media.opengl.GL2.*;
@@ -82,6 +83,7 @@ public class RobotRace extends Base {
     int lightSource1 = GL_LIGHT1;
     int cameraLight = GL_LIGHT3;
     
+    
     public static int terrainTexture;
     
     /**
@@ -94,16 +96,16 @@ public class RobotRace extends Base {
         robots = new Robot[4];
         
         // Initialize robot 0
-        robots[0] = new Robot(Material.GOLD, 2f);
+        robots[0] = new Robot(Material.GOLD, 2f,torso);
         
         // Initialize robot 1
-        robots[1] = new Robot(Material.SILVER, 1.7f);
+        robots[1] = new Robot(Material.SILVER, 1.7f,torso);
         
         // Initialize robot 2
-        robots[2] = new Robot(Material.WOOD, 2.4f);
+        robots[2] = new Robot(Material.WOOD, 2.4f,torso);
 
         // Initialize robot 3
-        robots[3] = new Robot(Material.ORANGE, 1.9f);
+        robots[3] = new Robot(Material.ORANGE, 1.9f,torso);
         
         // Initialize the camera
         camera = new Camera();
@@ -233,7 +235,7 @@ public class RobotRace extends Base {
         track = loadTexture("track4.jpg");
         brick = loadTexture("brick.jpg");
         head  = loadTexture("head.jpg");
-        torso = loadTexture("torso.jpg");      
+        torso = loadTexture("track5.jpg");   
         
         float[][] terrainColors = {
             new float[] {0f, 0.302f, .302f, 1f, 0f},         // The dark blue spot.

@@ -1,10 +1,13 @@
 package robotrace;
 
 import com.jogamp.opengl.util.gl2.GLUT;
+import com.jogamp.opengl.util.texture.Texture;
 import java.util.Random;
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 import static java.lang.Math.*;
+import javax.media.opengl.GL;
+import static javax.media.opengl.GL.GL_TEXTURE_2D;
 
 /**
 * Represents a Robot, to be implemented according to the Assignments.
@@ -27,16 +30,18 @@ class Robot {
     float[] outerColor;
     float stretchedHeight;
     String outerType;
+    Texture part;
     
     /**
      * Constructs the robot with initial parameters.
      */
-    public Robot(Material material, float stretchedHeight) {
+    public Robot(Material material, float stretchedHeight, Texture part) {
         this.material = material;
         this.centerColor = material.centerColor;
         this.outerColor = material.outerColor;
         this.stretchedHeight = stretchedHeight;
         this.outerType = material.outerType;
+        this.part = part;
     }
 
     /**
@@ -352,6 +357,10 @@ class Robot {
             
             float[] centerColor = rgbaCenter;
             float[] outerColor = rgbaOuter;
+            
+            gl.glEnable(GL_TEXTURE_2D);
+            //part.bind(gl);   
+            
             
             if(!stickFigure) {
                 gl.glPushMatrix();
