@@ -37,23 +37,27 @@ class Terrain {
     /**
      * Draws the terrain.
      */
-    public void draw(GL2 gl, GLU glu, GLUT glut) {
-        RobotRace.setMaterial(gl, new float[] {.8f, .8f, .8f, 1f}, 20, "metal");
+    public void draw(GL2 gl, GLU glu, GLUT glut, float tAnim) {
+        RobotRace.setMaterial(gl, new float[] {1f, 1f, 1f, 1f}, 100f, "metal");
         
+        // Enable 1D texturing and bind the 1D terrain texture.
         gl.glDisable(gl.GL_TEXTURE_2D);
         gl.glEnable(gl.GL_TEXTURE_1D);
         
         gl.glBindTexture(gl.GL_TEXTURE_1D, RobotRace.terrainTexture);
-        gl.glLineWidth(5f);
-        for(int u = 0; u < amount_u; u++) {
-            gl.glBegin(gl.GL_TRIANGLE_STRIP);
-            
+        gl.glTexParameteri(gl.GL_TEXTURE_1D, gl.GL_TEXTURE_WRAP_S, gl.GL_CLAMP);
+        
+        // Draw the entire terrain strip by strip.
+        for(int u = 0; u < amount_u; u++) {            
+            // Initialise the start values.
             Vector oldPoint1 = Coordinate(0, u);
             Vector oldPoint2 = Coordinate(0, u + 1);
             
             double scaledHeight = (oldPoint2.z() + 1) / 2;
             gl.glTexCoord1d(scaledHeight);
             
+            // Draw one strip of triangles.
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
             for(int v = 0; v < amount_v + 1; v++) {
                 Vector point1 = Coordinate(v, u);       // Get the coordinate of the first point.
                 Vector point2 = Coordinate(v, u + 1);   // Get the coordinate of the second point.
@@ -71,20 +75,36 @@ class Terrain {
                 oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
                 oldPoint2 = point2;          // Store the value of point2, which will be used by the next calculation.
             }
+            
             gl.glEnd();
         }
         
         gl.glDisable(gl.GL_TEXTURE_1D);
-        //gl.glEnable(gl.GL_TEXTURE_2D);
-        for(int i = 0, limit = 30; i < limit; i++) {
+        
+        /** 
+         * Generates limit amount of transparant layers on top of each other.
+         * Generating a more smooth transition from ground to water on the edges,
+         * although still far from realistic, since this method doesn't take
+         * the distance looked through the water into account, but only the
+         * depth. The effect is most visible on the corners of the terrain with water.
+         *
+         * Looking at it from below will not make it visible - except at the edges 
+         * from some angles - since it is rendered bottom to top, independent from
+         * the position of the camera. Resulting in the depth-buffer preventing
+         * the upper layers from being drawn.
+        */
+        for(int i = 0, limit = 40; i < limit; i++) {
             gl.glPushMatrix();
-            gl.glTranslatef(xCoordinate(0), yCoordinate(0), (float) Math.pow(1f / (-((float) i / (float) limit) - 1f), 5)); // Using 1 + (1 / (-scalar * x - 1)) for increase of 
+            
+            double layerHeight = -abs(pow(1f / (-((double) i / (double) limit) - 1f), 3)  + .15f * cos(tAnim / 2)); // Use -|1/(-(i/lim)-1)| for the height of the layer, and a sinusoid with tAnim to let the water breath.
+            gl.glTranslatef(xCoordinate(0), yCoordinate(0), (float) layerHeight);
             
             RobotRace.setMaterial(gl, 
-                    new float[] {0f, 0f, .5f, .5f / (float) limit}, 
-                    100f * ((float) i / (float) limit),
+                    new float[] {0f, 0.4f, .5f, 1.2f / (float) limit},  // Set the color and transparity of (one layer of) water.
+                    1f * ((float) i / (float) limit),
                     "plastic");
             
+            // Draw the water as one large plane.
             gl.glBegin(gl.GL_QUADS);
                 gl.glNormal3f(0f, 0f, 1f);
                 gl.glVertex3d(0f, 0f, 0f);
@@ -100,8 +120,8 @@ class Terrain {
     
     public void drawTriangle(GL2 gl, Vector normal, Vector newPoint) {
         // Texture mapping.
-        double scaledHeight = (newPoint.z() + 1) / 2;
-        gl.glTexCoord1d(scaledHeight);
+        double scaledHeight = (newPoint.z() + 1.01f) / 2.02f; // Height on the texture {0, 1} (in stead of [0,1], because this resulted in (semi) transparant parts on the extreems).
+        gl.glTexCoord1d(scaledHeight); // Map the new point to the 1D texture.
         
         // Set the normal.
         setNormal(gl, normal);

@@ -174,11 +174,17 @@ public class RobotRace extends Base {
         // Create the colors array, which will store all the colors.
         Color[] colors = new Color[amount];
         
+        System.out.println("Started generating a color gradient with " + rgbah.length + " colors.");
+        
         // Calculate all colors.
         int previousSteps = 0;
         for(int i = 0, limit = rgbah.length - 1; i < limit; i++) {
             int stepsAmount = (int) ((rgbah[i+1][4] - rgbah[i][4]) * amount); // Get the amount of steps, difference in height [0, 1] times the amount of steps.
             int steps = previousSteps + stepsAmount; // Is the target amount which will be reached with this value for i.
+            
+            // Add a header to the log.
+            System.out.println("\tCalculating the gradient from color " + i + " to " + (i + 1) +".");
+            System.out.println("Color int\tRed\t\tGreen\t\tBlue\t\tAlpha");
             
             // Generate colors[previousSteps] until colors[steps]
             for(int j = previousSteps; j < steps; j++) { 
@@ -194,6 +200,9 @@ public class RobotRace extends Base {
                 for(int c = 0; c < 4; c++) {
                     color[c] = rgbah[i][c] * factorColor1 + rgbah[i+1][c] * factorColor2;
                 }
+                
+                // Return the result of this color to the log.
+                System.out.println(j + "\t\t" + color[0] + "\t" +  color[1] + "\t" + color[2] + "\t" + color[3]);
                 
                 // Put this into the colors array.
                 colors[j] = new Color(color[0], color[1], color[2], color[3]);
@@ -240,13 +249,13 @@ public class RobotRace extends Base {
         part = loadTexture("partTex.jpg");
         
         float[][] terrainColors = {
-            new float[] {0f, 0.302f, .302f, 1f, 0f},         // The dark blue spot.
-            new float[] {.125f, .698f, .667f, 1f, .375f},     // 
-            new float[] {0.957f, 0.843f, 0.276f, 1f, .6875f},//
-            new float[] {.486f, .988f, 0f, 1f, 1f}           // Lawn green
+            new float[] {0f, 0.202f, .202f, 1f, 0f},          // Darker blue color for the bottom of the water.
+            new float[] {.05f, .450f, .450f, 1f, .25f},      // Light blue color under water. Would have been better if it had a sand like color.
+            new float[] {0.957f, 0.843f, 0.276f, 1f, .6875f}, // Yellow sand color.
+            new float[] {.486f, .988f, 0f, 1f, 1f}            // Lawn green
         };
         
-        terrainTexture = create1DTexture(colorGradient(terrainColors, 256, 2));
+        terrainTexture = create1DTexture(colorGradient(terrainColors, 256, 1.7f));
         
         // Enable lighting.
         gl.glShadeModel(GL_SMOOTH);
@@ -369,7 +378,7 @@ public class RobotRace extends Base {
         
         
         // Draw the terrain.
-        terrain.draw(gl, glu, glut);
+        terrain.draw(gl, glu, glut, gs.tAnim);
         
         // Set the ambient light of the scene.
         double offset = 10f * (Math.PI / 180f); // Calculate offset in radians.
@@ -477,8 +486,8 @@ public class RobotRace extends Base {
     * @return                           Void
     */
     public static GL2 setMaterial(GL2 gl, float r, float g, float b, float a, float shininess, String materialType) {
-        float ambientDecrease = 2f;
-        float diffuseDecrease = 1.7f;
+        float ambientDecrease = 1f;
+        float diffuseDecrease = 3f;
         
         float[] ambientColor = {r / ambientDecrease, g / ambientDecrease, b / ambientDecrease, a};
         float[] diffuseColor = {r / diffuseDecrease, g / diffuseDecrease, b / diffuseDecrease, a};
