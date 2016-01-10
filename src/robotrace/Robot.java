@@ -112,6 +112,12 @@ class Robot {
             drawBody(gl,glu,glut,legDistance, lowerBodyHeight, bodyHeight, stickFigure, tAnim);
         gl.glPopMatrix();
         
+        // Draw the texture
+        gl.glPushMatrix();
+            gl.glTranslatef(legDistance*1.5f,legDistance*-0.5f, legHeight + feetHeight + lowerBodyHeight);
+            drawTexture(gl, glu, glut, legDistance);
+        gl.glPopMatrix();
+        
         // Draw the head.
         gl.glPushMatrix();
             gl.glTranslatef(0, 0, legHeight + feetHeight + lowerBodyHeight);
@@ -274,6 +280,31 @@ class Robot {
         gl.glPopMatrix();
     }
     
+    public void drawTexture(GL2 gl, GLU glu, GLUT glut, float legDistance){
+        
+        part = RobotRace.getPart();
+            
+        gl.glEnable(GL_TEXTURE_2D);
+        //remove "//" for textures below
+        gl.glColor3f(1f, 1f, 1f);
+        part.bind(gl);
+        
+        gl.glBegin(gl.GL_QUADS);
+        gl.glTexCoord2d(0, 0);
+        gl.glVertex3d(0, 0, 0);
+        gl.glTexCoord2d(legDistance * 3f, 0);
+        gl.glVertex3d(-legDistance * 3f, 0, 0);
+        gl.glTexCoord2d(legDistance * 3f, legDistance * 3f);
+        gl.glVertex3d(-legDistance * 3f, 0, legDistance * 3f);
+        gl.glTexCoord2d(0, legDistance * 3f);
+        gl.glVertex3d(0, 0, legDistance * 3f);
+        gl.glEnd(); 
+        
+        part.disable(gl);
+        
+        
+    }
+    
     public float drawLimb(GL2 gl, GLUT glut, float partSize, float angle, float legAngle, boolean stickFigure, float tAnim) {
         
         gl.glPushMatrix();
@@ -358,12 +389,6 @@ class Robot {
             
             float[] centerColor = rgbaCenter;
             float[] outerColor = rgbaOuter;
-            
-            part = RobotRace.getPart();
-            
-            gl.glEnable(GL_TEXTURE_2D);
-            //remove "//" for textures below
-            //part.bind(gl);  
             
             
             if(!stickFigure) {
