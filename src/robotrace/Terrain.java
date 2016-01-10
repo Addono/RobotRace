@@ -19,15 +19,15 @@ class Terrain {
     float size_y = 40;
     int texture;
     
-    float[][] heights = new float[amount_v][amount_u]; // Stores all the heights for all the different point.
+    float[][] heights = new float[amount_v + 1][amount_u + 1]; // Stores all the heights for all the different point.
     
     /**
      * Pre-computes the height for all points.
      */
     public Terrain() {
-        for(int v = 0; v < amount_v; v++) {
+        for(int v = 0; v < amount_v + 1; v++) {
             float x = xCoordinate(v);
-            for(int u = 0; u < amount_u; u++) {
+            for(int u = 0; u < amount_u + 1; u++) {
                 float y = yCoordinate(u);
                 heights[v][u] = heightAt(x, y);
             }
@@ -44,14 +44,17 @@ class Terrain {
         gl.glEnable(gl.GL_TEXTURE_1D);
         
         gl.glBindTexture(gl.GL_TEXTURE_1D, RobotRace.terrainTexture);
-        
-        for(int u = 0; u < amount_u - 1; u++) {
+        gl.glLineWidth(5f);
+        for(int u = 0; u < amount_u; u++) {
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
             
-            Vector oldPoint1 = new Vector(0,0,0);
-            Vector oldPoint2 = new Vector(0,0,0);
+            Vector oldPoint1 = Coordinate(0, u);
+            Vector oldPoint2 = Coordinate(0, u + 1);
             
-            for(int v = 0; v < amount_v; v++) {
+            double scaledHeight = (oldPoint2.z() + 1) / 2;
+            gl.glTexCoord1d(scaledHeight);
+            
+            for(int v = 0; v < amount_v + 1; v++) {
                 Vector point1 = Coordinate(v, u);       // Get the coordinate of the first point.
                 Vector point2 = Coordinate(v, u + 1);   // Get the coordinate of the second point.
                 
@@ -70,6 +73,29 @@ class Terrain {
             }
             gl.glEnd();
         }
+        
+        gl.glDisable(gl.GL_TEXTURE_1D);
+        //gl.glEnable(gl.GL_TEXTURE_2D);
+        for(int i = 0, limit = 30; i < limit; i++) {
+            gl.glPushMatrix();
+            gl.glTranslatef(xCoordinate(0), yCoordinate(0), (float) Math.pow(1f / (-((float) i / (float) limit) - 1f), 5)); // Using 1 + (1 / (-scalar * x - 1)) for increase of 
+            
+            RobotRace.setMaterial(gl, 
+                    new float[] {0f, 0f, .5f, .5f / (float) limit}, 
+                    100f * ((float) i / (float) limit),
+                    "plastic");
+            
+            gl.glBegin(gl.GL_QUADS);
+                gl.glNormal3f(0f, 0f, 1f);
+                gl.glVertex3d(0f, 0f, 0f);
+                gl.glVertex3d(0f, size_y, 0f);
+                gl.glVertex3d(size_x, size_y, 0f);
+                gl.glVertex3d(size_x, 0f, 0f);
+            gl.glEnd();
+            
+            gl.glPopMatrix();
+        }
+        
     }
     
     public void drawTriangle(GL2 gl, Vector normal, Vector newPoint) {
@@ -127,7 +153,7 @@ class Terrain {
      * @return float    The value of the corresponding v-coordinate.
      */
     public float xCoordinate(float v) {
-        return ((2 * v / (float) amount_v) - 1f) * size_x; // Calculate the v coordinate.
+        return ((v / (float) amount_v) - .5f) * size_x; // Calculate the v coordinate.
     }
     
     /**
@@ -137,7 +163,7 @@ class Terrain {
      * @return float    The value of the corresponding u-coordinate.
      */
     public float yCoordinate(float u) {
-        return ((2 * u / (float) amount_u) - 1f) * size_y; // Calculate the u coordinate.
+        return ((u / (float) amount_u) - .5f) * size_y; // Calculate the u coordinate.
     }
     
     /**
