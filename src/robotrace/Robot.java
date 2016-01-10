@@ -283,20 +283,21 @@ class Robot {
     public void drawTexture(GL2 gl, GLU glu, GLUT glut, float legDistance){
         
         part = RobotRace.getPart();
-            
+        
+        float scale = 1f;
+        
         gl.glEnable(GL_TEXTURE_2D);
         //remove "//" for textures below
-        gl.glColor3f(1f, 1f, 1f);
         part.bind(gl);
         
         gl.glBegin(gl.GL_QUADS);
         gl.glTexCoord2d(0, 0);
         gl.glVertex3d(0, 0, 0);
-        gl.glTexCoord2d(legDistance * 3f, 0);
+        gl.glTexCoord2d(legDistance * 3f*scale, 0);
         gl.glVertex3d(-legDistance * 3f, 0, 0);
-        gl.glTexCoord2d(legDistance * 3f, legDistance * 3f);
+        gl.glTexCoord2d(legDistance * 3f*scale, legDistance * 3f*scale);
         gl.glVertex3d(-legDistance * 3f, 0, legDistance * 3f);
-        gl.glTexCoord2d(0, legDistance * 3f);
+        gl.glTexCoord2d(0, legDistance * 3f*scale);
         gl.glVertex3d(0, 0, legDistance * 3f);
         gl.glEnd(); 
         

@@ -282,7 +282,7 @@ public class RobotRace extends Base {
     }
     
     public static Texture getPart(){
-        return part;
+        return torso;
     }
     
     /**
