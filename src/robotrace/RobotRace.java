@@ -129,6 +129,9 @@ public class RobotRace extends Base {
         // L-track
         raceTracks[2] = new RaceTrack(new Vector[] { 
             /* add control points */
+            new Vector(6,-3,1), new Vector(15,-3,1),new Vector(15,-12,1), new Vector(6,-12,1), new Vector(-12,-12,1), new Vector(-12,-12,1),
+            new Vector(-12,0,1), new Vector(-12,0,1), new Vector(-12,0,1), new Vector(-12,18,1),// new Vector(-12,24,1),new Vector(-3,24,1),
+            //new Vector(-3,18,1), new Vector(-3,18,1),new Vector(-3,18,1),new Vector(-3,6,1),new Vector(-3,-3,1),new Vector(-3,-3,1),
         });
         
         // C-track
