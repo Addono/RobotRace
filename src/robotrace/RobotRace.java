@@ -331,12 +331,6 @@ public class RobotRace extends Base {
         
     }
     
-    public void clock(int x, int y, float r, float g, float b, String string){
-        gl.glColor3f( r, g, b );
-        gl.glRasterPos2f(x, y);
-        glut.glutBitmapString(glut.BITMAP_HELVETICA_18, string);
-}
-    
     /**
      * Draws the entire scene.
      */
@@ -402,14 +396,6 @@ public class RobotRace extends Base {
         };
         
         gl.glLightfv(cameraLight, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
-        
-        gl.glDisable( GL_DEPTH_TEST );
-        
-        String s = "Clock";
-        
-        clock(100,100,1,1,1,s);
-        
-        gl.glEnable( GL_DEPTH_TEST);
         
     }
     
