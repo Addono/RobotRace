@@ -192,14 +192,14 @@ class RaceTrack {
                     gl.glVertex3d(point.x, point.y, point.z);
                 }
             }*/
-            gl.glBegin(gl.GL_TRIANGLE_STRIP_ADJACENCY_ARB);
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
             
             Vector oldPoint1 = getLanePoint(-.5f, 0);
             Vector oldPoint2 = getLanePoint(3f, 0);
             
-            for(int i = 0; i < amount; i++) {        
-                Vector point1 = getLanePoint(-.5f, (double) i / (double) amount);// Get the coordinate of the first point.
-                Vector point2 = getLanePoint(3f, (double) i / (double) amount);  // Get the coordinate of the second point.
+            for(int i = 0; i <= amount; i++) {        
+                Vector point1 = getLanePoint(-.5f, ((double) i / (double) amount) % 1);// Get the coordinate of the first point.
+                Vector point2 = getLanePoint(3f, ((double) i / (double) amount) % 1);  // Get the coordinate of the second point.
                 
                 Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
                 Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
