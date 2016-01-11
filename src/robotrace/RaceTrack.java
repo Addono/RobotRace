@@ -42,7 +42,6 @@ class RaceTrack {
      */
     public RaceTrack(Vector[] controlPoints) {
         this.controlPoints = controlPoints;
-        calculateTrackPoints();
     }
 
     /**
@@ -58,8 +57,6 @@ class RaceTrack {
 
             gl.glEnable(GL_TEXTURE_2D);
             track.bind(gl);
-            
-            //gl.glTexEnvi(gl.GL_TEXTURE_ENV, gl.GL_TEXTURE_ENV_MODE, gl.GL_REPLACE); // Kills shading
             
             gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
             gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
@@ -171,7 +168,49 @@ class RaceTrack {
             }
             gl.glEnd();
         } else {
-            // draw the spline track
+            //gl.glBegin(gl.GL_LINE_STRIP);
+            
+            int amount = 100;
+            
+            /*
+            int limit = (controlPoints.length) / 3;
+            int partsEachCurve =  amount / limit;
+            
+            // 
+            for(int i = 0; i < limit; i++) {
+                int start = i * 3;
+                Vector[] points = {
+                    controlPoints[start],
+                    controlPoints[start+1],
+                    controlPoints[start+2],
+                    controlPoints[(start+3) % controlPoints.length]
+                };
+                
+                // Draw this curve.
+                for(int part = 0; part <= partsEachCurve; part++) {
+                    Vector point = getCubicBezierPoint((float) part / (float) partsEachCurve, points);
+                    gl.glVertex3d(point.x, point.y, point.z);
+                }
+            }*/
+            //gl.glBegin(gl.GL_LINE_LOOP);
+            for(int i = 0; i < amount; i++) {
+                System.out.println(i + "  " + amount);
+                Vector point = getLanePoint(.5f, (double) i / (double) amount);
+              //  gl.glVertex3d(point.x, point.y, point.z);
+                gl.glPushMatrix();
+                gl.glTranslated(point.x, point.y, point.z);
+                glut.glutSolidCube(.1f);
+                gl.glPopMatrix();
+                
+                point = getLanePoint(-.5f, (double) i / (double) amount);
+                
+                gl.glPushMatrix();
+                gl.glTranslated(point.x, point.y, point.z);
+                glut.glutSolidCube(.1f);
+                gl.glPopMatrix();
+            }
+            
+            //gl.glEnd();
         }
     }
     
@@ -196,25 +235,63 @@ class RaceTrack {
      * Returns the center of a lane at 0 <= t < 1.
      * Use this method to find the position of a robot on the track.
      */
-    public Vector getLanePoint(int lane, double t) {
+    public Vector getLanePoint(float lane, double t) {
         if (null == controlPoints) {
             return getPoint(t).add(
                     getLaneTangent(0, t).cross(Vector.Z).normalized().scale(laneWidth * (.5f + lane))
             );
         } else {
-            return Vector.O; // <- code goes here
+            int amountOfSplines = controlPoints.length / 3; // Get the amount of splines to be drawn.
+            double timePerSpline= 1 / (double) amountOfSplines;
+            
+            int selectedSpline  = (int) Math.floor(t * amountOfSplines);
+            double relativeT    = (t % timePerSpline) * amountOfSplines;
+            int startPoint      = 3 * selectedSpline;
+            
+            System.out.println(t + " " + amountOfSplines + " " + selectedSpline + " " + startPoint + " " + ((startPoint+3) % controlPoints.length));
+            
+            Vector point        = getCubicBezierPoint(relativeT,
+                    controlPoints[startPoint],
+                    controlPoints[startPoint+1],
+                    controlPoints[startPoint+2],
+                    controlPoints[(startPoint+3) % controlPoints.length]
+            );
+            
+            Vector tangent      = getLaneTangent(lane, t);
+            
+            return point.add(tangent.cross(Vector.Z).normalized().scale((lane + .5f) * laneWidth)); // <- code goes here
         }
+    }
+    
+    public Vector getLanePoint(int lane, double t) {
+        return getLanePoint((float) lane, t);
+    }
+    
+    public Vector getLaneTangent(int lane, double t) {
+        return getLaneTangent((float) lane, t);
     }
     
     /**
      * Returns the tangent of a lane at 0 <= t < 1.
      * Use this method to find the orientation of a robot on the track.
      */
-    public Vector getLaneTangent(int lane, double t) {
+    public Vector getLaneTangent(float lane, double t) {
         if (null == controlPoints) {
             return getTangent(t);
         } else {
-            return Vector.O; // <- code goes here
+            int amountOfSplines = controlPoints.length / 3; // Get the amount of splines to be drawn.
+            double timePerSpline= 1 / (double) amountOfSplines;
+            
+            int selectedSpline  = (int) Math.floor(t * amountOfSplines);
+            double relativeT    = (t % timePerSpline) * amountOfSplines;
+            int startPoint      = 3 * selectedSpline;
+            
+            return getCubicBezierTangent(relativeT,
+                    controlPoints[startPoint],
+                    controlPoints[startPoint+1],
+                    controlPoints[startPoint+2],
+                    controlPoints[(startPoint+3) % (controlPoints.length)]
+            );
         }
     }
 
@@ -252,22 +329,26 @@ class RaceTrack {
      */
     private Vector getCubicBezierPoint(double t, Vector P0, Vector P1,
                                                  Vector P2, Vector P3) {
-        return P0.scale(t*t*t)
-                .add(P1.scale(3 * t * t * (1 - t)))
-                .add(P2.scale(3 * t * Math.pow(1 - t, 2)))
-                .add(P3.scale(Math.pow(1 - t, 3)));
+        return P0.scale(Math.pow(t, 3d))
+                .add(P1.scale(3f * t * t * (1f - t)))
+                .add(P2.scale(3f * t * Math.pow(1 - t, 2d)))
+                .add(P3.scale(Math.pow(1f - t, 3d)));
+    }
+    
+    private Vector getCubicBezierPoint(double t, Vector[] P) {
+        return getCubicBezierPoint(t, P[0], P[1], P[2], P[3]);
     }
     
     /**
      * Returns a tangent on a bezier segment with control points
      * P0, P1, P2, P3 at 0 <= t < 1.
-     * P = 3 *P0 * t^2 + P1 * (6 * (1 - t) * t - 3* t^2) + P2 * (3 * (1 - t)^2 - 6 * (1 - t) * t) + -3 * P3 * (1 - t)^2
+     * P = 3 *P0 * t^2 + P1 * (6 * (1 - t) * t - 3 * t^2) + P2 * (3 * (1 - t)^2 - 6 * (1 - t) * t) + -3 * P3 * (1 - t)^2
      */
     private Vector getCubicBezierTangent(double t, Vector P0, Vector P1,
                                                    Vector P2, Vector P3) {
         return  P0.scale(3 * t * t)
-                .add(P1.scale(6 * t * (1 - t)))
-                .add(P2.scale(3 * (1 - t) * (1 - t) - 6 * (1 - t) * t))
-                .add(P3.scale(-3 * (1 - t) * (1 - t)));
+                .add(P1.scale((6 - 9 * t)* t))
+                .add(P2.scale(9 * t * t - 12 * t + 3))
+                .add(P3.scale((6 - 3 * t) * t - 3));
     }
 }

@@ -121,10 +121,9 @@ public class RobotRace extends Base {
         
         // O-track
         raceTracks[1] = new RaceTrack(new Vector[] {
-            /* add control points like:
-            new Vector(10, 0, 1), new Vector(10, 5, 1), new Vector(5, 10, 1),
-            new Vector(..., ..., ...), ...
-            */
+            // add control points like:
+            new Vector(-10, 0, 1),  new Vector(-10, 14, 1), new Vector(10, 14, 1),   // The first half of the circle.
+            new Vector( 10, 0, 1),  new Vector(10, -14, 1), new Vector(-10, -14, 1), // The second half of the circle.
         });
         
         // L-track
@@ -359,8 +358,8 @@ public class RobotRace extends Base {
         float robotSpeed[] = {22f, 26f, 27f, 30f}; // Array containing the speed of all the robots.
         for(int i = 0; i < 4; i++) {
             float timeScale = robotSpeed[i];
-            robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, gs.tAnim / timeScale);
-            robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, gs.tAnim / timeScale);
+            robots[i].position = raceTracks[gs.trackNr].getLanePoint(i, (gs.tAnim / timeScale) % 1d);
+            robots[i].direction = raceTracks[gs.trackNr].getLaneTangent(i, (gs.tAnim / timeScale) % 1d);
             
             Vector defaultDir = new Vector(0f, -1f, 0f); // Point towards the front side of the robot.
             Vector rotationVector = defaultDir.cross(robots[i].direction).normalized();
@@ -381,7 +380,7 @@ public class RobotRace extends Base {
         
         
         // Draw the terrain.
-        terrain.draw(gl, glu, glut, gs.tAnim);
+        //terrain.draw(gl, glu, glut, gs.tAnim);
         
         // Set the ambient light of the scene.
         double offset = 10f * (Math.PI / 180f); // Calculate offset in radians.
