@@ -387,7 +387,7 @@ public class RobotRace extends Base {
         
         
         // Draw the terrain.
-        //terrain.draw(gl, glu, glut, gs.tAnim);
+        terrain.draw(gl, glu, glut, gs.tAnim);
         
         // Set the ambient light of the scene.
         double offset = 10f * (Math.PI / 180f); // Calculate offset in radians.
