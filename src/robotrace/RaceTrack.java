@@ -171,9 +171,12 @@ class RaceTrack {
         } else {
             int amount = 100;
             float scale = 5f;
+            float inner = -.5f;
+            float outer = 4f;
+            float sideWidth = 1.5f;
             
-            Vector oldPoint1 = getLanePoint(4f, 1f - 1f / (float) amount);   // Set old point to the last points to be drawn
-            Vector oldPoint2 = getLanePoint(-.5f, 1f - 1f / (float) amount);
+            Vector oldPoint1 = getLanePoint(outer, 1f - 1f / (float) amount);   // Set old point to the last points to be drawn
+            Vector oldPoint2 = getLanePoint(inner, 1f - 1f / (float) amount);
             float length = 0;                           // Used to minimize distortion.
             
             gl.glDisable(gl.GL_TEXTURE_1D);
@@ -189,8 +192,72 @@ class RaceTrack {
             for(int i = 0; i <= amount; i++) {       
                 double t = ((double) i / (double) amount) % 1;
                 
-                Vector point1 = getLanePoint(4f, t);    // Get the coordinate of the first point (outer).
-                Vector point2 = getLanePoint(-.5f, t);  // Get the coordinate of the second point (inner).
+                Vector point1 = getLanePoint(outer, t);    // Get the coordinate of the first point (outer).
+                Vector point2 = getLanePoint(inner, t);  // Get the coordinate of the second point (inner).
+                
+                length += point2.subtract(oldPoint2).length() / scale;
+                
+                Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
+                Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
+                Vector oldHorizontal = oldPoint2.subtract(oldPoint1);   // The line from oldP1 to oldP2.
+                
+                Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
+                Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
+                
+                gl.glTexCoord2f(length, 0f);
+                drawTriangle(gl, normal1, point1);
+                gl.glTexCoord2f(length, 1f);
+                drawTriangle(gl, normal2, point2);
+                
+                oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
+                oldPoint2 = point2;          // Store the value of point2, which will be used by the next calculation.
+            }
+            
+            gl.glEnd();
+            
+            oldPoint1 = getLanePoint(outer + sideWidth, 1f - 1f / (float) amount).subtract(new Vector(0f, 0f, 2f));   // Set old point to the last points to be drawn
+            oldPoint2 = getLanePoint(outer, 1f - 1f / (float) amount);
+            length = 0;     
+            
+            brick.bind(gl);
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            for(int i = 0; i <= amount; i++) {       
+                double t = ((double) i / (double) amount) % 1;
+                
+                Vector point1 = getLanePoint(outer + sideWidth, t).subtract(new Vector(0f, 0f, 2f));    // Get the coordinate of the first point (outer).
+                Vector point2 = getLanePoint(outer, t);                                                  // Get the coordinate of the second point (inner).
+                
+                length += point2.subtract(oldPoint2).length() / scale;
+                
+                Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
+                Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
+                Vector oldHorizontal = oldPoint2.subtract(oldPoint1);   // The line from oldP1 to oldP2.
+                
+                Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
+                Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
+                
+                gl.glTexCoord2f(length, 0f);
+                drawTriangle(gl, normal1, point1);
+                gl.glTexCoord2f(length, 1f);
+                drawTriangle(gl, normal2, point2);
+                
+                oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
+                oldPoint2 = point2;          // Store the value of point2, which will be used by the next calculation.
+            }
+            
+            gl.glEnd();
+            
+            oldPoint1 = getLanePoint(inner - sideWidth, 1f - 1f / (float) amount).subtract(new Vector(0f, 0f, 2f));   // Set old point to the last points to be drawn
+            oldPoint2 = getLanePoint(inner, 1f - 1f / (float) amount);
+            length = 0;     
+            
+            brick.bind(gl);
+            gl.glBegin(gl.GL_TRIANGLE_STRIP);
+            for(int i = 0; i <= amount; i++) {       
+                double t = ((double) i / (double) amount) % 1;
+                
+                Vector point1 = getLanePoint(inner - sideWidth, t).subtract(new Vector(0f, 0f, 2f));    // Get the coordinate of the first point (outer).
+                Vector point2 = getLanePoint(inner, t);                                                  // Get the coordinate of the second point (inner).
                 
                 length += point2.subtract(oldPoint2).length() / scale;
                 
@@ -273,7 +340,7 @@ class RaceTrack {
             double timePerSpline= 1 / (double) amountOfSplines;
             
             int selectedSpline  = (int) Math.floor(t * amountOfSplines);
-            double relativeT    = (t % timePerSpline) * amountOfSplines;
+            double relativeT    = 1f - (t % timePerSpline) * amountOfSplines;
             int startPoint      = 3 * selectedSpline;
             
             Vector point        = getCubicBezierPoint(relativeT,
@@ -309,7 +376,7 @@ class RaceTrack {
             double timePerSpline= 1 / (double) amountOfSplines;
             
             int selectedSpline  = (int) Math.floor(t * amountOfSplines);
-            double relativeT    = (t % timePerSpline) * amountOfSplines;
+            double relativeT    = 1f - (t % timePerSpline) * amountOfSplines;
             int startPoint      = 3 * selectedSpline;
             
             return getCubicBezierTangent(relativeT,
@@ -317,7 +384,7 @@ class RaceTrack {
                     controlPoints[startPoint+1],
                     controlPoints[startPoint+2],
                     controlPoints[(startPoint+3) % (controlPoints.length)]
-            );
+            ).scale(-1f); // Invert direction.
         }
     }
 
