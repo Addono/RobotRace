@@ -87,13 +87,13 @@ class Terrain {
              float width = 3;
              float height = 10;
              gl.glPushMatrix();
-             gl.glTranslatef(3.5f, 0, 0.5f);
+             gl.glTranslatef(3.5f, 4f, 0.5f);
              drawTree(gl,glu,glut,width,height);
-             gl.glTranslatef(13f,17f, 0);
+             gl.glTranslatef(13f,13f, 0);
              width +=1;
              height +=2;
              drawTree(gl,glu,glut,(float)width,height);
-             gl.glTranslatef(-34f,-8f, -0.2f);
+             gl.glTranslatef(-34f,0f, -0.2f);
              drawTree(gl,glu,glut,(float)width,height);
              gl.glPopMatrix();
         /** 
