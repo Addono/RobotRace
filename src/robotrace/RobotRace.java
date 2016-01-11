@@ -153,17 +153,17 @@ public class RobotRace extends Base {
         raceTracks[3] = new RaceTrack(new Vector[] { 
             /* add control points */
             
-            new Vector(0*o+x,-6*o+y,1),
+            new Vector(0*o+x,-6*o+y,1), //
             new Vector(-8*o+x,-6*o+y,1),
             new Vector(-8*o+x,6*o+y,1),
-            new Vector(0*o+x,6*o+y,1),
-            new Vector(6*o+x,7*o+y,1),
-            new Vector(6*o+x,1*o+y,1),
-            new Vector(1*o+x,2*o+y,1),
-            new Vector(-3*o+x,2*o+y,1),
-            new Vector(-3*o+x,-2*o+y,1),
-            new Vector(1*o+x,-2*o+y,1),
-            new Vector(5*o+x,-2*o+y,1),
+            new Vector(1*o+x,6*o+y,1), //
+            new Vector(5*o+x,6*o+y,1),
+            new Vector(5*o+x,1*o+y,1),
+            new Vector(1*o+x,1*o+y,1), //
+            new Vector(-2*o+x,1*o+y,1),
+            new Vector(-2*o+x,-1*o+y,1),
+            new Vector(1*o+x,-1*o+y,1), //
+            new Vector(5*o+x,-1*o+y,1),
             new Vector(5*o+x,-6*o+y,1),
 
         });
