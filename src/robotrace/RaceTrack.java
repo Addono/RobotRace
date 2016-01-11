@@ -166,40 +166,33 @@ class RaceTrack {
                 
                 oldPoint = point;
             }
+            
             gl.glEnd();
         } else {
-            //gl.glBegin(gl.GL_LINE_STRIP);
-            
             int amount = 100;
+            float scale = 5f;
             
-            /*
-            int limit = (controlPoints.length) / 3;
-            int partsEachCurve =  amount / limit;
+            Vector oldPoint1 = getLanePoint(4f, 1f - 1f / (float) amount);   // Set old point to the last points to be drawn
+            Vector oldPoint2 = getLanePoint(-.5f, 1f - 1f / (float) amount);
+            float length = 0;                           // Used to minimize distortion.
             
-            // 
-            for(int i = 0; i < limit; i++) {
-                int start = i * 3;
-                Vector[] points = {
-                    controlPoints[start],
-                    controlPoints[start+1],
-                    controlPoints[start+2],
-                    controlPoints[(start+3) % controlPoints.length]
-                };
-                
-                // Draw this curve.
-                for(int part = 0; part <= partsEachCurve; part++) {
-                    Vector point = getCubicBezierPoint((float) part / (float) partsEachCurve, points);
-                    gl.glVertex3d(point.x, point.y, point.z);
-                }
-            }*/
+            gl.glDisable(gl.GL_TEXTURE_1D);
+            gl.glEnable(gl.GL_TEXTURE_2D);
+            
+            gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+            gl.glTexParameteri(GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+            
+            RobotRace.setMaterial(gl, 1f, 1f, 1f, 1f, 10f, "metal");
+            track.bind(gl);
+            
             gl.glBegin(gl.GL_TRIANGLE_STRIP);
-            
-            Vector oldPoint1 = getLanePoint(-.5f, 0);
-            Vector oldPoint2 = getLanePoint(3f, 0);
-            
-            for(int i = 0; i <= amount; i++) {        
-                Vector point1 = getLanePoint(-.5f, ((double) i / (double) amount) % 1);// Get the coordinate of the first point.
-                Vector point2 = getLanePoint(3f, ((double) i / (double) amount) % 1);  // Get the coordinate of the second point.
+            for(int i = 0; i <= amount; i++) {       
+                double t = ((double) i / (double) amount) % 1;
+                
+                Vector point1 = getLanePoint(4f, t);    // Get the coordinate of the first point (outer).
+                Vector point2 = getLanePoint(-.5f, t);  // Get the coordinate of the second point (inner).
+                
+                length += point2.subtract(oldPoint2).length() / scale;
                 
                 Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
                 Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
@@ -208,7 +201,9 @@ class RaceTrack {
                 Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
                 Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
                 
+                gl.glTexCoord2f(length, 0f);
                 drawTriangle(gl, normal1, point1);
+                gl.glTexCoord2f(length, 1f);
                 drawTriangle(gl, normal2, point2);
                 
                 oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
@@ -220,10 +215,6 @@ class RaceTrack {
     }
     
     public void drawTriangle(GL2 gl, Vector normal, Vector newPoint) {
-        // Texture mapping.
-        double scaledHeight = (newPoint.z() + 1.01f) / 2.02f; // Height on the texture {0, 1} (in stead of [0,1], because this resulted in (semi) transparant parts on the extreems).
-        gl.glTexCoord1d(scaledHeight); // Map the new point to the 1D texture.
-        
         // Set the normal.
         setNormal(gl, normal);
         
