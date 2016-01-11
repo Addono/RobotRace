@@ -96,12 +96,12 @@ class Terrain {
         for(int i = 0, limit = 40; i < limit; i++) {
             gl.glPushMatrix();
             
-            double layerHeight = -abs(pow(1f / (-((double) i / (double) limit) - 1f), 3)  + .15f * cos(tAnim / 2)); // Use -|1/(-(i/lim)-1)| for the height of the layer, and a sinusoid with tAnim to let the water breath.
-            gl.glTranslatef(xCoordinate(0), yCoordinate(0), (float) layerHeight);
+            double layerHeight = -abs(pow(1f / (-((double) i / (double) limit) - 1f), 3)  + .25f * cos(tAnim / 1.5f)); // Use -|1/(-(i/lim)-1)| for the height of the layer, and a sinusoid with tAnim to let the water breath.
+            gl.glTranslatef(xCoordinate(0), yCoordinate(0), (float) layerHeight); // Move local coordinate system to the right position.
             
             RobotRace.setMaterial(gl, 
-                    new float[] {0f, 0.4f, .5f, 1.2f / (float) limit},  // Set the color and transparity of (one layer of) water.
-                    1f * ((float) i / (float) limit),
+                    new float[] {0.2f, 0.2f, .2f, 1.2f / (float) limit},  // Set the color and transparity of (one layer of) water.
+                    1f * ((float) (limit - i) / (float) limit),          
                     "plastic");
             
             // Draw the water as one large plane.
@@ -190,6 +190,6 @@ class Terrain {
      * Computes the elevation of the terrain at (v, u).
      */
     public float heightAt(float v, float u) {
-        return (float) (0.6 * cos(0.3 * v + 0.2 * u) + 0.4 * cos(v - 0.5 * u));
+        return (float) (0.8 * cos(0.1 * v + 0.1 * u) * sin(.3 * v) + 0.2 * cos(.2 * v - 0.5 * u) * sin(.4 * u));
     }
 }
