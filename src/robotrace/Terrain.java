@@ -88,7 +88,7 @@ class Terrain {
              float height = 10;
              gl.glPushMatrix();
              gl.glTranslatef(3.5f, 4f, 0.5f);
-             drawTree(gl,glu,glut,width,height);
+             //drawTree(gl,glu,glut,width,height);
              gl.glTranslatef(13f,13f, 0);
              width +=1;
              height +=2;
