@@ -72,6 +72,7 @@ public class RobotRace extends Base {
     
     /** Instance of the camera. */
     private final Camera camera;
+    private final Camera picInPic;
     
     /** Instance of the race track. */
     private final RaceTrack[] raceTracks;
@@ -110,6 +111,7 @@ public class RobotRace extends Base {
         
         // Initialize the camera
         camera = new Camera();
+        picInPic = new Camera();
         
         // Initialize the race tracks
         raceTracks = new RaceTrack[5];
@@ -326,7 +328,14 @@ public class RobotRace extends Base {
                       camera.center.x(), camera.center.y(), camera.center.z(),
                       camera.up.x(),     camera.up.y(),     camera.up.z()
         );
+        
     }
+    
+    public void clock(int x, int y, float r, float g, float b, String string){
+        gl.glColor3f( r, g, b );
+        gl.glRasterPos2f(x, y);
+        glut.glutBitmapString(glut.BITMAP_HELVETICA_18, string);
+}
     
     /**
      * Draws the entire scene.
@@ -393,6 +402,15 @@ public class RobotRace extends Base {
         };
         
         gl.glLightfv(cameraLight, GL_POSITION, ambientLightDir, 0); // Set the direction of the ambient light.
+        
+        gl.glDisable( GL_DEPTH_TEST );
+        
+        String s = "Clock";
+        
+        clock(100,100,1,1,1,s);
+        
+        gl.glEnable( GL_DEPTH_TEST);
+        
     }
     
     /**

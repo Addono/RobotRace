@@ -287,6 +287,7 @@ class Robot {
         float scale = 1f;
         
         gl.glEnable(GL_TEXTURE_2D);
+        gl.glColor3f(1f, 1f, 1f);
         //remove "//" for textures below
         part.bind(gl);
         

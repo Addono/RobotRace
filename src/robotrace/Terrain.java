@@ -79,8 +79,23 @@ class Terrain {
             gl.glEnd();
         }
         
+        
+        
         gl.glDisable(gl.GL_TEXTURE_1D);
         
+        //draw trees
+             float width = 3;
+             float height = 10;
+             gl.glPushMatrix();
+             gl.glTranslatef(3.5f, 0, 0.5f);
+             drawTree(gl,glu,glut,width,height);
+             gl.glTranslatef(13f,17f, 0);
+             width +=1;
+             height +=2;
+             drawTree(gl,glu,glut,(float)width,height);
+             gl.glTranslatef(-34f,-8f, -0.2f);
+             drawTree(gl,glu,glut,(float)width,height);
+             gl.glPopMatrix();
         /** 
          * Generates limit amount of transparant layers on top of each other.
          * Generating a more smooth transition from ground to water on the edges,
@@ -104,6 +119,8 @@ class Terrain {
                     1f * ((float) (limit - i) / (float) limit),          
                     "plastic");
             
+            
+            
             // Draw the water as one large plane.
             gl.glBegin(gl.GL_QUADS);
                 gl.glNormal3f(0f, 0f, 1f);
@@ -115,6 +132,25 @@ class Terrain {
             
             gl.glPopMatrix();
         }
+        
+        
+        
+    }
+    
+    public void drawTree(GL2 gl,GLU glu, GLUT glut, float width, float height){
+        
+        
+        RobotRace.setMaterial(gl, 0.41f, 0.12f, 0.0f, 1.0f, 10, "plastic");
+        gl.glPushMatrix();
+            glut.glutSolidCylinder((float)width/10, (float)height/10, 30, 30);
+            gl.glTranslatef(0, 0, 1);
+            RobotRace.setMaterial(gl, 0f, 1.0f, 0f, 1.0f, 10, "plastic");
+            glut.glutSolidCone((float)width/2, (float)height/6, 20,2);
+            gl.glTranslatef(0, 0, 0.8f);
+            glut.glutSolidCone((float)width/2.6, (float)height/7, 20,2);
+            gl.glTranslatef(0, 0, 0.8f);
+            glut.glutSolidCone((float)width/4, (float)height/9, 20,2);
+        gl.glPopMatrix();
         
     }
     
