@@ -192,26 +192,63 @@ class RaceTrack {
                     gl.glVertex3d(point.x, point.y, point.z);
                 }
             }*/
-            //gl.glBegin(gl.GL_LINE_LOOP);
-            for(int i = 0; i < amount; i++) {
-                System.out.println(i + "  " + amount);
-                Vector point = getLanePoint(.5f, (double) i / (double) amount);
-              //  gl.glVertex3d(point.x, point.y, point.z);
-                gl.glPushMatrix();
-                gl.glTranslated(point.x, point.y, point.z);
-                glut.glutSolidCube(.1f);
-                gl.glPopMatrix();
+            gl.glBegin(gl.GL_TRIANGLE_STRIP_ADJACENCY_ARB);
+            
+            Vector oldPoint1 = getLanePoint(-.5f, 0);
+            Vector oldPoint2 = getLanePoint(3f, 0);
+            
+            for(int i = 0; i < amount; i++) {        
+                Vector point1 = getLanePoint(-.5f, (double) i / (double) amount);// Get the coordinate of the first point.
+                Vector point2 = getLanePoint(3f, (double) i / (double) amount);  // Get the coordinate of the second point.
                 
-                point = getLanePoint(-.5f, (double) i / (double) amount);
+                Vector diagonal = point1.subtract(oldPoint2);           // The line from oldP2 to P1.
+                Vector newHorizontal = point2.subtract(point1);         // The line from P1 to P2.
+                Vector oldHorizontal = oldPoint2.subtract(oldPoint1);   // The line from oldP1 to oldP2.
                 
-                gl.glPushMatrix();
-                gl.glTranslated(point.x, point.y, point.z);
-                glut.glutSolidCube(.1f);
-                gl.glPopMatrix();
+                Vector normal1 = diagonal.cross(oldHorizontal.normalized()); // The normal for the first triangle.
+                Vector normal2 = diagonal.cross(newHorizontal).normalized(); // The normal for the second triangle.
+                
+                drawTriangle(gl, normal1, point1);
+                drawTriangle(gl, normal2, point2);
+                
+                oldPoint1 = point1;          // Store the value of point1, which will be used by the next calculation.
+                oldPoint2 = point2;          // Store the value of point2, which will be used by the next calculation.
             }
             
-            //gl.glEnd();
+            gl.glEnd();
         }
+    }
+    
+    public void drawTriangle(GL2 gl, Vector normal, Vector newPoint) {
+        // Texture mapping.
+        double scaledHeight = (newPoint.z() + 1.01f) / 2.02f; // Height on the texture {0, 1} (in stead of [0,1], because this resulted in (semi) transparant parts on the extreems).
+        gl.glTexCoord1d(scaledHeight); // Map the new point to the 1D texture.
+        
+        // Set the normal.
+        setNormal(gl, normal);
+        
+        // Draw the line to the new point.
+        drawLineSegment(gl, newPoint);
+    }
+    
+    /**
+     * Sets the normal vector of the upcoming triangles.
+     * 
+     * @param GL2     The JOGL 2 object.
+     * @param Vector  The normal vector which should be applied.
+     */
+    public void setNormal(GL2 gl, Vector normal) {
+        gl.glNormal3d(normal.x(), normal.y(), normal.z());
+    }
+    
+    /**
+     * Draws a line part from the previous line end to the specified newPoint.
+     * 
+     * @param GL2       The JOGL 2 object.
+     * @param Vector    The newPoint where the line should be drawn to. 
+     */
+    public void drawLineSegment(GL2 gl, Vector newPoint) {
+        gl.glVertex3d(newPoint.x(), newPoint.y(), newPoint.z());
     }
     
     /**
@@ -247,8 +284,6 @@ class RaceTrack {
             int selectedSpline  = (int) Math.floor(t * amountOfSplines);
             double relativeT    = (t % timePerSpline) * amountOfSplines;
             int startPoint      = 3 * selectedSpline;
-            
-            System.out.println(t + " " + amountOfSplines + " " + selectedSpline + " " + startPoint + " " + ((startPoint+3) % controlPoints.length));
             
             Vector point        = getCubicBezierPoint(relativeT,
                     controlPoints[startPoint],

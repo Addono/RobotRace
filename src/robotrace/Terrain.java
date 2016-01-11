@@ -153,6 +153,22 @@ class Terrain {
         gl.glPopMatrix();
         
     }
+        
+    /**
+     * Calculates a coordinate for a point. Uses the heights array for the z
+     * coordinate.
+     * 
+     * @param int       The v-th point of which the coordinates should be returned.
+     * @param int       The u-th point of which the coordinates should be returned.     
+     * @return Vector   The coordinates of the point.
+     */
+    public Vector Coordinate(int v, int u) {
+        return new Vector(
+                xCoordinate(v),
+                yCoordinate(u),
+                heights[v][u]
+        );
+    }
     
     public void drawTriangle(GL2 gl, Vector normal, Vector newPoint) {
         // Texture mapping.
@@ -184,22 +200,6 @@ class Terrain {
      */
     public void drawLineSegment(GL2 gl, Vector newPoint) {
         gl.glVertex3d(newPoint.x(), newPoint.y(), newPoint.z());
-    }
-    
-    /**
-     * Calculates a coordinate for a point. Uses the heights array for the z
-     * coordinate.
-     * 
-     * @param int       The v-th point of which the coordinates should be returned.
-     * @param int       The u-th point of which the coordinates should be returned.     
-     * @return Vector   The coordinates of the point.
-     */
-    public Vector Coordinate(int v, int u) {
-        return new Vector(
-                xCoordinate(v),
-                yCoordinate(u),
-                heights[v][u]
-        );
     }
     
     /**
