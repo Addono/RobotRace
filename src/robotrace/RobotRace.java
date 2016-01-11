@@ -85,8 +85,8 @@ public class RobotRace extends Base {
     int cameraLight = GL_LIGHT3;
     static Texture part;
     float o = 3;
-    float x = -4;
-    float y = -4;
+    float x = 0;
+    float y = 0;
     
     
     public static int terrainTexture;
@@ -140,18 +140,33 @@ public class RobotRace extends Base {
            // new Vector(6, -3, 1), new Vector(-3, -3, 1), new Vector(-3, -3, 1),
            // new Vector(-3,18,1), new Vector(-3,18,1),new Vector(-3,18,1)
            
-new Vector(5*o+x,0*o+y-1,1),
-new Vector(7*o+x+1,0*o+y-2-1,1),
-new Vector(7*o+x+1,-5*o+y+2-1,1),
-new Vector(5*o+x,-5*o+y,1),
-new Vector(-4*o+x,-5*o+y,1),
-new Vector(-5*o+x,-5*o+y,1),
-new Vector(-5*o+x,4*o+y,1),
-new Vector(-5*o+x,7*o+y,1),
-new Vector(0*o+x,7*o+y,1),
-new Vector(0*o+x,4*o+y,1),
-new Vector(0*o+x,0*o+y+2-1,1),
-new Vector(1*o+x,0*o+y+1-1,1),
+//new Vector(5*o+x,0*o+y-1,1),
+//new Vector(7*o+x+1,0*o+y-2-1,1),
+//new Vector(7*o+x+1,-5*o+y+2-1,1),
+//new Vector(5*o+x,-5*o+y,1),
+//new Vector(-4*o+x,-5*o+y,1),
+//new Vector(-5*o+x,-5*o+y,1),
+//new Vector(-5*o+x,4*o+y,1),
+//new Vector(-5*o+x,7*o+y,1),
+//new Vector(0*o+x,7*o+y,1),
+//new Vector(0*o+x,4*o+y,1),
+//new Vector(0*o+x,0*o+y+2-1,1),
+//new Vector(1*o+x,0*o+y+1-1,1),
+            
+new Vector(3.5*o+x,-0.5*o+y,1),
+new Vector(7*o+x,-1*o+y,1),
+new Vector(7*o+x,-6*o+y,1),
+new Vector(4*o+x,-6*o+y,1),
+new Vector(-5*o+x,-6*o+y,1),
+new Vector(-6*o+x,-6*o+y,1),
+new Vector(-6*o+x,4*o+y,1),
+new Vector(-6*o+x,7*o+y,1),
+new Vector(-1*o+x,7*o+y,1),
+new Vector(-1*o+x,4*o+y,1),
+new Vector(-0.5*o+x,1.5*o+y,1),
+new Vector(1*o+x,0*o+y,1),
+            
+            
         });
         
         // C-track
