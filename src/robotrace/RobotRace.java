@@ -174,7 +174,7 @@ public class RobotRace extends Base {
         // Create the colors array, which will store all the colors.
         Color[] colors = new Color[amount];
         
-        System.out.println("Started generating a color gradient with " + rgbah.length + " colors.");
+        System.out.println("\n  Started generating a color gradient with a total of " + rgbah.length + " colors");
         
         // Calculate all colors.
         int previousSteps = 0;
@@ -250,12 +250,12 @@ public class RobotRace extends Base {
         
         float[][] terrainColors = {
             new float[] {0f, 0.202f, .202f, 1f, 0f},          // Darker blue color for the bottom of the water.
-            new float[] {.05f, .450f, .450f, 1f, .25f},      // Light blue color under water. Would have been better if it had a sand like color.
+            new float[] {.1f, .450f, .450f, 1f, .375f},       // Light blue color under water. Would have been better if it had a sand like color and the blue water color would be handeled by the semi-transparant layers.
             new float[] {0.957f, 0.843f, 0.276f, 1f, .6875f}, // Yellow sand color.
             new float[] {.486f, .988f, 0f, 1f, 1f}            // Lawn green
         };
         
-        terrainTexture = create1DTexture(colorGradient(terrainColors, 256, 1.7f));
+        terrainTexture = create1DTexture(colorGradient(terrainColors, 256, 1.5f));
         
         // Enable lighting.
         gl.glShadeModel(GL_SMOOTH);
